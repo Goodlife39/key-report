@@ -5605,7 +5605,7 @@ function screenshotReport(reportId) {
     const padding = 30;
     const fontSize = 40;
     const lineHeight = 62;
-    const titleHeight = screenshotProduct === "haolong" ? 62 : 0;
+    const titleHeight = 0;
     const maxTextWidth = width - padding * 2;
     const measureContext = canvas.getContext("2d");
     measureContext.font = `${fontSize}px Arial, Helvetica, sans-serif`;
@@ -5638,16 +5638,6 @@ function screenshotReport(reportId) {
     context.strokeStyle = "#dce5eb";
     context.lineWidth = 2;
     context.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
-
-    if (screenshotProduct === "haolong") {
-        context.fillStyle = "#a0a0a0";
-        context.fillRect(0, 0, width, titleHeight);
-        context.fillStyle = "#ffffff";
-        context.font = `bold 34px Arial, Helvetica, sans-serif`;
-        context.textAlign = "center";
-        context.fillText("下注", width / 2, 40);
-        context.textAlign = "left";
-    }
 
     context.font = `${fontSize}px Arial, Helvetica, sans-serif`;
     context.textBaseline = "top";
