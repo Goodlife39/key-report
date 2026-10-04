@@ -1,0 +1,5928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>HLB8</title>
+
+<style>
+
+/* =====================================================
+   基础
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+
+    background: white;
+    color: #111;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =====================================================
+   HOME
+===================================================== */
+
+#homePage {
+    display: block;
+
+    width: 100%;
+    min-height: 100vh;
+
+    background: #eef8ff;
+}
+
+
+/* =====================================================
+   首页顶部
+===================================================== */
+
+.home-header {
+
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 10px;
+
+    background: white;
+
+    border-bottom: 1px solid #ddd;
+}
+
+.home-update {
+
+    width: 80px;
+
+    color: #0066ff;
+
+    font-size: 18px;
+
+    text-align: left;
+}
+
+.home-title {
+
+    flex: 1;
+
+    text-align: center;
+
+    font-size: 20px;
+}
+
+.home-logout {
+
+    width: 80px;
+
+    color: #0066ff;
+
+    font-size: 18px;
+
+    text-align: right;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   首页 2 x 3
+===================================================== */
+
+.home-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    grid-template-rows: repeat(3, 1fr);
+
+    width: 100%;
+
+    min-height: calc(100vh - 55px);
+
+    background: #eef8ff;
+
+    border-top: 1px solid #d8dfe3;
+    border-left: 1px solid #d8dfe3;
+}
+
+
+/* =====================================================
+   首页格子
+===================================================== */
+
+.home-item {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 220px;
+
+    background: #eef8ff;
+
+    border-right: 1px solid #d8dfe3;
+    border-bottom: 1px solid #d8dfe3;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+.home-item:active {
+
+    background: #dfeffc;
+}
+
+
+/* =====================================================
+   首页文字
+===================================================== */
+
+.home-label {
+
+    color: #222;
+
+    font-size: 19px;
+
+    text-align: center;
+}
+
+
+/* =====================================================
+   新单图标
+===================================================== */
+
+.new-order-icon {
+
+    position: relative;
+
+    width: 88px;
+    height: 88px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 15px;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            #e52229 0deg 45deg,
+            #f5f5f5 45deg 90deg,
+            #e52229 90deg 145deg,
+            #f5f5f5 145deg 195deg,
+            #e52229 195deg 250deg,
+            #f5f5f5 250deg 305deg,
+            #e52229 305deg 360deg
+        );
+
+    box-shadow:
+        0 2px 5px rgba(0,0,0,0.12);
+}
+
+.ticket-small {
+
+    width: 57px;
+    height: 31px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #f5b51b;
+
+    color: white;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    transform: rotate(-15deg);
+}
+
+.plus-circle {
+
+    position: absolute;
+
+    right: -4px;
+    bottom: -4px;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #35c95a;
+
+    color: white;
+
+    font-size: 30px;
+    font-weight: bold;
+}
+
+
+/* =====================================================
+   首页其他图标
+===================================================== */
+
+.home-icon {
+
+    width: 95px;
+    height: 95px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 15px;
+
+    font-size: 70px;
+
+    line-height: 1;
+}
+
+.person-icon {
+    font-size: 72px;
+}
+
+.report-icon {
+    font-size: 72px;
+}
+
+.chart-icon {
+    font-size: 72px;
+}
+
+.settings-icon {
+    font-size: 74px;
+}
+
+
+/* =====================================================
+   红色 1
+===================================================== */
+
+.number-one {
+
+    width: 92px;
+    height: 92px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 15px;
+
+    border: 7px solid #ed1111;
+
+    border-radius: 16px;
+
+    background: white;
+
+    color: #e50000;
+
+    font-size: 58px;
+    font-weight: bold;
+}
+
+
+/* =====================================================
+   INPUT PAGE
+===================================================== */
+
+#inputPage {
+
+    display: none;
+
+    min-height: 100vh;
+
+    padding-bottom: 245px;
+
+    background: white;
+}
+
+
+/* =====================================================
+   Input 顶部
+===================================================== */
+
+.header {
+
+    height: 55px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 15px;
+
+    border-bottom: 1px solid #ddd;
+
+    background: white;
+}
+
+.header-left {
+
+    color: #0066ff;
+
+    font-size: 21px;
+
+    cursor: pointer;
+}
+
+.header-title {
+
+    font-size: 23px;
+
+    font-weight: bold;
+}
+
+
+.header-product-switch {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.product-switch-button {
+    min-height: 34px;
+    padding: 0 10px;
+    border: 1px solid #1689e8;
+    border-radius: 5px;
+    background: #fff;
+    color: #1689e8;
+    font-size: 15px;
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+.product-switch-button.active {
+    background: #1689e8;
+    color: #fff;
+}
+
+.header-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+.header-rebuy,
+.header-buy {
+
+    color: #0066ff;
+
+    font-size: 19px;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   户口
+===================================================== */
+
+.account {
+
+    padding: 16px 15px 8px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+
+/* =====================================================
+   日期
+===================================================== */
+
+.date-row {
+
+    width: 100%;
+
+    padding: 4px 15px 0;
+}
+
+#dateInput {
+
+    width: 100%;
+
+    height: 42px;
+
+    padding: 0;
+
+    border: none;
+
+    outline: none;
+
+    background: white;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 21px;
+
+    font-weight: bold;
+
+    color: #111;
+}
+
+
+/* =====================================================
+   号码输入
+===================================================== */
+
+#dInput {
+
+    display: block;
+
+    width: 100%;
+
+    min-height: 390px;
+
+    padding: 4px 15px 15px;
+
+    border: none;
+
+    outline: none;
+
+    resize: none;
+
+    background-color: white;
+
+    background-image: none;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 19px;
+
+    line-height: 1.65;
+
+    color: #111;
+
+    caret-color: #111;
+}
+
+
+/* =====================================================
+   金额
+===================================================== */
+
+.amount-bar {
+
+    position: fixed;
+
+    left: 0;
+    right: 0;
+
+    bottom: 245px;
+
+    height: 40px;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    padding-right: 12px;
+
+    background: white;
+
+    z-index: 20;
+}
+
+.amount {
+
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+
+/* =====================================================
+   键盘
+===================================================== */
+
+.keypad {
+
+    position: fixed;
+
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 245px;
+
+    display: none;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    grid-template-rows: repeat(4, 1fr);
+
+    background: #ddd;
+
+    z-index: 30;
+}
+
+.key {
+
+    border: 1px solid #aaa;
+
+    border-radius: 0;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #f6f6f6 50%,
+            #e5e5e5 100%
+        );
+
+    font-size: 29px;
+
+    color: #111;
+
+    cursor: pointer;
+
+    touch-action: manipulation;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+.key:active {
+
+    background: #ccc;
+}
+
+.backspace {
+
+    font-size: 25px;
+}
+
+.clear-key {
+
+    background: #ed1515;
+
+    color: white;
+
+    font-size: 24px;
+
+    font-weight: bold;
+}
+
+.clear-key:active {
+
+    background: #bf0000;
+}
+
+.bet-key,
+.enter-key {
+
+    background: #079a42;
+
+    color: white;
+
+    font-size: 24px;
+
+    font-weight: bold;
+}
+
+.bet-key:active,
+.enter-key:active {
+
+    background: #067533;
+}
+
+
+/* =====================================================
+   REPORT LIST PAGE
+===================================================== */
+
+#reportPage {
+
+    display: none;
+
+    min-height: 100vh;
+
+    background: white;
+
+    padding-bottom: 20px;
+}
+
+
+/* =====================================================
+   Report 顶部
+===================================================== */
+
+.report-header {
+
+    height: 55px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 15px;
+
+    border-bottom: 1px solid #ddd;
+
+    background: white;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 50;
+}
+
+.report-back {
+
+    width: 80px;
+
+    color: #0066ff;
+
+    font-size: 21px;
+
+    cursor: pointer;
+}
+
+.report-title {
+
+    flex: 1;
+
+    text-align: center;
+
+    font-size: 23px;
+
+    font-weight: bold;
+}
+
+.report-new {
+
+    width: 80px;
+
+    color: #0066ff;
+
+    font-size: 19px;
+
+    text-align: right;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   Report 搜索区域
+===================================================== */
+
+.report-search {
+
+    padding: 10px 10px 8px;
+
+    background: white;
+
+    border-bottom: 1px solid #ddd;
+}
+
+
+/* 日期 */
+
+.search-date-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-bottom: 8px;
+}
+
+.search-date-label {
+
+    font-size: 17px;
+
+    white-space: nowrap;
+}
+
+#searchDate {
+
+    flex: 1;
+
+    min-width: 0;
+
+    height: 40px;
+
+    padding: 0 8px;
+
+    border: 1px solid #888;
+
+    background: white;
+
+    font-size: 17px;
+
+    outline: none;
+}
+
+.search-button {
+
+    height: 40px;
+
+    padding: 0 14px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    background: #1689e8;
+
+    color: white;
+
+    font-size: 17px;
+
+    cursor: pointer;
+}
+
+
+/* 编号 / 号码 */
+
+.search-two-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    width: 100%;
+}
+
+.search-group {
+
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+}
+
+.search-label {
+
+    font-size: 16px;
+
+    white-space: nowrap;
+}
+
+.search-input {
+
+    flex: 1;
+
+    min-width: 0;
+
+    height: 38px;
+
+    padding: 0 7px;
+
+    border: 1px solid #999;
+
+    outline: none;
+
+    font-size: 16px;
+
+    background: white;
+}
+
+.search-small-button {
+
+    height: 38px;
+
+    padding: 0 9px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    background: #1689e8;
+
+    color: white;
+
+    font-size: 15px;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   Report 列表
+===================================================== */
+
+#reportList {
+
+    padding: 10px;
+
+    background: white;
+}
+
+
+/* =====================================================
+   单张 Report
+===================================================== */
+
+.report-card {
+
+    position: relative;
+
+    margin-bottom: 10px;
+
+    padding: 14px 14px 48px;
+
+    background: #eef8ff;
+
+    border: 1px solid #dce5eb;
+
+    border-radius: 8px;
+
+    color: #111;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 18px;
+
+    line-height: 1.55;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+}
+
+
+/* 废票 */
+
+.report-card.cancelled {
+
+    background: #ffc8f3;
+
+    color: #d40000;
+
+    border-color: #f2a9e1;
+}
+
+
+
+/* 豪龙收据样式 */
+.report-card.haolong-card {
+    padding: 0 0 48px;
+    background: #fff;
+    border-color: #e5e5e5;
+    border-radius: 8px;
+}
+
+.report-card.haolong-card.cancelled {
+    background: #fff;
+    color: #111;
+}
+
+.haolong-report-title {
+    padding: 7px 12px;
+    background: #a0a0a0;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.5;
+    border-radius: 7px 7px 0 0;
+}
+
+.haolong-report-content {
+    padding: 14px 14px 18px;
+    color: #111;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+}
+
+.haolong-report-line {
+    min-height: 1.55em;
+}
+
+.haolong-report-blue {
+    color: #0000ee;
+}
+/* 删除按钮 */
+
+.report-delete {
+
+    position: absolute;
+
+    right: 10px;
+
+    bottom: 9px;
+
+    height: 32px;
+
+    padding: 0 15px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    background: #ed1515;
+
+    color: white;
+
+    font-size: 15px;
+
+    cursor: pointer;
+}
+
+.report-delete:active {
+
+    background: #b90000;
+}
+
+
+.report-rebuy {
+
+    position: absolute;
+
+    right: 82px;
+
+    bottom: 9px;
+
+    height: 32px;
+
+    padding: 0 15px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    background: #1689e8;
+
+    color: white;
+
+    font-size: 15px;
+
+    cursor: pointer;
+}
+
+
+.report-rebuy:active {
+
+    background: #0d6fc0;
+}
+
+
+
+.report-screenshot {
+    position: absolute;
+    right: 154px;
+    bottom: 9px;
+    height: 32px;
+    padding: 0 13px;
+    border: none;
+    border-radius: 5px;
+    background: #159447;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.report-screenshot:active { background: #0d7134; }
+
+/* 废票标记 */
+
+.cancel-label {
+
+    color: #d40000;
+
+    font-weight: bold;
+
+    margin-bottom: 6px;
+}
+
+
+/* 没有结果 */
+
+.no-result {
+
+    padding: 35px 10px;
+
+    text-align: center;
+
+    color: #777;
+
+    font-size: 17px;
+}
+
+
+/* =====================================================
+   手机
+===================================================== */
+
+/* BET 后的收据弹窗 */
+.receipt-modal { display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.48); }
+.receipt-modal-dialog { display:flex; flex-direction:column; width:min(560px, 100%); max-height:85vh; overflow:hidden; border-radius:10px; background:#fff; box-shadow:0 8px 30px rgba(0,0,0,.25); }
+.receipt-modal-title { flex:none; padding:11px 14px; background:#a0a0a0; color:#fff; text-align:center; font-size:20px; font-weight:bold; }
+.receipt-modal-content { flex:1; overflow:auto; padding:16px; background:#eef8ff; color:#111; font-family:Arial, Helvetica, sans-serif; font-size:18px; line-height:1.55; white-space:pre-wrap; word-break:break-word; }
+.receipt-modal-content.haolong-report-content { background:#fff; }
+.receipt-modal-actions { display:flex; justify-content:flex-end; gap:10px; flex:none; padding:11px 13px; border-top:1px solid #ddd; background:#fff; }
+.receipt-modal-button { min-width:82px; height:40px; border:0; border-radius:5px; color:#fff; font-size:17px; }
+.receipt-modal-screenshot { background:#1689e8; }
+.receipt-modal-ok { background:#159447; }
+@media (max-width: 600px) { .receipt-modal { padding:12px; } .receipt-modal-dialog { max-height:88vh; } }
+
+/* 按日期查询号码 */
+#dailyNumberPage { display:none; min-height:100vh; padding-bottom:20px; background:#f5f7fa; }
+.daily-number-header { position:sticky; top:0; z-index:50; height:55px; display:flex; align-items:center; justify-content:space-between; padding:0 15px; border-bottom:1px solid #ddd; background:#fff; }
+.daily-number-back { width:80px; color:#06f; font-size:21px; cursor:pointer; }
+.daily-number-title { flex:1; text-align:center; font-size:22px; font-weight:bold; }
+.daily-number-spacer { width:80px; }
+.daily-number-search { display:flex; align-items:center; gap:8px; padding:12px 10px; background:#fff; border-bottom:1px solid #ddd; }
+.daily-number-search label { white-space:nowrap; font-size:17px; }
+#dailyNumberDate { flex:1; min-width:0; height:42px; padding:0 8px; border:1px solid #888; background:#fff; font-size:17px; }
+.daily-number-search button { height:42px; padding:0 16px; border:0; border-radius:5px; background:#1689e8; color:#fff; font-size:17px; }
+#dailyNumberResults { padding:10px; }
+.daily-number-group { margin-bottom:10px; padding:0 12px 10px; border:1px solid #e2e5e8; border-radius:7px; background:#fff; }
+.daily-number-group-title { margin:0 -12px 8px; padding:8px 12px; border-bottom:1px solid #e5e5e5; color:#06f; font-size:20px; font-weight:bold; }
+.daily-number-total .daily-number-group-title { background:#1689e8; color:#fff; }
+.daily-number-summary { margin-bottom:6px; color:#1689e8; font-weight:bold; }
+.daily-number-line { padding:3px 0; color:#111; font-size:18px; line-height:1.5; white-space:pre-wrap; word-break:break-word; }
+.daily-number-empty { padding:24px 10px; color:#777; text-align:center; font-size:17px; }
+
+@media (max-width: 600px) {
+
+    .home-item {
+
+        min-height: 0;
+    }
+
+    .home-icon {
+
+        width: 82px;
+        height: 82px;
+
+        font-size: 62px;
+    }
+
+    .new-order-icon {
+
+        width: 82px;
+        height: 82px;
+    }
+
+    .person-icon,
+    .report-icon,
+    .chart-icon {
+
+        font-size: 66px;
+    }
+
+    .settings-icon {
+
+        font-size: 70px;
+    }
+
+    .number-one {
+
+        width: 88px;
+        height: 88px;
+
+        border-width: 7px;
+
+        font-size: 55px;
+    }
+
+    .home-label {
+
+        font-size: 18px;
+    }
+
+    #dInput {
+
+        font-size: 18px;
+
+        min-height: 390px;
+    }
+
+    .key {
+
+        font-size: 28px;
+    }
+
+    .report-card {
+
+        font-size: 17px;
+
+        padding: 13px 13px 46px;
+    }
+
+    .search-two-row {
+
+        gap: 5px;
+    }
+
+    .search-label {
+
+        font-size: 14px;
+    }
+
+    .search-small-button {
+
+        padding: 0 7px;
+
+        font-size: 14px;
+    }
+
+}
+
+
+/* =====================================================
+   小屏幕
+===================================================== */
+
+@media (max-height: 700px) {
+
+    .home-icon,
+    .new-order-icon,
+    .number-one {
+
+        margin-bottom: 8px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HOME
+===================================================== -->
+
+<div id="homePage">
+
+
+    <div class="home-header">
+
+        <div class="home-update">
+            更新
+        </div>
+
+        <div class="home-title">
+            主题
+        </div>
+
+        <div
+            class="home-logout"
+            onclick="logout()"
+        >
+            登出
+        </div>
+
+    </div>
+
+
+    <div class="home-grid">
+
+
+        <!-- 新单 -->
+
+        <div
+            class="home-item"
+            onclick="openInputPage('hlb8')"
+        >
+
+            <div class="new-order-icon">
+
+                <div class="ticket-small">
+                    Ticket
+                </div>
+
+                <div class="plus-circle">
+                    +
+                </div>
+
+            </div>
+
+            <div class="home-label">
+                新单
+            </div>
+
+        </div>
+
+
+        <!-- 检查 / 废票 -->
+
+        <div
+            class="home-item"
+            onclick="openCheckPage('hlb8')"
+        >
+
+            <div class="home-icon person-icon">
+                🧑🏻
+            </div>
+
+            <div class="home-label">
+                检查/废票-票单
+            </div>
+
+        </div>
+
+
+        <!-- 报告 -->
+
+        <div
+            class="home-item"
+            onclick="openCheckPage('hlb8')"
+        >
+
+            <div class="home-icon report-icon">
+                📋
+            </div>
+
+            <div class="home-label">
+                报告
+            </div>
+
+        </div>
+
+
+        <!-- 成绩 -->
+
+        <div
+            class="home-item"
+            onclick="showMessage('成绩功能稍后加入')"
+        >
+
+            <div class="home-icon chart-icon">
+                📊
+            </div>
+
+            <div class="home-label">
+                成绩
+            </div>
+
+        </div>
+
+
+        <!-- 豪龙开单 -->
+
+        <div
+            class="home-item"
+            onclick="openInputPage('haolong')"
+        >
+
+            <div class="home-icon dragon-icon">
+                🐉
+            </div>
+
+            <div class="home-label">
+                豪龙
+            </div>
+
+        </div>
+
+
+        <!-- 豪龙 Report -->
+
+        <div
+            class="home-item"
+            onclick="openCheckPage('haolong')"
+        >
+
+            <div class="home-icon report-icon">
+                📋
+            </div>
+
+            <div class="home-label">
+                豪龙 Report
+            </div>
+
+        </div>
+
+
+        <!-- 按日期查看已买号码 -->
+
+        <div
+            class="home-item"
+            onclick="openDailyNumberPage()"
+        >
+
+            <div class="home-icon report-icon">
+                🔎
+            </div>
+
+            <div class="home-label">
+                号码查询
+            </div>
+
+        </div>
+
+
+        <!-- 新单号码查询 -->
+
+        <div
+            class="home-item"
+            onclick="openDailyNumberPage('hlb8')"
+        >
+
+            <div class="home-icon report-icon">
+                🔎
+            </div>
+
+            <div class="home-label">
+                新单号码查询
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     INPUT PAGE
+===================================================== -->
+
+<div id="inputPage">
+
+
+    <div class="header">
+
+        <div
+            class="header-left"
+            onclick="backToHome()"
+        >
+            ‹ 返回
+        </div>
+
+
+        <div class="header-title header-product-switch">
+            <button type="button" id="hlb8SwitchButton" class="product-switch-button" onclick="switchInputProduct('hlb8')">新单</button>
+            <button type="button" id="haolongSwitchButton" class="product-switch-button" onclick="switchInputProduct('haolong')">豪龙</button>
+        </div>
+
+
+        <div class="header-actions">
+
+            <div
+                class="header-rebuy"
+                onclick="rebuyCurrent()"
+            >
+                重买
+            </div>
+
+            <div
+                class="header-buy"
+                onclick="generateReport()"
+            >
+                Buy
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="account" id="accountLabel">
+        户口: hlb8
+    </div>
+
+
+    <div class="date-row">
+
+        <input
+            id="dateInput"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            readonly
+        >
+
+    </div>
+
+
+    <textarea
+        id="dInput"
+        spellcheck="false"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        readonly
+        placeholder="137&#10;1234#1&#10;2234"
+    ></textarea>
+
+
+</div>
+
+
+<!-- =====================================================
+     金额
+===================================================== -->
+
+<div
+    id="amountBar"
+    class="amount-bar"
+>
+
+    <div
+        id="amountDisplay"
+        class="amount"
+    >
+        $0.00
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     KEYBOARD
+===================================================== -->
+
+<div
+    id="keypad"
+    class="keypad"
+>
+
+
+    <button
+        class="key"
+        onclick="inputKey('1')"
+    >
+        1
+    </button>
+
+
+    <button
+        class="key"
+        onclick="inputKey('2')"
+    >
+        2
+    </button>
+
+
+    <button
+        class="key"
+        onclick="inputKey('3')"
+    >
+        3
+    </button>
+
+
+    <button
+        class="key backspace"
+        onclick="backspace()"
+    >
+        ⌫
+    </button>
+
+
+    <button
+        class="key"
+        onclick="inputKey('4')"
+    >
+        4
+    </button>
+
+
+    <button
+        class="key"
+        onclick="inputKey('5')"
+    >
+        5
+    </button>
+
+
+    <button
+        class="key"
+        onclick="inputKey('6')"
+    >
+        6
+    </button>
+
+
+    <button
+        class="key clear-key"
+        onclick="clearAll()"
+    >
+        CLEAR
+    </button>
+
+
+    <button
+        class="key"
+        onclick="inputKey('7')"
+    >
+        7
+    </button>
+
+
+    <button
+        class="key"
+        onclick="inputKey('8')"
+    >
+        8
+    </button>
+
+
+    <button
+        class="key"
+        onclick="inputKey('9')"
+    >
+        9
+    </button>
+
+
+    <button
+        class="key bet-key"
+        onclick="generateReport()"
+    >
+        BET
+    </button>
+
+
+    <button
+        class="key"
+        onclick="inputKey('*')"
+    >
+        *
+    </button>
+
+
+    <button
+        class="key"
+        onclick="inputKey('0')"
+    >
+        0
+    </button>
+
+
+    <button
+        class="key"
+        onclick="inputKey('#')"
+    >
+        #
+    </button>
+
+
+    <button
+        class="key enter-key"
+        onclick="enterKey()"
+    >
+        ENTER
+    </button>
+
+
+</div>
+
+
+<!-- =====================================================
+     REPORT LIST PAGE
+===================================================== -->
+
+<div id="reportPage">
+
+
+    <div class="report-header">
+
+        <div
+            class="report-back"
+            onclick="backToHome()"
+        >
+            ‹ 返回
+        </div>
+
+
+        <div class="report-title">
+            新单
+        </div>
+
+
+        <div
+            class="report-new"
+            onclick="openInputPage()"
+        >
+            新单
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         搜索
+    ================================================= -->
+
+    <div class="report-search">
+
+
+        <!-- 日期 -->
+
+        <div class="search-date-row">
+
+            <div class="search-date-label">
+                从
+            </div>
+
+            <input
+                id="searchDate"
+                type="text"
+                autocomplete="off"
+                placeholder="2026/08/28"
+            >
+
+            <button
+                class="search-button"
+                onclick="searchReports()"
+            >
+                寻找
+            </button>
+
+        </div>
+
+
+        <!-- 编号 + 号码 -->
+
+        <div class="search-two-row">
+
+
+            <div class="search-group">
+
+                <div class="search-label">
+                    编号:
+                </div>
+
+                <input
+                    id="searchId"
+                    class="search-input"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder=""
+                >
+
+                <button
+                    class="search-small-button"
+                    onclick="searchReports()"
+                >
+                    寻找
+                </button>
+
+            </div>
+
+
+            <div class="search-group">
+
+                <div class="search-label">
+                    号码:
+                </div>
+
+                <input
+                    id="searchNumber"
+                    class="search-input"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder=""
+                >
+
+                <button
+                    class="search-small-button"
+                    onclick="searchReports()"
+                >
+                    寻找
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         Report 列表
+    ================================================= -->
+
+    <div id="reportList"></div>
+
+
+</div>
+
+
+<div id="dailyNumberPage">
+    <div class="daily-number-header">
+        <div class="daily-number-back" onclick="backToHome()">‹ 返回</div>
+        <div id="dailyNumberTitle" class="daily-number-title">号码查询</div>
+        <div class="daily-number-spacer"></div>
+    </div>
+    <div class="daily-number-search">
+        <label for="dailyNumberDate">日期</label>
+        <input id="dailyNumberDate" type="date">
+        <button onclick="renderDailyNumbers()">查看</button>
+    </div>
+    <div id="dailyNumberResults"></div>
+</div>
+
+<div id="receiptModal" class="receipt-modal" role="dialog" aria-modal="true" aria-label="收据">
+    <div class="receipt-modal-dialog">
+        <div id="receiptModalTitle" class="receipt-modal-title">Report</div>
+        <div id="receiptModalContent" class="receipt-modal-content"></div>
+        <div class="receipt-modal-actions">
+            <button class="receipt-modal-button receipt-modal-screenshot" onclick="screenshotModalReceipt()">截图</button>
+            <button class="receipt-modal-button receipt-modal-ok" onclick="closeReceiptModal()">OK</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+/* =====================================================
+   页面
+===================================================== */
+
+const homePage =
+    document.getElementById("homePage");
+
+const inputPage =
+    document.getElementById("inputPage");
+
+const reportPage =
+    document.getElementById("reportPage");
+
+const dailyNumberPage =
+    document.getElementById("dailyNumberPage");
+
+const dailyNumberDate =
+    document.getElementById("dailyNumberDate");
+
+const dailyNumberTitle =
+    document.getElementById("dailyNumberTitle");
+
+const dailyNumberResults =
+    document.getElementById("dailyNumberResults");
+
+const receiptModal = document.getElementById("receiptModal");
+const receiptModalContent = document.getElementById("receiptModalContent");
+const receiptModalTitle = document.getElementById("receiptModalTitle");
+let currentReceiptModalId = null;
+let dailyNumberProductFilter = "all";
+
+const amountBar =
+    document.getElementById("amountBar");
+
+const keypad =
+    document.getElementById("keypad");
+
+const dateInput =
+    document.getElementById("dateInput");
+
+const numberInput =
+    document.getElementById("dInput");
+
+const searchDate =
+    document.getElementById("searchDate");
+
+const searchId =
+    document.getElementById("searchId");
+
+const searchNumber =
+    document.getElementById("searchNumber");
+
+
+let activeInput =
+    dateInput;
+
+let activeProduct =
+    "hlb8";
+
+
+function getProductLabel() {
+
+    return activeProduct === "haolong"
+        ? "豪龙"
+        : "hlb8";
+
+}
+
+
+function getReportsStorageKey() {
+
+    return activeProduct === "haolong"
+        ? "haolong_reports"
+        : "hlb8_reports";
+
+}
+
+
+function getCounterStorageKey(dayStamp) {
+
+    return activeProduct === "haolong"
+        ? `haolong_generate_count_${dayStamp}`
+        : "hlb8_generate_count";
+
+}
+
+
+/* =====================================================
+   页面切换
+===================================================== */
+
+function showPage(page) {
+
+    homePage.style.display = "none";
+    inputPage.style.display = "none";
+    reportPage.style.display = "none";
+    dailyNumberPage.style.display = "none";
+    amountBar.style.display = "none";
+    keypad.style.display = "none";
+
+    if (page === "home") {
+        homePage.style.display = "block";
+    }
+
+    if (page === "input") {
+        inputPage.style.display = "block";
+        amountBar.style.display = "flex";
+        keypad.style.display = "grid";
+    }
+
+    if (page === "report") {
+        reportPage.style.display = "block";
+        renderReports();
+    }
+
+    if (page === "dailyNumbers") {
+        dailyNumberPage.style.display = "block";
+        renderDailyNumbers();
+    }
+
+}
+
+
+
+/* =====================================================
+   今天日期
+===================================================== */
+
+function getTodayString() {
+
+    const now =
+        new Date();
+
+    const year =
+        now.getFullYear();
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(2, "0");
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(2, "0");
+
+    return `${year}/${month}/${day}`;
+
+}
+
+
+/* =====================================================
+   日期转换
+===================================================== */
+
+function normalizeDateString(value) {
+
+    const text =
+        String(value || "")
+            .trim();
+
+    if (!text) {
+
+        return "";
+
+    }
+
+
+    const match =
+        text.match(
+            /^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/
+        );
+
+
+    if (!match) {
+
+        return text;
+
+    }
+
+
+    return (
+        match[1] +
+        "/" +
+        String(
+            parseInt(match[2], 10)
+        ).padStart(2, "0") +
+        "/" +
+        String(
+            parseInt(match[3], 10)
+        ).padStart(2, "0")
+    );
+
+}
+
+
+/* =====================================================
+   初始化日期
+===================================================== */
+
+dateInput.value =
+    "D#";
+
+searchDate.value =
+    getTodayString();
+
+
+/* =====================================================
+   首页 → 新单
+===================================================== */
+
+function updateInputProductSwitch() {
+    const hlb8Button = document.getElementById("hlb8SwitchButton");
+    const haolongButton = document.getElementById("haolongSwitchButton");
+    if (!hlb8Button || !haolongButton) return;
+
+    hlb8Button.classList.toggle("active", activeProduct === "hlb8");
+    haolongButton.classList.toggle("active", activeProduct === "haolong");
+    hlb8Button.setAttribute("aria-pressed", activeProduct === "hlb8" ? "true" : "false");
+    haolongButton.setAttribute("aria-pressed", activeProduct === "haolong" ? "true" : "false");
+}
+
+
+function switchInputProduct(product) {
+    if (product !== "hlb8" && product !== "haolong") return;
+
+    activeProduct = product;
+    document.getElementById("accountLabel").textContent =
+        `户口: ${getProductLabel()}`;
+    updateInputProductSwitch();
+    updateAmount();
+}
+
+
+function openInputPage(product) {
+
+    if (product) {
+
+        activeProduct = product;
+
+    }
+
+    document.getElementById("accountLabel").textContent =
+        `户口: ${getProductLabel()}`;
+
+    updateInputProductSwitch();
+    showPage("input");
+
+    activeInput =
+        dateInput;
+
+    dateInput.focus();
+
+    dateInput.setSelectionRange(
+        dateInput.value.length,
+        dateInput.value.length
+    );
+
+}
+
+
+/* =====================================================
+   返回首页
+===================================================== */
+
+function backToHome() {
+
+    showPage("home");
+
+}
+
+
+/* =====================================================
+   首页 → 检查
+===================================================== */
+
+function openCheckPage(product) {
+
+    if (product) {
+
+        activeProduct = product;
+
+    }
+
+    searchDate.value =
+        getTodayString();
+
+    searchId.value =
+        "";
+
+    searchNumber.value =
+        "";
+
+    showPage("report");
+
+}
+
+
+/* =====================================================
+   首页其他
+===================================================== */
+
+function openDailyNumberPage(productScope = "all") {
+    dailyNumberProductFilter = productScope;
+    dailyNumberTitle.textContent = productScope === "hlb8" ? "新单号码查询" : "号码查询";
+    dailyNumberDate.value = getTodayString().replace(/\//g, "-");
+    showPage("dailyNumbers");
+}
+
+function readReportsForDailyNumbers(storageKey) {
+    try {
+        const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        return Array.isArray(saved) ? saved : [];
+    } catch (error) { return []; }
+}
+
+function getUniqueDailyPermutations(digits) {
+    const counts = {};
+    for (const digit of digits) counts[digit] = (counts[digit] || 0) + 1;
+    const result = [];
+    function build(prefix) {
+        if (prefix.length === digits.length) { result.push(prefix); return; }
+        Object.keys(counts).sort().forEach(function(digit) {
+            if (!counts[digit]) return;
+            counts[digit]--;
+            build(prefix + digit);
+            counts[digit]++;
+        });
+    }
+    build("");
+    return result;
+}
+
+
+function getDailyNumbersFromBetLine(rawLine) {
+    let line = String(rawLine || "").trim();
+    if (!line || line.startsWith("#")) return [];
+
+    let base = line;
+    while (/(?:#{1,2}\d+|-\d+)$/.test(base)) {
+        base = base.replace(/(?:#{1,2}\d+|-\d+)$/, "");
+    }
+
+    const boxMatch = base.match(/^(\*{1,2})(\d+)$/);
+    if (boxMatch) return getUniqueDailyPermutations(boxMatch[2]);
+
+    const prefixBoxMatch = base.match(/^(\d+)\*(\d+)$/);
+    if (prefixBoxMatch) {
+        return getUniqueDailyPermutations(prefixBoxMatch[2]).map(function(permutation) {
+            return prefixBoxMatch[1] + permutation;
+        });
+    }
+
+    const digits = base.replace(/\D/g, "");
+    return digits.length >= 4 ? [digits.slice(0, 4)] : [];
+}
+
+
+function renderDailyNumbers() {
+    const selectedDate = normalizeDateString(dailyNumberDate.value);
+    const groupOrder = ["M", "P", "T", "S", "I", "J", "W", "C", "N", "A", "H", "E"];
+    const groups = Object.fromEntries(groupOrder.map(code => [code, []]));
+    const totalNumbers = new Set();
+    const receiptTotals = {hlb8: 0, haolong: 0};
+    const allSources = [
+        {key: "hlb8_reports", product: "hlb8"},
+        {key: "haolong_reports", product: "haolong"}
+    ];
+    const sources = dailyNumberProductFilter === "hlb8"
+        ? allSources.filter(source => source.product === "hlb8")
+        : allSources;
+
+    if (!selectedDate) {
+        dailyNumberResults.innerHTML = "";
+        return;
+    }
+
+    sources.forEach(function(source) {
+        const map = source.product === "haolong"
+            ? {...numberMap, "8": "H", "9": "E"}
+            : numberMap;
+
+        readReportsForDailyNumbers(source.key).forEach(function(ticket) {
+            if (ticket.cancelled || getReportCreationDate(ticket.createdAt) !== selectedDate) return;
+
+            const amountMatch = source.product === "haolong"
+                ? String(ticket.report || "").match(/^GT=([\d.]+)\(MYR\)$/m)
+                : String(ticket.report || "").match(/^Total\(([\d.]+)\)OK$/m);
+            if (amountMatch) receiptTotals[source.product] += Number(amountMatch[1]) || 0;
+
+            let activeCodes = [...new Set(String(ticket.headerNumbers || "").split("").map(digit => map[digit]).filter(Boolean))];
+            if (!activeCodes.length && ticket.report) {
+                const header = ticket.report.split(/\r?\n/).find(line => /^\*[A-Z]+$/.test(line) || /^[A-Z]+\s+-X$/.test(line));
+                if (header) activeCodes = [...new Set(header.replace(/^\*/, "").replace(/\s+-X$/, "").split(""))];
+            }
+
+            const rawLines = String(ticket.rawInput || "").split(/\r?\n/).slice(1);
+            rawLines.forEach(function(rawLine) {
+                const line = rawLine.trim();
+                if (!line) return;
+
+                const selection = line.match(/^#(\d+?)(?:(?:##?|-)\d+)?$/);
+                if (selection) {
+                    activeCodes = [...new Set(selection[1].split("").map(digit => map[digit]).filter(Boolean))];
+                    return;
+                }
+
+                const numbers = getDailyNumbersFromBetLine(line);
+                if (!numbers.length) return;
+
+                numbers.forEach(number => totalNumbers.add(number));
+
+                activeCodes.forEach(function(code) {
+                    if (groups[code]) groups[code].push(...numbers);
+                });
+            });
+        });
+    });
+
+    dailyNumberResults.innerHTML = "";
+    let hasResults = false;
+
+    if (totalNumbers.size) {
+        hasResults = true;
+        const section = document.createElement("section");
+        section.className = "daily-number-group daily-number-total";
+        const title = document.createElement("div");
+        title.className = "daily-number-group-title";
+        title.textContent = `TOTAL（${totalNumbers.size}个不同号码）`;
+        section.appendChild(title);
+
+        const summary = document.createElement("div");
+        summary.className = "daily-number-line daily-number-summary";
+        summary.textContent = dailyNumberProductFilter === "hlb8"
+            ? `新单票单合计：${receiptTotals.hlb8}`
+            : `新单票单合计：${receiptTotals.hlb8}；豪龙合计：${receiptTotals.haolong} MYR`;
+        section.appendChild(summary);
+
+        [...totalNumbers].sort().forEach(function(number) {
+            const row = document.createElement("div");
+            row.className = "daily-number-line";
+            row.textContent = number;
+            section.appendChild(row);
+        });
+        dailyNumberResults.appendChild(section);
+    }
+
+    groupOrder.forEach(function(code) {
+        if (!groups[code].length) return;
+        hasResults = true;
+        const section = document.createElement("section");
+        section.className = "daily-number-group";
+        const title = document.createElement("div");
+        title.className = "daily-number-group-title";
+        title.textContent = `${code}（${groups[code].length}）`;
+        section.appendChild(title);
+        groups[code].forEach(function(number) {
+            const row = document.createElement("div");
+            row.className = "daily-number-line";
+            row.textContent = number;
+            section.appendChild(row);
+        });
+        dailyNumberResults.appendChild(section);
+    });
+
+    if (!hasResults) {
+        const empty = document.createElement("div");
+        empty.className = "daily-number-empty";
+        empty.textContent = "这一天没有找到已买号码";
+        dailyNumberResults.appendChild(empty);
+    }
+}
+
+
+
+
+function logout() {
+
+    alert(
+        "登出功能稍后加入"
+    );
+
+}
+
+
+function showMessage(message) {
+
+    alert(message);
+
+}
+
+
+/* =====================================================
+   Generate 编号
+===================================================== */
+
+let generateCount = 0;
+
+
+/* =====================================================
+   MTW
+===================================================== */
+
+const numberMap = {
+
+    "1": "M",
+    "2": "P",
+    "3": "T",
+    "4": "S",
+    "5": "I",
+    "6": "J",
+    "7": "W",
+    "8": "C",
+    "9": "N",
+    "0": "A"
+
+};
+
+
+/* =====================================================
+   输入框
+===================================================== */
+
+dateInput.addEventListener(
+    "focus",
+    function() {
+
+        activeInput =
+            dateInput;
+
+    }
+);
+
+
+function updateActiveLineHighlight() {
+
+    const input = numberInput;
+
+    const style =
+        window.getComputedStyle(input);
+
+    const lineHeight =
+        parseFloat(style.lineHeight) ||
+        parseFloat(style.fontSize) * 1.65;
+
+    const paddingTop =
+        parseFloat(style.paddingTop) || 0;
+
+    const beforeCaret =
+        input.value.substring(
+            0,
+            input.selectionStart || 0
+        );
+
+    const lineIndex =
+        (beforeCaret.match(/\n/g) || []).length;
+
+    const lineTop =
+        paddingTop +
+        lineIndex * lineHeight -
+        input.scrollTop;
+
+    const lineBottom =
+        lineTop + lineHeight;
+
+    if (lineBottom <= 0 || lineTop >= input.clientHeight) {
+
+        input.style.backgroundImage = "none";
+
+        return;
+
+    }
+
+    const visibleTop = Math.max(0, lineTop);
+    const visibleBottom = Math.min(input.clientHeight, lineBottom);
+
+    input.style.backgroundImage =
+        `linear-gradient(to bottom, transparent 0px, transparent ${visibleTop}px, #f9ead7 ${visibleTop}px, #f9ead7 ${visibleBottom}px, transparent ${visibleBottom}px)`;
+
+}
+
+
+numberInput.addEventListener(
+    "focus",
+    function() {
+
+        activeInput =
+            numberInput;
+
+        updateActiveLineHighlight();
+
+    }
+);
+
+
+numberInput.addEventListener(
+    "scroll",
+    updateActiveLineHighlight
+);
+
+
+/* =====================================================
+   键盘输入
+===================================================== */
+
+function inputKey(char) {
+
+    if (!activeInput) {
+
+        activeInput =
+            dateInput;
+
+    }
+
+
+    const start =
+        activeInput.selectionStart;
+
+
+    const end =
+        activeInput.selectionEnd;
+
+
+    const value =
+        activeInput.value;
+
+
+    activeInput.value =
+        value.substring(0, start) +
+        char +
+        value.substring(end);
+
+
+    const position =
+        start + char.length;
+
+
+    activeInput.focus();
+
+
+    activeInput.setSelectionRange(
+        position,
+        position
+    );
+
+    if (activeInput === numberInput) {
+
+        updateActiveLineHighlight();
+
+    }
+
+    updateAmount();
+
+}
+
+
+/* =====================================================
+   ENTER
+===================================================== */
+
+function enterKey() {
+
+    activeInput =
+        numberInput;
+
+
+    const start =
+        numberInput.selectionStart;
+
+
+    const end =
+        numberInput.selectionEnd;
+
+
+    const value =
+        numberInput.value;
+
+
+    numberInput.value =
+        value.substring(0, start) +
+        "\n" +
+        value.substring(end);
+
+
+    const position =
+        start + 1;
+
+
+    numberInput.focus();
+
+
+    numberInput.setSelectionRange(
+        position,
+        position
+    );
+
+    updateActiveLineHighlight();
+
+    updateAmount();
+
+}
+
+
+/* =====================================================
+   Backspace
+===================================================== */
+
+function backspace() {
+
+    if (!activeInput) {
+
+        activeInput =
+            dateInput;
+
+    }
+
+
+    const start =
+        activeInput.selectionStart;
+
+
+    const end =
+        activeInput.selectionEnd;
+
+
+    const value =
+        activeInput.value;
+
+
+    if (start !== end) {
+
+        activeInput.value =
+            value.substring(0, start) +
+            value.substring(end);
+
+
+        activeInput.focus();
+
+
+        activeInput.setSelectionRange(
+            start,
+            start
+        );
+
+        if (activeInput === numberInput) {
+
+            updateActiveLineHighlight();
+
+        }
+
+        updateAmount();
+
+        return;
+
+    }
+
+
+    if (start <= 0) {
+
+        return;
+
+    }
+
+
+    activeInput.value =
+        value.substring(0, start - 1) +
+        value.substring(start);
+
+
+    activeInput.focus();
+
+
+    activeInput.setSelectionRange(
+        start - 1,
+        start - 1
+    );
+
+    if (activeInput === numberInput) {
+
+        updateActiveLineHighlight();
+
+    }
+
+    updateAmount();
+
+}
+
+
+/* =====================================================
+   CLEAR
+===================================================== */
+
+function clearAll() {
+
+    dateInput.value =
+        "D#";
+
+
+    numberInput.value =
+        "";
+
+
+    activeInput =
+        dateInput;
+
+
+    dateInput.focus();
+
+
+    dateInput.setSelectionRange(
+        dateInput.value.length,
+        dateInput.value.length
+    );
+
+
+    updateAmount();
+
+}
+
+
+/* =====================================================
+   阶乘
+===================================================== */
+
+function factorial(n) {
+
+    let result = 1;
+
+
+    for (
+        let i = 2;
+        i <= n;
+        i++
+    ) {
+
+        result *= i;
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =====================================================
+   包字排列数量
+===================================================== */
+
+function getPermutationCount(
+    numberString
+) {
+
+    const counts = {};
+
+
+    for (
+        const char of numberString
+    ) {
+
+        counts[char] =
+            (counts[char] || 0) + 1;
+
+    }
+
+
+    let denominator = 1;
+
+
+    Object.values(counts).forEach(
+        function(count) {
+
+            denominator *=
+                factorial(count);
+
+        }
+    );
+
+
+    return (
+        factorial(numberString.length) /
+        denominator
+    );
+
+}
+
+
+/* =====================================================
+   数字 → MTW
+===================================================== */
+
+function convertToLetters(
+    numbers
+) {
+
+    let result = "";
+
+    const productNumberMap =
+        activeProduct === "haolong"
+            ? { ...numberMap, "8": "H", "9": "E" }
+            : numberMap;
+
+
+    for (
+        const char of numbers
+    ) {
+
+        if (productNumberMap[char]) {
+
+            result +=
+                productNumberMap[char];
+
+        }
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =====================================================
+   日期指令
+===================================================== */
+
+function parseDateCommand(value) {
+
+    const text =
+        value
+            .trim()
+            .toUpperCase();
+
+
+    if (text === "D") {
+
+        return {
+
+            type: "period",
+
+            count: 1
+
+        };
+
+    }
+
+
+    if (text === "D#") {
+
+        return {
+
+            type: "period",
+
+            count: 1
+
+        };
+
+    }
+
+
+    const periodMatch =
+        text.match(
+            /^D(\d+)$/
+        );
+
+
+    if (periodMatch) {
+
+        const count =
+            parseInt(
+                periodMatch[1],
+                10
+            );
+
+
+        if (count < 1) {
+
+            return null;
+
+        }
+
+
+        return {
+
+            type: "period",
+
+            count: count
+
+        };
+
+    }
+
+
+    const hashMatch =
+        text.match(
+            /^D#(\d{1,2})$/
+        );
+
+
+    if (hashMatch) {
+
+        const digits =
+            hashMatch[1];
+
+
+        if (
+            digits.length === 1
+        ) {
+
+            const count =
+                parseInt(
+                    digits,
+                    10
+                );
+
+
+            if (count < 1) {
+
+                return null;
+
+            }
+
+
+            return {
+
+                type: "period",
+
+                count: count
+
+            };
+
+        }
+
+
+        const day =
+            parseInt(
+                digits,
+                10
+            );
+
+
+        if (
+            day < 1 ||
+            day > 31
+        ) {
+
+            return null;
+
+        }
+
+
+        return {
+
+            type: "date",
+
+            day: day
+
+        };
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =====================================================
+   Magnum 日期
+===================================================== */
+
+const MAGNUM_DAYS = [
+    0,
+    3,
+    6
+];
+
+
+function isMagnumDate(date) {
+
+    return MAGNUM_DAYS.includes(
+        date.getDay()
+    );
+
+}
+
+
+/* =====================================================
+   找最近一期
+===================================================== */
+
+function getNextMagnumDate(
+    fromDate
+) {
+
+    const start =
+        new Date(fromDate);
+
+
+    start.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    for (
+        let i = 0;
+        i <= 7;
+        i++
+    ) {
+
+        const date =
+            new Date(start);
+
+
+        date.setDate(
+            start.getDate() + i
+        );
+
+
+        if (
+            isMagnumDate(date)
+        ) {
+
+            return date;
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =====================================================
+   找 N 期
+===================================================== */
+
+function getMagnumDates(
+    count
+) {
+
+    const result = [];
+
+
+    let current =
+        new Date();
+
+
+    current.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    for (
+        let i = 0;
+        i < count;
+        i++
+    ) {
+
+        const date =
+            getNextMagnumDate(
+                current
+            );
+
+
+        if (!date) {
+
+            break;
+
+        }
+
+
+        result.push(date);
+
+
+        current =
+            new Date(date);
+
+
+        current.setDate(
+            current.getDate() + 1
+        );
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =====================================================
+   指定日期
+===================================================== */
+
+function getSpecificDate(
+    day
+) {
+
+    const now =
+        new Date();
+
+
+    now.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    let year =
+        now.getFullYear();
+
+
+    let month =
+        now.getMonth();
+
+
+    let date =
+        new Date(
+            year,
+            month,
+            day
+        );
+
+
+    if (
+        date.getDate() !== day
+    ) {
+
+        month++;
+
+
+        date =
+            new Date(
+                year,
+                month,
+                day
+            );
+
+    }
+
+
+    if (
+        date < now
+    ) {
+
+        month++;
+
+
+        date =
+            new Date(
+                year,
+                month,
+                day
+            );
+
+    }
+
+
+    if (
+        date.getDate() !== day
+    ) {
+
+        return null;
+
+    }
+
+
+    return date;
+
+}
+
+
+/* =====================================================
+   根据 D 指令取得日期
+===================================================== */
+
+function getDrawDates(
+    dateCommand
+) {
+
+    const parsed =
+        parseDateCommand(
+            dateCommand
+        );
+
+
+    if (!parsed) {
+
+        return null;
+
+    }
+
+
+    if (
+        parsed.type === "period"
+    ) {
+
+        return getMagnumDates(
+            parsed.count
+        );
+
+    }
+
+
+    if (
+        parsed.type === "date"
+    ) {
+
+        const date =
+            getSpecificDate(
+                parsed.day
+            );
+
+
+        if (!date) {
+
+            return null;
+
+        }
+
+
+        return [date];
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =====================================================
+   日期格式
+===================================================== */
+
+function formatShortDate(
+    date
+) {
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    return `${day}/${month}`;
+
+}
+
+
+function formatDrawDates(
+    dates
+) {
+
+    if (
+        !dates ||
+        dates.length === 0
+    ) {
+
+        return "";
+
+    }
+
+
+    if (
+        dates.length === 1
+    ) {
+
+        return formatShortDate(
+            dates[0]
+        );
+
+    }
+
+
+    return (
+        formatShortDate(dates[0]) +
+        "~" +
+        formatShortDate(
+            dates[dates.length - 1]
+        )
+    );
+
+}
+
+
+/* =====================================================
+   当前时间
+===================================================== */
+
+function getCurrentDateTime() {
+
+    const now =
+        new Date();
+
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const year =
+        String(
+            now.getFullYear()
+        ).slice(-2);
+
+
+    const hour =
+        String(
+            now.getHours()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const minute =
+        String(
+            now.getMinutes()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    return (
+        `${day}/${month}/${year} ${hour}:${minute}`
+    );
+
+}
+
+
+/* =====================================================
+   解析普通号码
+===================================================== */
+
+function parseBasicLine(
+    line
+) {
+
+    line =
+        line.trim();
+
+
+    const convertToMtw =
+        line.startsWith("#");
+
+
+    if (convertToMtw) {
+
+        line =
+            line.substring(1).trim();
+
+    }
+
+
+    if (activeProduct === "haolong") {
+
+        const dualModeMatch =
+            line.match(
+                /^(.+?)#(\d+)#(\d+)$/
+            );
+
+        if (dualModeMatch) {
+
+            const bigQuantity =
+                parseInt(dualModeMatch[2], 10);
+
+            const smallQuantity =
+                parseInt(dualModeMatch[3], 10);
+
+            return {
+
+                number:
+                    dualModeMatch[1].trim(),
+
+                quantity:
+                    bigQuantity + smallQuantity,
+
+                bigQuantity:
+                    bigQuantity,
+
+                smallQuantity:
+                    smallQuantity,
+
+                multiMode: true,
+
+                mode: "big",
+
+                hasQuantity: true,
+
+                convertToMtw: convertToMtw
+
+            };
+
+        }
+
+    }
+
+
+    let match =
+        line.match(
+            /^(.+?)##(\d+)$/
+        );
+
+
+    if (match) {
+
+        return {
+
+            number:
+                match[1].trim(),
+
+            quantity:
+                parseInt(
+                    match[2],
+                    10
+                ),
+
+            mode: "small",
+
+            hasQuantity: true,
+
+            convertToMtw: convertToMtw
+
+        };
+
+    }
+
+
+    match =
+        line.match(
+            /^(.+?)#(\d+)$/
+        );
+
+
+    if (match) {
+
+        return {
+
+            number:
+                match[1].trim(),
+
+            quantity:
+                parseInt(
+                    match[2],
+                    10
+                ),
+
+            mode: "big",
+
+            hasQuantity: true,
+
+            convertToMtw: convertToMtw
+
+        };
+
+    }
+
+
+    match =
+        line.match(
+            /^(.+?)-(\d+)$/
+        );
+
+
+    if (match) {
+
+        return {
+
+            number:
+                match[1].trim(),
+
+            quantity:
+                parseInt(
+                    match[2],
+                    10
+                ),
+
+            mode: "big",
+
+            hasQuantity: true,
+
+            convertToMtw: convertToMtw
+
+        };
+
+    }
+
+
+    return {
+
+        number: line,
+
+        quantity: null,
+
+        mode: "big",
+
+        hasQuantity: false,
+
+        convertToMtw: convertToMtw
+
+    };
+
+}
+
+
+/* =====================================================
+   分析号码
+===================================================== */
+
+function analyzeNumber(
+    text
+) {
+
+    text =
+        text.trim();
+
+
+    if (
+        text.endsWith("**")
+    ) {
+
+        let prefix = "";
+
+        let number = text;
+
+
+        if (
+            number.startsWith("**")
+        ) {
+
+            prefix = "**";
+
+            number =
+                number.substring(2);
+
+        }
+        else if (
+            number.startsWith("*")
+        ) {
+
+            prefix = "*";
+
+            number =
+                number.substring(1);
+
+        }
+
+
+        number =
+            number.substring(
+                0,
+                number.length - 2
+            );
+
+
+        return {
+
+            type: "starSpecial",
+
+            prefix: prefix,
+
+            number: number
+
+        };
+
+    }
+
+
+    if (
+        text.startsWith("**")
+    ) {
+
+        return {
+
+            type: "iBao",
+
+            number:
+                text.substring(2)
+
+        };
+
+    }
+
+
+    if (
+        text.startsWith("*")
+    ) {
+
+        return {
+
+            type: "bao",
+
+            number:
+                text.substring(1)
+
+        };
+
+    }
+
+
+    const middle =
+        text.match(
+            /^(\d+)\*(\d+)$/
+        );
+
+
+    if (middle) {
+
+        return {
+
+            type: "prefixBao",
+
+            prefixNumber:
+                middle[1],
+
+            number:
+                middle[2]
+
+        };
+
+    }
+
+
+    return {
+
+        type: "normal",
+
+        number: text
+
+    };
+
+}
+
+
+/* =====================================================
+   数字检查
+===================================================== */
+
+function isValidNumber(
+    number
+) {
+
+    return /^[0-9]+$/.test(
+        number
+    );
+
+}
+
+
+/* =====================================================
+   ** 特殊下注
+===================================================== */
+
+function parseStarQuantities(
+    text
+) {
+
+    const matches =
+        text.match(
+            /#(\d+)/g
+        );
+
+
+    if (!matches) {
+
+        return [];
+
+    }
+
+
+    return matches.map(
+        function(item) {
+
+            return parseInt(
+                item.substring(1),
+                10
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   普通
+===================================================== */
+
+function formatNormal(
+    number,
+    quantity,
+    mode
+) {
+
+    if (
+        mode === "small"
+    ) {
+
+        return (
+            `${number}=S${quantity}`
+        );
+
+    }
+
+
+    return (
+        `${number}=B${quantity}`
+    );
+
+}
+
+
+/* =====================================================
+   包字
+===================================================== */
+
+function formatBao(
+    number,
+    quantity
+) {
+
+    const count =
+        getPermutationCount(
+            number
+        );
+
+
+    return (
+        `{${number}}=B${quantity}(x${count})`
+    );
+
+}
+
+
+/* =====================================================
+   i包
+===================================================== */
+
+function formatIBao(
+    number,
+    quantity
+) {
+
+    const count =
+        getPermutationCount(
+            number
+        );
+
+
+    return (
+        `【${number}】=B${quantity}{iB x${count}}`
+    );
+
+}
+
+
+/* =====================================================
+   1*234
+===================================================== */
+
+function formatPrefixBao(
+    prefix,
+    number,
+    quantity
+) {
+
+    const count =
+        getPermutationCount(
+            number
+        );
+
+
+    return (
+        `${prefix}{${number}}=B${quantity}(x${count})`
+    );
+
+}
+
+
+/* =====================================================
+   **1234**
+===================================================== */
+
+function formatStarSpecial(
+    analyzed,
+    quantities
+) {
+
+    const labels = [
+        "SA",
+        "SB",
+        "SC",
+        "SD",
+        "SE"
+    ];
+
+
+    let result =
+        `${analyzed.prefix}${analyzed.number}**=`;
+
+
+    let parts = [];
+
+
+    for (
+        let i = 0;
+        i < quantities.length &&
+        i < labels.length;
+        i++
+    ) {
+
+        const quantity =
+            quantities[i];
+
+
+        if (
+            quantity > 0
+        ) {
+
+            parts.push(
+                `-${labels[i]}${quantity}`
+            );
+
+        }
+
+    }
+
+
+    return (
+        result +
+        parts.join("")
+    );
+
+}
+
+
+/* =====================================================
+   单项 Total
+===================================================== */
+
+function calculateItemTotal(
+    headerMultiplier,
+    item
+) {
+
+    if (
+        item.isMtwControl
+    ) {
+
+        return 0;
+
+    }
+
+
+    const multiplier =
+        item.sideMultiplier ||
+        headerMultiplier;
+
+
+    if (
+        item.special
+    ) {
+
+        let sum = 0;
+
+
+        item.quantities.forEach(
+            function(quantity) {
+
+                if (
+                    quantity > 0
+                ) {
+
+                    sum += quantity;
+
+                }
+
+            }
+        );
+
+
+        return (
+            multiplier *
+            sum
+        );
+
+    }
+
+
+    const analyzed =
+        item.analyzed;
+
+
+    const quantity =
+        item.quantity;
+
+
+    if (
+        analyzed.type ===
+        "normal"
+    ) {
+
+        return (
+            multiplier *
+            quantity
+        );
+
+    }
+
+
+    if (
+        analyzed.type ===
+        "bao"
+    ) {
+
+        return (
+            multiplier *
+            quantity *
+            getPermutationCount(
+                analyzed.number
+            )
+        );
+
+    }
+
+
+    if (
+        analyzed.type ===
+        "iBao"
+    ) {
+
+        if (activeProduct === "haolong") {
+
+            return (
+                multiplier *
+                quantity
+            );
+
+        }
+
+        return (
+            multiplier *
+            quantity *
+            getPermutationCount(
+                analyzed.number
+            )
+        );
+
+    }
+
+
+    if (
+        analyzed.type ===
+        "prefixBao"
+    ) {
+
+        return (
+            multiplier *
+            quantity *
+            getPermutationCount(
+                analyzed.number
+            )
+        );
+
+    }
+
+
+    return 0;
+
+}
+
+
+/* =====================================================
+   解析号码行
+===================================================== */
+
+function parseNumberLines(
+    rawLines,
+    headerMultiplier = 1
+) {
+
+    const result = [];
+
+
+    let previousQuantity =
+        null;
+
+    let previousSpecialQuantities =
+        null;
+
+    let activeMultiplier =
+        headerMultiplier;
+
+
+    for (
+        const rawLine
+        of rawLines
+    ) {
+
+
+        /* 特殊 */
+
+        const firstHash =
+            rawLine.indexOf("#");
+
+        const numberPart =
+            firstHash >= 0
+                ? rawLine.substring(0, firstHash).trim()
+                : rawLine.trim();
+
+        if (
+            rawLine.includes("**") &&
+            numberPart.endsWith("**")
+        ) {
+
+            const quantityPart =
+                firstHash >= 0
+                    ? rawLine.substring(firstHash)
+                    : "";
+
+
+            const analyzed =
+                analyzeNumber(
+                    numberPart
+                );
+
+
+            if (
+                analyzed.type !==
+                "starSpecial"
+            ) {
+
+                return {
+
+                    error:
+                        `特殊格式不正确：\n${rawLine}`
+
+                };
+
+            }
+
+
+            if (
+                !isValidNumber(
+                    analyzed.number
+                )
+            ) {
+
+                return {
+
+                    error:
+                        `号码格式不正确：\n${rawLine}`
+
+                };
+
+            }
+
+
+            const quantities =
+                quantityPart
+                    ? parseStarQuantities(quantityPart)
+                    : previousSpecialQuantities
+                        ? [...previousSpecialQuantities]
+                        : [];
+
+            if (!quantities.length) {
+                return {
+                    error:
+                        `特殊下注数量请先输入，例如：\n1234**#1#1#1\n1434**`
+                };
+            }
+
+            previousSpecialQuantities =
+                [...quantities];
+
+
+            result.push({
+
+                special: true,
+
+                analyzed:
+                    analyzed,
+
+                quantities:
+                    quantities,
+
+                sideMultiplier:
+                    activeMultiplier
+
+            });
+
+
+            continue;
+
+        }
+
+
+        /* 普通 */
+
+        const info =
+            parseBasicLine(
+                rawLine
+            );
+
+
+        if (
+            info.convertToMtw
+        ) {
+
+            const controlAnalyzed =
+                analyzeNumber(info.number);
+
+            if (
+                !isValidNumber(controlAnalyzed.number)
+            ) {
+
+                return {
+
+                    error:
+                        `号码格式不正确：\n${rawLine}`
+
+                };
+
+            }
+
+            activeMultiplier =
+                controlAnalyzed.number.length;
+
+            result.push({
+
+                special: false,
+
+                analyzed:
+                    controlAnalyzed,
+
+                quantity: 0,
+
+                mode:
+                    info.mode,
+
+                convertToMtw: true,
+
+                isMtwControl: true,
+
+                sideMultiplier:
+                    activeMultiplier
+
+            });
+
+            continue;
+
+        }
+
+
+        if (
+            info.multiMode
+        ) {
+
+            previousQuantity =
+                info.quantity;
+
+        }
+        else if (
+            !info.hasQuantity
+        ) {
+
+            if (
+                previousQuantity === null
+            ) {
+
+                return {
+
+                    error:
+                        `第一组号码必须先输入数量，例如：1234#1`
+
+                };
+
+            }
+
+
+            info.quantity =
+                previousQuantity;
+
+        }
+        else {
+
+            previousQuantity =
+                info.quantity;
+
+        }
+
+
+        if (
+            !info.quantity ||
+            info.quantity <= 0
+        ) {
+
+            return {
+
+                error:
+                    `数量必须大于 0：\n${rawLine}`
+
+            };
+
+        }
+
+
+        const analyzed =
+            analyzeNumber(
+                info.number
+            );
+
+
+        if (
+            !isValidNumber(
+                analyzed.number
+            )
+        ) {
+
+            return {
+
+                error:
+                    `号码格式不正确：\n${rawLine}`
+
+            };
+
+        }
+
+
+        result.push({
+
+            special: false,
+
+            analyzed:
+                analyzed,
+
+            quantity:
+                info.quantity,
+
+            mode:
+                info.mode,
+
+            convertToMtw:
+                info.convertToMtw,
+
+            multiMode:
+                info.multiMode || false,
+
+            bigQuantity:
+                info.bigQuantity,
+
+            smallQuantity:
+                info.smallQuantity,
+
+            sideMultiplier:
+                activeMultiplier
+
+        });
+
+    }
+
+
+    return {
+
+        data: result
+
+    };
+
+}
+
+
+function getHaolongDateStamp(date = new Date()) {
+
+    const year =
+        String(date.getFullYear());
+
+    const month =
+        String(date.getMonth() + 1).padStart(2, "0");
+
+    const day =
+        String(date.getDate()).padStart(2, "0");
+
+    return `${year}${month}${day}`;
+
+}
+
+
+function formatHaolongReceiptTime(date = new Date()) {
+
+    const year =
+        String(date.getFullYear()).slice(-2);
+
+    const month =
+        String(date.getMonth() + 1).padStart(2, "0");
+
+    const day =
+        String(date.getDate()).padStart(2, "0");
+
+    const hour =
+        String(date.getHours()).padStart(2, "0");
+
+    const minute =
+        String(date.getMinutes()).padStart(2, "0");
+
+    return `${year}${month}${day} ${hour}${minute}`;
+
+}
+
+
+function formatHaolongItem(item, analyzed) {
+
+    if (item.convertToMtw) {
+
+        return analyzed.number;
+
+    }
+
+    if (item.special) {
+
+        const labels = ["SA", "SB", "SC", "SD", "SE"];
+
+        const parts = item.quantities
+            .slice(0, labels.length)
+            .map((quantity, index) =>
+                quantity > 0 ? `${labels[index]}${quantity}` : ""
+            )
+            .filter(Boolean);
+
+        const isIBox = analyzed.prefix === "**";
+        const numberPrefix = isIBox ? "(IB)" : "";
+        const iboxSuffix = isIBox
+            ? `(ibox${getPermutationCount(analyzed.number)})`
+            : "";
+
+        return `${numberPrefix}${analyzed.number}=${parts.join(" ")}${iboxSuffix}`;
+
+    }
+
+    if (item.multiMode) {
+
+        return `${analyzed.number}=B${item.bigQuantity} S${item.smallQuantity}`;
+
+    }
+
+    if (analyzed.type === "normal") {
+
+        const mode = item.mode === "small" ? "S" : "B";
+
+        return `${analyzed.number}=${mode}${item.quantity}`;
+
+    }
+
+    if (analyzed.type === "bao") {
+
+        return `(${analyzed.number})=B${item.quantity}(box${getPermutationCount(analyzed.number)})`;
+
+    }
+
+    if (analyzed.type === "iBao") {
+
+        const mode = item.mode === "small" ? "S" : "B";
+
+        return `(IB)${analyzed.number}=${mode}${item.quantity}(ibox${getPermutationCount(analyzed.number)})`;
+
+    }
+
+    if (analyzed.type === "prefixBao") {
+
+        return `${analyzed.prefixNumber}(${analyzed.number})=B${item.quantity}(box${getPermutationCount(analyzed.number)})`;
+
+    }
+
+    return "";
+
+}
+
+
+/* =====================================================
+   Report 储存
+===================================================== */
+
+function getSavedReports() {
+
+    try {
+
+        const data =
+            localStorage.getItem(
+                getReportsStorageKey()
+            );
+
+
+        if (!data) {
+
+            return [];
+
+        }
+
+
+        const reports =
+            JSON.parse(data);
+
+
+        if (
+            !Array.isArray(reports)
+        ) {
+
+            return [];
+
+        }
+
+
+        return reports;
+
+    }
+    catch (error) {
+
+        return [];
+
+    }
+
+}
+
+
+function saveReports(
+    reports
+) {
+
+    localStorage.setItem(
+        getReportsStorageKey(),
+        JSON.stringify(reports)
+    );
+
+}
+
+
+/* =====================================================
+   取得搜索日期
+===================================================== */
+
+function getReportCreationDate(
+    createdAt
+) {
+
+    const date =
+        new Date(createdAt);
+
+
+    if (
+        isNaN(date.getTime())
+    ) {
+
+        return "";
+
+    }
+
+
+    const year =
+        date.getFullYear();
+
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(2, "0");
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2, "0");
+
+
+    return (
+        `${year}/${month}/${day}`
+    );
+
+}
+
+
+/* =====================================================
+   Generate Report
+===================================================== */
+
+function generateReport() {
+
+    const receiptProduct = activeProduct;
+
+    const dateCommand =
+        dateInput.value.trim();
+
+
+    const input =
+        numberInput.value.trim();
+
+
+    if (!dateCommand) {
+
+        alert(
+            "请输入日期，例如 D、D#、D2、D#2 或 D#02。"
+        );
+
+        dateInput.focus();
+
+        return;
+
+    }
+
+
+    if (!input) {
+
+        alert(
+            "请输入号码。"
+        );
+
+        numberInput.focus();
+
+        return;
+
+    }
+
+
+    const lines =
+        input
+            .split(/\r?\n/)
+            .map(
+                line =>
+                    line.trim()
+            )
+            .filter(
+                line =>
+                    line !== ""
+            );
+
+
+    if (
+        lines.length < 2
+    ) {
+
+        alert(
+            "请输入号码组和下注号码。\n例如：\n137\n1234#1"
+        );
+
+        return;
+
+    }
+
+
+    let headerNumbers =
+        lines[0];
+
+
+    if (
+        headerNumbers.startsWith("#")
+    ) {
+
+        headerNumbers =
+            headerNumbers
+                .substring(1)
+                .trim();
+
+    }
+
+
+    if (
+        !/^[0-9]+$/.test(
+            headerNumbers
+        )
+    ) {
+
+        alert(
+            "第一行只能输入数字，例如 137 或 #137。"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        headerNumbers.length === 0
+    ) {
+
+        alert(
+            "第一行号码不能为空。"
+        );
+
+        return;
+
+    }
+
+
+    /* 日期 */
+
+    const drawDates =
+        getDrawDates(
+            dateCommand
+        );
+
+
+    if (
+        !drawDates ||
+        drawDates.length === 0
+    ) {
+
+        alert(
+            "日期格式不正确。"
+        );
+
+        return;
+
+    }
+
+
+    /* MTW */
+
+    const mtw =
+        convertToLetters(
+            headerNumbers
+        );
+
+
+    const headerMultiplier =
+        headerNumbers.length;
+
+
+    /* 下注 */
+
+    const numberLines =
+        lines.slice(1);
+
+
+    const parsed =
+        parseNumberLines(
+            numberLines,
+            headerMultiplier
+        );
+
+
+    if (
+        parsed.error
+    ) {
+
+        alert(
+            parsed.error
+        );
+
+        return;
+
+    }
+
+
+    const items =
+        parsed.data;
+
+
+    /* Total */
+
+    let onePeriodTotal = 0;
+
+
+    items.forEach(
+        function(item) {
+
+            onePeriodTotal +=
+                calculateItemTotal(
+                    headerMultiplier,
+                    item
+                );
+
+        }
+    );
+
+
+    const total =
+        onePeriodTotal *
+        drawDates.length;
+
+
+    /* Generate 编号 */
+
+    const receiptCreatedAt =
+        new Date();
+
+    const receiptDateStamp =
+        getHaolongDateStamp(receiptCreatedAt);
+
+    const counterStorageKey =
+        getCounterStorageKey(receiptDateStamp);
+
+    generateCount =
+        parseInt(
+            localStorage.getItem(counterStorageKey),
+            10
+        ) || 0;
+
+    generateCount++;
+
+
+    localStorage.setItem(
+        counterStorageKey,
+        generateCount
+    );
+
+
+    const count =
+        String(generateCount);
+
+    const reportId =
+        receiptProduct === "haolong"
+            ? `haolong-${receiptDateStamp}-${count}`
+            : generateCount;
+
+
+    /* Report */
+
+    let report = "";
+
+
+    if (receiptProduct === "haolong") {
+
+        report +=
+            `${formatHaolongReceiptTime(receiptCreatedAt)}(${count})\n`;
+
+        report +=
+            "GX999\n";
+
+        report +=
+            `${formatDrawDates(drawDates)}\n`;
+
+        report +=
+            `*${mtw}\n`;
+
+        items.forEach(
+            function(item) {
+
+                const analyzed =
+                    item.convertToMtw
+                        ? {
+                            ...item.analyzed,
+                            number: convertToLetters(item.analyzed.number),
+                            prefixNumber: item.analyzed.prefixNumber
+                                ? convertToLetters(item.analyzed.prefixNumber)
+                                : item.analyzed.prefixNumber
+                        }
+                        : item.analyzed;
+
+                report +=
+                    formatHaolongItem(item, analyzed) +
+                    "\n";
+
+            }
+        );
+
+        report +=
+            `GT=${total}(MYR)`;
+
+    }
+    else {
+
+
+
+    report +=
+        `D:${getCurrentDateTime()}\n`;
+
+
+    report +=
+        `COPY******\n`;
+
+
+    report +=
+        `${getProductLabel()} (${count})\n`;
+
+
+    report +=
+        `${formatDrawDates(drawDates)}\n`;
+
+
+    report +=
+        `${mtw} -X\n`;
+
+
+    items.forEach(
+        function(item) {
+
+            const reportAnalyzed =
+                item.convertToMtw
+                    ? {
+                        ...item.analyzed,
+                        number: convertToLetters(item.analyzed.number),
+                        prefixNumber: item.analyzed.prefixNumber
+                            ? convertToLetters(item.analyzed.prefixNumber)
+                            : item.analyzed.prefixNumber
+                    }
+                    : item.analyzed;
+
+
+            if (
+                item.convertToMtw
+            ) {
+
+                report +=
+                    reportAnalyzed.number +
+                    "\n";
+
+                return;
+
+            }
+
+
+            if (
+                item.special
+            ) {
+
+                report +=
+                    formatStarSpecial(
+                        item.analyzed,
+                        item.quantities
+                    ) +
+                    "\n";
+
+                return;
+
+            }
+
+
+            if (
+                item.analyzed.type ===
+                "normal"
+            ) {
+
+                report +=
+                    formatNormal(
+                        reportAnalyzed.number,
+                        item.quantity,
+                        item.mode
+                    ) +
+                    "\n";
+
+                return;
+
+            }
+
+
+            if (
+                item.analyzed.type ===
+                "bao"
+            ) {
+
+                report +=
+                    formatBao(
+                        reportAnalyzed.number,
+                        item.quantity
+                    ) +
+                    "\n";
+
+                return;
+
+            }
+
+
+            if (
+                item.analyzed.type ===
+                "iBao"
+            ) {
+
+                report +=
+                    formatIBao(
+                        reportAnalyzed.number,
+                        item.quantity
+                    ) +
+                    "\n";
+
+                return;
+
+            }
+
+
+            if (
+                item.analyzed.type ===
+                "prefixBao"
+            ) {
+
+                report +=
+                    formatPrefixBao(
+                        reportAnalyzed.prefixNumber,
+                        reportAnalyzed.number,
+                        item.quantity
+                    ) +
+                    "\n";
+
+            }
+
+        }
+    );
+
+
+    report +=
+        `Total(${total})OK\n`;
+
+
+    report +=
+        `END`;
+
+
+
+    }
+
+
+    /* =================================================
+       保存完整资料
+    ================================================= */
+
+    const reports =
+        getSavedReports();
+
+
+    reports.unshift({
+
+        id: reportId,
+
+        product: receiptProduct,
+
+        count: count,
+
+        report: report,
+
+        rawInput: input,
+
+        dateCommand: dateCommand,
+
+        headerNumbers: headerNumbers,
+
+        createdAt:
+            receiptCreatedAt.toISOString(),
+
+        cancelled: false
+
+    });
+
+
+    saveReports(
+        reports
+    );
+
+
+    numberInput.value = "";
+    updateAmount();
+    updateActiveLineHighlight();
+    openReceiptModal(reportId, report, receiptProduct);
+
+}
+
+
+/* =====================================================
+   重买
+   从 Report 带回原本号码
+===================================================== */
+
+function rebuyReport(
+    reportId
+) {
+
+    const reports =
+        getSavedReports();
+
+
+    const item =
+        reports.find(
+            function(report) {
+
+                return (
+                    report.id ===
+                    reportId
+                );
+
+            }
+        );
+
+
+    if (!item) {
+
+        alert(
+            "找不到这张订单。"
+        );
+
+        return;
+
+    }
+
+
+    dateInput.value =
+        item.dateCommand || "D#";
+
+
+    numberInput.value =
+        item.rawInput || "";
+
+
+    document.getElementById("accountLabel").textContent =
+        `户口: ${getProductLabel()}`;
+
+
+    activeInput =
+        numberInput;
+
+
+    showPage("input");
+
+    updateAmount();
+
+
+    numberInput.focus();
+
+
+    numberInput.setSelectionRange(
+        numberInput.value.length,
+        numberInput.value.length
+    );
+
+    updateActiveLineHighlight();
+
+}
+
+
+/* =====================================================
+   当前重买
+   新单页面点击顶部「重买」
+   ===================================================== */
+
+function rebuyCurrent() {
+
+    const reports =
+        getSavedReports();
+
+
+    if (
+        reports.length === 0
+    ) {
+
+        alert(
+            "目前没有可以重买的 Report。"
+        );
+
+        return;
+
+    }
+
+
+    /*
+       如果目前输入框已经有号码，
+       就保持现在的内容。
+       如果没有，就拿最新一张。
+    */
+
+    if (
+        numberInput.value.trim()
+    ) {
+
+        activeInput =
+            numberInput;
+
+        numberInput.focus();
+
+        return;
+
+    }
+
+
+    rebuyReport(
+        reports[0].id
+    );
+
+}
+
+
+/* =====================================================
+   Buy
+   直接 Generate 下一次
+===================================================== */
+
+function buyReport(
+    reportId
+) {
+
+    const reports =
+        getSavedReports();
+
+
+    const item =
+        reports.find(
+            function(report) {
+
+                return (
+                    report.id ===
+                    reportId
+                );
+
+            }
+        );
+
+
+    if (!item) {
+
+        alert(
+            "找不到这张订单。"
+        );
+
+        return;
+
+    }
+
+
+    dateInput.value =
+        item.dateCommand || "D#";
+
+
+    numberInput.value =
+        item.rawInput || "";
+
+
+    /*
+       generateReport 会自动 +1
+    */
+
+    generateReport();
+
+}
+
+
+/* =====================================================
+   删除 / 废票
+   ===================================================== */
+
+function cancelReport(
+    reportId
+) {
+
+    const reports =
+        getSavedReports();
+
+
+    const item =
+        reports.find(
+            function(report) {
+
+                return (
+                    report.id ===
+                    reportId
+                );
+
+            }
+        );
+
+
+    if (!item) {
+
+        return;
+
+    }
+
+            if (
+                item.cancelled
+    ) {
+
+        item.cancelled =
+            false;
+
+    }
+    else {
+
+        item.cancelled =
+            true;
+
+    }
+
+
+    saveReports(
+        reports
+    );
+
+
+    renderReports();
+
+}
+
+
+/* =====================================================
+   Report 搜索
+===================================================== */
+
+function searchReports() {
+
+    renderReports();
+
+}
+
+
+/* =====================================================
+   搜索是否包含号码
+===================================================== */
+
+function reportContainsNumber(
+    report,
+    searchValue
+) {
+
+    if (!searchValue) {
+
+        return true;
+
+    }
+
+
+    return (
+        report.rawInput
+            .replace(/\s/g, "")
+            .includes(
+                searchValue
+                    .replace(/\s/g, "")
+            )
+    );
+
+}
+
+
+/* =====================================================
+   Render Reports
+===================================================== */
+
+function renderReports() {
+
+    const list =
+        document.getElementById(
+            "reportList"
+        );
+
+
+    const reports =
+        getSavedReports();
+
+
+    const dateValue =
+        normalizeDateString(
+            searchDate.value
+        );
+
+
+    const idValue =
+        searchId.value
+            .trim();
+
+
+    const numberValue =
+        searchNumber.value
+            .trim();
+
+
+    let filtered =
+        reports.filter(
+            function(report) {
+
+
+                /* 日期 */
+
+                if (
+                    dateValue
+                ) {
+
+                    const reportDate =
+                        getReportCreationDate(
+                            report.createdAt
+                        );
+
+
+                    if (
+                        reportDate !==
+                        dateValue
+                    ) {
+
+                        return false;
+
+                    }
+
+                }
+
+
+                /* 编号 */
+
+                if (
+                    idValue
+                ) {
+
+                    const idText =
+                        String(
+                            report.id
+                        );
+
+                    const visibleCount =
+                        report.count !== undefined && report.count !== null
+                            ? String(report.count)
+                            : "";
+
+                    if (
+                        idText !== idValue &&
+                        visibleCount !== idValue
+                    )
+                    {
+
+                        return false;
+
+                    }
+
+                }
+
+
+                /* 号码 */
+
+                if (
+                    numberValue
+                ) {
+
+                    if (
+                        !reportContainsNumber(
+                            report,
+                            numberValue
+                        )
+                    ) {
+
+                        return false;
+
+                    }
+
+                }
+
+
+                return true;
+
+            }
+        );
+
+
+    /* 最新在最上面 */
+
+    filtered.sort(
+        function(a, b) {
+
+            return (
+                new Date(b.createdAt) -
+                new Date(a.createdAt)
+            );
+
+        }
+    );
+
+
+    list.innerHTML =
+        "";
+
+
+    if (
+        filtered.length === 0
+    ) {
+
+        list.innerHTML =
+            `
+            <div class="no-result">
+                没有找到 Report
+            </div>
+            `;
+
+        return;
+
+    }
+
+
+    filtered.forEach(
+        function(item) {
+
+            const reportProduct = item.product || activeProduct;
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "report-card";
+
+
+            
+            if (reportProduct === "haolong") {
+                card.classList.add("haolong-card");
+
+                const title = document.createElement("div");
+                title.className = "haolong-report-title";
+                title.textContent = "下注";
+                card.appendChild(title);
+            }
+
+            if (
+                item.cancelled
+            ) {
+
+                card.classList.add(
+                    "cancelled"
+                );
+
+            }
+
+
+            /* =================================================
+               废票显示
+            ================================================= */
+
+            if (
+                item.cancelled
+            ) {
+
+                const cancelLabel =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                cancelLabel.className =
+                    "cancel-label";
+
+
+                cancelLabel.textContent =
+                    "******";
+
+
+                card.appendChild(
+                    cancelLabel
+                );
+
+
+                const cancelText =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                cancelText.textContent =
+                    `COPY(CANCEL)[${item.id}]`;
+
+
+                card.appendChild(
+                    cancelText
+                );
+
+            }
+
+
+            /* =================================================
+               Report 内容
+            ================================================= */
+
+            const reportText =
+                document.createElement(
+                    "div"
+                );
+
+
+            
+            if (reportProduct === "haolong") {
+                reportText.className = "haolong-report-content";
+            }
+
+            if (reportProduct === "haolong") {
+                item.report.split("\n").forEach(function(line) {
+                    const lineElement = document.createElement("div");
+                    lineElement.className = "haolong-report-line";
+
+                    if (line === "GX999" || line === "GXX999") {
+                        const blueText = document.createElement("span");
+                        blueText.className = "haolong-report-blue";
+                        blueText.textContent = "GX999";
+                        lineElement.appendChild(blueText);
+                    }
+                    else {
+                        const totalMatch = line.match(/^GT=(.*)\(MYR\)$/);
+
+                        if (totalMatch) {
+                            lineElement.appendChild(document.createTextNode("GT="));
+
+                            const blueAmount = document.createElement("span");
+                            blueAmount.className = "haolong-report-blue";
+                            blueAmount.textContent = totalMatch[1];
+                            lineElement.appendChild(blueAmount);
+                            lineElement.appendChild(document.createTextNode("(MYR)"));
+                        }
+                        else {
+                            lineElement.textContent = line;
+                        }
+                    }
+
+                    reportText.appendChild(lineElement);
+                });
+            }
+            else {
+                reportText.textContent = item.report;
+            }
+
+
+            card.appendChild(
+                reportText
+            );
+
+
+            /* =================================================
+               删除按钮
+            ================================================= */
+
+            const deleteButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            deleteButton.className =
+                "report-delete";
+
+
+            deleteButton.textContent =
+                item.cancelled
+                    ? "恢复"
+                    : "删除";
+
+
+            deleteButton.onclick =
+                function() {
+
+                    cancelReport(
+                        item.id
+                    );
+
+                };
+
+
+            card.appendChild(
+                deleteButton
+            );
+
+
+            const rebuyButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            rebuyButton.className =
+                "report-rebuy";
+
+
+            rebuyButton.textContent =
+                "重买";
+
+
+            rebuyButton.onclick =
+                function() {
+
+                    rebuyReport(
+                        item.id
+                    );
+
+                };
+
+
+            card.appendChild(
+                rebuyButton
+            );
+
+
+            const screenshotButton =
+                document.createElement("button");
+
+            screenshotButton.className = "report-screenshot";
+            screenshotButton.textContent = "截图";
+            screenshotButton.onclick = function() {
+                screenshotReport(item.id);
+            };
+
+            card.appendChild(screenshotButton);
+
+
+            list.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   金额
+===================================================== */
+
+function openReceiptModal(reportId, reportText, product = activeProduct) {
+    currentReceiptModalId = reportId;
+    receiptModalTitle.textContent = product === "haolong" ? "下注" : "Report";
+    receiptModalContent.innerHTML = "";
+
+    if (product === "haolong") {
+        receiptModalContent.className = "receipt-modal-content haolong-report-content";
+        String(reportText).split(/\r?\n/).forEach(function(line) {
+            const row = document.createElement("div");
+            row.className = "haolong-report-line";
+            if (line === "GX999" || line === "GXX999") {
+                const code = document.createElement("span");
+                code.className = "haolong-report-blue";
+                code.textContent = "GX999";
+                row.appendChild(code);
+            }
+            else {
+                const total = line.match(/^GT=(.*)\(MYR\)$/);
+                if (total) {
+                    row.appendChild(document.createTextNode("GT="));
+                    const amount = document.createElement("span");
+                    amount.className = "haolong-report-blue";
+                    amount.textContent = total[1];
+                    row.appendChild(amount);
+                    row.appendChild(document.createTextNode("(MYR)"));
+                }
+                else {
+                    row.textContent = line;
+                }
+            }
+            receiptModalContent.appendChild(row);
+        });
+    }
+    else {
+        receiptModalContent.className = "receipt-modal-content";
+        receiptModalContent.textContent = reportText;
+    }
+
+    receiptModal.style.display = "flex";
+}
+
+
+function screenshotModalReceipt() {
+    if (currentReceiptModalId !== null) {
+        screenshotReport(currentReceiptModalId);
+    }
+}
+
+
+function closeReceiptModal() {
+    receiptModal.style.display = "none";
+    currentReceiptModalId = null;
+}
+
+
+function screenshotReport(reportId) {
+    const item = getSavedReports().find(report => report.id === reportId);
+    if (!item) {
+        alert("找不到这张票单。");
+        return;
+    }
+
+    const screenshotProduct = item.product || activeProduct;
+    let lines = String(item.report || "").split(/\r?\n/);
+    const endIndex = lines.findIndex(line => line.trim() === "END");
+    if (endIndex >= 0) lines = lines.slice(0, endIndex);
+    if (screenshotProduct === "haolong") {
+        lines = lines.map(line => line === "GXX999" ? "GX999" : line);
+    }
+
+    const canvas = document.createElement("canvas");
+    const width = 1000;
+    const padding = 30;
+    const fontSize = 40;
+    const lineHeight = 62;
+    const titleHeight = screenshotProduct === "haolong" ? 62 : 0;
+    const maxTextWidth = width - padding * 2;
+    const measureContext = canvas.getContext("2d");
+    measureContext.font = `${fontSize}px Arial, Helvetica, sans-serif`;
+
+    const wrappedLines = [];
+    lines.forEach(function(line) {
+        if (line === "") {
+            wrappedLines.push("");
+            return;
+        }
+        let current = "";
+        for (const character of Array.from(line)) {
+            const candidate = current + character;
+            if (current && measureContext.measureText(candidate).width > maxTextWidth) {
+                wrappedLines.push(current);
+                current = character;
+            }
+            else {
+                current = candidate;
+            }
+        }
+        wrappedLines.push(current);
+    });
+
+    canvas.width = width;
+    canvas.height = titleHeight + padding * 2 + Math.max(1, wrappedLines.length) * lineHeight;
+    const context = canvas.getContext("2d");
+    context.fillStyle = screenshotProduct === "haolong" ? "#ffffff" : "#eef8ff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.strokeStyle = "#dce5eb";
+    context.lineWidth = 2;
+    context.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
+
+    if (screenshotProduct === "haolong") {
+        context.fillStyle = "#a0a0a0";
+        context.fillRect(0, 0, width, titleHeight);
+        context.fillStyle = "#ffffff";
+        context.font = `bold 34px Arial, Helvetica, sans-serif`;
+        context.textAlign = "center";
+        context.fillText("下注", width / 2, 40);
+        context.textAlign = "left";
+    }
+
+    context.font = `${fontSize}px Arial, Helvetica, sans-serif`;
+    context.textBaseline = "top";
+    let y = titleHeight + padding;
+    wrappedLines.forEach(function(line) {
+        if (screenshotProduct === "haolong" && line === "GX999") {
+            context.fillStyle = "#0000ee";
+            context.fillText(line, padding, y);
+            context.fillStyle = "#111111";
+        }
+        else {
+            const totalMatch = screenshotProduct === "haolong" && line.match(/^GT=(.*)\(MYR\)$/);
+            if (totalMatch) {
+                const prefix = "GT=";
+                context.fillStyle = "#111111";
+                context.fillText(prefix, padding, y);
+                const amountX = padding + context.measureText(prefix).width;
+                context.fillStyle = "#0000ee";
+                context.fillText(totalMatch[1], amountX, y);
+                const suffixX = amountX + context.measureText(totalMatch[1]).width;
+                context.fillStyle = "#111111";
+                context.fillText("(MYR)", suffixX, y);
+            }
+            else {
+                context.fillStyle = "#111111";
+                context.fillText(line, padding, y);
+            }
+        }
+        y += lineHeight;
+    });
+
+    const dataUrl = canvas.toDataURL("image/png");
+    const filename = `receipt-${String(item.count || item.id).replace(/[^a-zA-Z0-9_-]/g, "-")}.png`;
+    const base64 = dataUrl.split(",")[1];
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    const imageFile = new File([bytes], filename, {type: "image/png"});
+
+    if (navigator.share && navigator.canShare && navigator.canShare({files: [imageFile]})) {
+        navigator.share({files: [imageFile], title: "收据截图"}).catch(function(error) {
+            if (error.name !== "AbortError") downloadReceiptImage(dataUrl, filename);
+        });
+        return;
+    }
+
+    downloadReceiptImage(dataUrl, filename);
+}
+
+
+function downloadReceiptImage(dataUrl, filename) {
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
+
+
+function updateAmount() {
+
+    const input =
+        numberInput.value.trim();
+
+
+    if (!input) {
+
+        document
+            .getElementById(
+                "amountDisplay"
+            )
+            .textContent =
+                "$0.00";
+
+        return;
+
+    }
+
+
+    const lines =
+        input
+            .split(/\r?\n/)
+            .map(
+                line =>
+                    line.trim()
+            )
+            .filter(
+                line =>
+                    line !== ""
+            );
+
+
+    if (
+        lines.length < 2
+    ) {
+
+        document
+            .getElementById(
+                "amountDisplay"
+            )
+            .textContent =
+                "$0.00";
+
+        return;
+
+    }
+
+
+    let headerNumbers =
+        lines[0];
+
+
+    if (
+        headerNumbers.startsWith("#")
+    ) {
+
+        headerNumbers =
+            headerNumbers.substring(1);
+
+    }
+
+
+    if (
+        !/^[0-9]+$/.test(
+            headerNumbers
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const headerMultiplier =
+        headerNumbers.length;
+
+
+    const parsed =
+        parseNumberLines(
+            lines.slice(1),
+            headerMultiplier
+        );
+
+
+    if (
+        parsed.error
+    ) {
+
+        return;
+
+    }
+
+
+    let total = 0;
+
+
+    parsed.data.forEach(
+        function(item) {
+
+            total +=
+                calculateItemTotal(
+                    headerMultiplier,
+                    item
+                );
+
+        }
+    );
+
+
+    const drawDates =
+        getDrawDates(
+            dateInput.value.trim()
+        );
+
+
+    if (
+        drawDates &&
+        drawDates.length > 0
+    ) {
+
+        total *=
+            drawDates.length;
+
+    }
+
+
+    document
+        .getElementById(
+            "amountDisplay"
+        )
+        .textContent =
+            `$${total.toFixed(2)}`;
+
+}
+
+
+/* =====================================================
+   输入变化
+===================================================== */
+
+dateInput.addEventListener(
+    "input",
+    updateAmount
+);
+
+
+numberInput.addEventListener(
+    "input",
+    updateAmount
+);
+
+
+/* =====================================================
+   搜索框 Enter
+===================================================== */
+
+searchDate.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            searchReports();
+
+        }
+
+    }
+);
+
+
+searchId.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            searchReports();
+
+        }
+
+    }
+);
+
+
+searchNumber.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            searchReports();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   初始化
+===================================================== */
+
+showPage("home");
+
+updateAmount();
+
+</script>
+
+</body>
+
+</html>
