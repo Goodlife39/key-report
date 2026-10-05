@@ -924,9 +924,14 @@ body {
 }
 
 .report-card.haolong-card.cancelled {
-    background: #fff;
+    background: #ffcbd2;
     color: #111;
+    border-color: #e6a0aa;
 }
+
+.report-card.haolong-card.cancelled .haolong-report-title { background:#a00000; }
+.haolong-deleted-at { color:#e33443; }
+.haolong-cancel-source-line { color:#0000ee; }
 
 .haolong-report-title {
     padding: 7px 12px;
@@ -1077,6 +1082,27 @@ body {
 .receipt-modal-screenshot { background:#1689e8; }
 .receipt-modal-ok { background:#159447; }
 @media (max-width: 600px) { .receipt-modal { padding:12px; } .receipt-modal-dialog { max-height:88vh; } }
+
+/* 独立粘贴下单页 */
+#pasteOrderPage { display:none; min-height:100vh; padding:0 12px 20px; background:#f6f7fb; }
+.paste-order-header { height:55px; margin:0 -12px 12px; display:flex; align-items:center; justify-content:space-between; padding:0 14px; border-bottom:1px solid #ddd; background:#fff; }
+.paste-order-back { color:#06f; font-size:20px; cursor:pointer; }
+.paste-order-title { font-size:21px; font-weight:bold; }
+.paste-order-spacer { width:55px; }
+.paste-order-account { display:flex; gap:10px; margin-bottom:10px; }
+.paste-order-account > div { flex:1; min-width:0; padding:12px; border:1px solid #bfc1c8; border-radius:9px; background:#fff; color:#555; font-size:17px; }
+.paste-order-label { display:block; margin-bottom:5px; color:#777; font-size:14px; }
+.paste-order-products { display:flex; gap:8px; margin:10px 0; }
+.paste-order-products button { flex:1; min-height:42px; border:1px solid #1689e8; border-radius:6px; background:#fff; color:#1689e8; font-size:17px; }
+.paste-order-products button.active { background:#1689e8; color:#fff; }
+#pasteOrderDate { width:100%; height:44px; margin:0 0 10px; padding:0 12px; border:1px solid #bfc1c8; border-radius:7px; background:#fff; font-size:18px; }
+.paste-order-amount-row { display:flex; gap:10px; margin-bottom:12px; }
+#pasteOrderAmount { flex:1; display:flex; align-items:center; justify-content:center; min-height:52px; border:2px solid #1689e8; border-radius:8px; color:#1689e8; font-size:22px; font-weight:bold; }
+.paste-order-buy { flex:0 0 38%; min-height:52px; border:0; border-radius:8px; background:#32ad50; color:#fff; font-size:20px; }
+#pasteOrderNumbers { display:block; width:100%; min-height:38vh; padding:15px; border:2px solid #1689e8; border-radius:10px; outline:none; background:#fff; font:20px/1.6 Arial, Helvetica, sans-serif; resize:vertical; }
+.paste-order-controls { display:flex; gap:8px; margin-top:10px; }
+.paste-order-controls button { flex:1; min-height:52px; border:0; border-radius:7px; background:#606060; color:#fff; font-size:18px; font-weight:bold; }
+.paste-order-controls .paste-clear { background:#d91d2a; }
 
 /* 按日期查询号码 */
 #dailyNumberPage { display:none; min-height:100vh; padding-bottom:20px; background:#f5f7fa; }
@@ -1385,6 +1411,12 @@ body {
                 新单号码查询
             </div>
 
+        </div>
+
+        <!-- 粘贴新单：独立页面，不替换原有新单 -->
+        <div class="home-item" onclick="openPasteOrderPage()">
+            <div class="home-icon report-icon">📋</div>
+            <div class="home-label">粘贴新单</div>
         </div>
 
 
@@ -1779,6 +1811,32 @@ body {
     <div id="dailyNumberResults"></div>
 </div>
 
+<div id="pasteOrderPage">
+    <div class="paste-order-header">
+        <div class="paste-order-back" onclick="backToHome()">‹ 返回</div>
+        <div class="paste-order-title">粘贴新单</div>
+        <div class="paste-order-spacer"></div>
+    </div>
+    <div class="paste-order-account">
+        <div><span class="paste-order-label">选择账户</span><strong id="pasteOrderAccount">hlb8</strong></div>
+        <div><span class="paste-order-label">币种</span><strong>MYR</strong></div>
+    </div>
+    <div class="paste-order-products">
+        <button id="pasteHlb8Button" onclick="setPasteOrderProduct('hlb8')">新单</button>
+        <button id="pasteHaolongButton" onclick="setPasteOrderProduct('haolong')">豪龙</button>
+    </div>
+    <input id="pasteOrderDate" type="text" value="D#" aria-label="下注日期" placeholder="D#">
+    <div class="paste-order-amount-row">
+        <div id="pasteOrderAmount">MYR 0.00</div>
+        <button class="paste-order-buy" onclick="buyPasteOrder()">购买</button>
+    </div>
+    <textarea id="pasteOrderNumbers" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="请粘贴已打好的号码，例如：&#10;137&#10;1234#1&#10;2234"></textarea>
+    <div class="paste-order-controls">
+        <button onclick="pasteOrderFromClipboard()">Paste</button>
+        <button class="paste-clear" onclick="clearPasteOrder()">清除</button>
+    </div>
+</div>
+
 <div id="receiptModal" class="receipt-modal" role="dialog" aria-modal="true" aria-label="收据">
     <div class="receipt-modal-dialog">
         <div id="receiptModalTitle" class="receipt-modal-title">Report</div>
@@ -1808,6 +1866,9 @@ const reportPage =
 
 const dailyNumberPage =
     document.getElementById("dailyNumberPage");
+const pasteOrderPage = document.getElementById("pasteOrderPage");
+const pasteOrderNumbers = document.getElementById("pasteOrderNumbers");
+const pasteOrderDate = document.getElementById("pasteOrderDate");
 
 const dailyNumberDate =
     document.getElementById("dailyNumberDate");
@@ -1890,6 +1951,7 @@ function showPage(page) {
     inputPage.style.display = "none";
     reportPage.style.display = "none";
     dailyNumberPage.style.display = "none";
+    pasteOrderPage.style.display = "none";
     amountBar.style.display = "none";
     keypad.style.display = "none";
 
@@ -1911,6 +1973,10 @@ function showPage(page) {
     if (page === "dailyNumbers") {
         dailyNumberPage.style.display = "block";
         renderDailyNumbers();
+    }
+
+    if (page === "pasteOrder") {
+        pasteOrderPage.style.display = "block";
     }
 
 }
@@ -2053,6 +2119,83 @@ function openInputPage(product) {
 
 }
 
+
+/* =====================================================
+   独立粘贴下单
+===================================================== */
+
+function openPasteOrderPage() {
+    activeProduct = "haolong";
+    pasteOrderDate.value = dateInput.value || "D#";
+    pasteOrderNumbers.value = "";
+    updatePasteOrderProduct();
+    updatePasteOrderTotal();
+    showPage("pasteOrder");
+}
+
+function setPasteOrderProduct(product) {
+    if (product !== "hlb8" && product !== "haolong") return;
+    activeProduct = product;
+    updatePasteOrderProduct();
+    updatePasteOrderTotal();
+}
+
+function updatePasteOrderProduct() {
+    document.getElementById("pasteOrderAccount").textContent =
+        activeProduct === "haolong" ? "GX999" : "hlb8";
+    document.getElementById("pasteHlb8Button").classList.toggle("active", activeProduct === "hlb8");
+    document.getElementById("pasteHaolongButton").classList.toggle("active", activeProduct === "haolong");
+}
+
+function updatePasteOrderTotal() {
+    const pasted = pasteOrderNumbers.value.trim();
+    if (!pasted) {
+        document.getElementById("pasteOrderAmount").textContent = "MYR 0.00";
+        return;
+    }
+    dateInput.value = pasteOrderDate.value.trim() || "D#";
+    numberInput.value = pasted;
+    updateAmount();
+    const amount = document.getElementById("amountDisplay").textContent.replace(/^\$/, "");
+    document.getElementById("pasteOrderAmount").textContent = `MYR ${amount}`;
+}
+
+async function pasteOrderFromClipboard() {
+    try {
+        if (!navigator.clipboard || !navigator.clipboard.readText) throw new Error("clipboard unavailable");
+        const text = await navigator.clipboard.readText();
+        if (text) {
+            pasteOrderNumbers.value = text;
+            updatePasteOrderTotal();
+        }
+        pasteOrderNumbers.focus();
+    }
+    catch (error) {
+        pasteOrderNumbers.focus();
+        alert("请在号码框长按并选择“粘贴”，或使用键盘 Ctrl+V。");
+    }
+}
+
+function clearPasteOrder() {
+    pasteOrderNumbers.value = "";
+    updatePasteOrderTotal();
+    pasteOrderNumbers.focus();
+}
+
+function buyPasteOrder() {
+    const pasted = pasteOrderNumbers.value.trim();
+    if (!pasted) {
+        alert("请先粘贴号码。");
+        pasteOrderNumbers.focus();
+        return;
+    }
+    dateInput.value = pasteOrderDate.value.trim() || "D#";
+    numberInput.value = pasted;
+    generateReport();
+}
+
+pasteOrderNumbers.addEventListener("input", updatePasteOrderTotal);
+pasteOrderDate.addEventListener("input", updatePasteOrderTotal);
 
 /* =====================================================
    返回首页
@@ -3862,21 +4005,11 @@ function calculateItemTotal(
         "iBao"
     ) {
 
-        if (activeProduct === "haolong") {
-
-            return (
-                multiplier *
-                quantity
-            );
-
-        }
-
+        // ** / ibox is priced once for the selected stake; permutation
+        // count is informational and must not multiply the charge.
         return (
             multiplier *
-            quantity *
-            getPermutationCount(
-                analyzed.number
-            )
+            quantity
         );
 
     }
@@ -5062,6 +5195,13 @@ function buyReport(
    删除 / 废票
    ===================================================== */
 
+function formatDeletedTimestamp(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+    const pad = part => String(part).padStart(2, "0");
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
 function cancelReport(
     reportId
 ) {
@@ -5089,19 +5229,13 @@ function cancelReport(
 
     }
 
-            if (
-                item.cancelled
-    ) {
-
-        item.cancelled =
-            false;
-
+            if (item.cancelled) {
+        item.cancelled = false;
+        delete item.deletedAt;
     }
     else {
-
-        item.cancelled =
-            true;
-
+        item.cancelled = true;
+        item.deletedAt = new Date().toISOString();
     }
 
 
@@ -5344,9 +5478,7 @@ function renderReports() {
                废票显示
             ================================================= */
 
-            if (
-                item.cancelled
-            ) {
+            if (item.cancelled && reportProduct !== "haolong") {
 
                 const cancelLabel =
                     document.createElement(
@@ -5400,9 +5532,13 @@ function renderReports() {
             }
 
             if (reportProduct === "haolong") {
+                let deletedLabelAdded = false;
                 item.report.split("\n").forEach(function(line) {
                     const lineElement = document.createElement("div");
                     lineElement.className = "haolong-report-line";
+                    if (item.cancelled && line.trim() === "RRRR") {
+                        lineElement.classList.add("haolong-cancel-source-line");
+                    }
 
                     if (line === "GX999" || line === "GXX999") {
                         const blueText = document.createElement("span");
@@ -5428,7 +5564,22 @@ function renderReports() {
                     }
 
                     reportText.appendChild(lineElement);
+
+                    if (item.cancelled && !deletedLabelAdded && (line === "GX999" || line === "GXX999")) {
+                        const deletedLine = document.createElement("div");
+                        deletedLine.className = "haolong-report-line haolong-deleted-at";
+                        deletedLine.textContent = `DELETED${item.deletedAt ? ` ${formatDeletedTimestamp(item.deletedAt)}` : ""}`;
+                        reportText.appendChild(deletedLine);
+                        deletedLabelAdded = true;
+                    }
                 });
+
+                if (item.cancelled && !deletedLabelAdded) {
+                    const deletedLine = document.createElement("div");
+                    deletedLine.className = "haolong-report-line haolong-deleted-at";
+                    deletedLine.textContent = `DELETED${item.deletedAt ? ` ${formatDeletedTimestamp(item.deletedAt)}` : ""}`;
+                    reportText.insertBefore(deletedLine, reportText.firstChild);
+                }
             }
             else {
                 reportText.textContent = item.report;
