@@ -836,6 +836,15 @@ body {
     background: white;
 }
 
+.search-box-row {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    width:100%;
+    margin-top:8px;
+}
+.search-box-row .search-input { flex:1; }
+
 .search-small-button {
 
     height: 38px;
@@ -1114,6 +1123,7 @@ body {
 .daily-number-search label { white-space:nowrap; font-size:17px; }
 #dailyNumberDate { flex:1; min-width:0; height:42px; padding:0 8px; border:1px solid #888; background:#fff; font-size:17px; }
 .daily-number-search button { height:42px; padding:0 16px; border:0; border-radius:5px; background:#1689e8; color:#fff; font-size:17px; }
+.daily-number-search .daily-number-copy { padding:0 12px; background:#159447; }
 #dailyNumberResults { padding:10px; }
 .daily-number-group { margin-bottom:10px; padding:0 12px 10px; border:1px solid #e2e5e8; border-radius:7px; background:#fff; }
 .daily-number-group-title { margin:0 -12px 8px; padding:8px 12px; border-bottom:1px solid #e5e5e5; color:#06f; font-size:20px; font-weight:bold; }
@@ -1718,7 +1728,7 @@ body {
 
             <input
                 id="searchDate"
-                type="text"
+                type="date"
                 autocomplete="off"
                 placeholder="2026/08/28"
             >
@@ -1790,6 +1800,12 @@ body {
 
         </div>
 
+        <div class="search-box-row">
+            <div class="search-label">包号码:</div>
+            <input id="searchBoxNumber" class="search-input" type="text" inputmode="numeric" autocomplete="off" placeholder="输入4位号码">
+            <button class="search-small-button" onclick="searchReports()">寻找</button>
+        </div>
+
     </div>
 
 
@@ -1813,6 +1829,7 @@ body {
         <label for="dailyNumberDate">日期</label>
         <input id="dailyNumberDate" type="date">
         <button onclick="renderDailyNumbers()">查看</button>
+        <button id="dailyNumberCopyButton" class="daily-number-copy" onclick="copyDailyNumberTotal()" style="display:none">复制</button>
     </div>
     <div id="dailyNumberResults"></div>
 </div>
@@ -1890,6 +1907,7 @@ const receiptModalContent = document.getElementById("receiptModalContent");
 const receiptModalTitle = document.getElementById("receiptModalTitle");
 let currentReceiptModalId = null;
 let dailyNumberProductFilter = "all";
+let dailyNumbersForCopy = [];
 
 const amountBar =
     document.getElementById("amountBar");
@@ -1911,6 +1929,8 @@ const searchId =
 
 const searchNumber =
     document.getElementById("searchNumber");
+
+const searchBoxNumber = document.getElementById("searchBoxNumber");
 
 
 let activeInput =
@@ -2069,7 +2089,7 @@ dateInput.value =
     "D#";
 
 searchDate.value =
-    getTodayString();
+    getTodayString().replace(/\//g, "-");
 
 
 /* =====================================================
@@ -2227,7 +2247,7 @@ function openCheckPage(product) {
     }
 
     searchDate.value =
-        getTodayString();
+        getTodayString().replace(/\//g, "-");
 
     searchId.value =
         "";
@@ -2250,6 +2270,8 @@ function openDailyNumberPage(productScope = "all") {
         ? "新单号码总数"
         : productScope === "hlb8" ? "新单号码查询" : "号码查询";
     dailyNumberDate.value = getTodayString().replace(/\//g, "-");
+    const copyButton = document.getElementById("dailyNumberCopyButton");
+    copyButton.style.display = productScope === "hlb8-total" ? "block" : "none";
     showPage("dailyNumbers");
 }
 
@@ -2302,6 +2324,34 @@ function getDailyNumbersFromBetLine(rawLine) {
 }
 
 
+async function copyDailyNumberTotal() {
+    if (!dailyNumbersForCopy.length) {
+        alert("没有可复制的号码。");
+        return;
+    }
+
+    const text = dailyNumbersForCopy.join("\n");
+    try {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("Clipboard API unavailable");
+        await navigator.clipboard.writeText(text);
+        alert(`已复制 ${dailyNumbersForCopy.length} 个不同号码。`);
+    }
+    catch (error) {
+        const helper = document.createElement("textarea");
+        helper.value = text;
+        helper.setAttribute("readonly", "");
+        helper.style.position = "fixed";
+        helper.style.top = "0";
+        helper.style.left = "0";
+        helper.style.opacity = "0";
+        document.body.appendChild(helper);
+        helper.select();
+        const copied = document.execCommand("copy");
+        helper.remove();
+        alert(copied ? `已复制 ${dailyNumbersForCopy.length} 个不同号码。` : "复制失败，请长按号码进行复制。");
+    }
+}
+
 function renderDailyNumbers() {
     const selectedDate = normalizeDateString(dailyNumberDate.value);
     const groupOrder = ["M", "P", "T", "S", "I", "J", "W", "C", "N", "A", "H", "E"];
@@ -2317,6 +2367,7 @@ function renderDailyNumbers() {
         : allSources;
 
     if (!selectedDate) {
+        dailyNumbersForCopy = [];
         dailyNumberResults.innerHTML = "";
         return;
     }
@@ -2364,6 +2415,9 @@ function renderDailyNumbers() {
     });
 
     dailyNumberResults.innerHTML = "";
+    dailyNumbersForCopy = [...totalNumbers].sort();
+    const copyButton = document.getElementById("dailyNumberCopyButton");
+    if (copyButton) copyButton.disabled = dailyNumbersForCopy.length === 0;
     let hasResults = false;
 
     if (totalNumbers.size) {
@@ -5262,9 +5316,13 @@ function cancelReport(
 ===================================================== */
 
 function searchReports() {
-
+    const boxValue = searchBoxNumber.value.trim();
+    if (boxValue && boxValue.replace(/\D/g, "").length !== 4) {
+        alert("包号码请输入4位数字。");
+        searchBoxNumber.focus();
+        return;
+    }
     renderReports();
-
 }
 
 
@@ -5295,6 +5353,19 @@ function reportContainsNumber(
 
 }
 
+
+function reportContainsBoxNumber(report, value) {
+    const digits = String(value || "").replace(/\D/g, "");
+    if (digits.length !== 4) return false;
+
+    const permutations = new Set(getUniqueDailyPermutations(digits));
+    const rawLines = String(report.rawInput || "").split(/\r?\n/).slice(1);
+    for (const line of rawLines) {
+        const purchasedNumbers = getDailyNumbersFromBetLine(line);
+        if (purchasedNumbers.some(number => permutations.has(number))) return true;
+    }
+    return false;
+}
 
 /* =====================================================
    Render Reports
@@ -5327,6 +5398,7 @@ function renderReports() {
         searchNumber.value
             .trim();
 
+    const boxNumberValue = searchBoxNumber.value.trim();
 
     let filtered =
         reports.filter(
@@ -5385,6 +5457,11 @@ function renderReports() {
 
                 }
 
+
+                /* 包号码：按所有不同排列匹配 */
+                if (boxNumberValue && !reportContainsBoxNumber(report, boxNumberValue)) {
+                    return false;
+                }
 
                 /* 号码 */
 
@@ -6049,17 +6126,13 @@ searchId.addEventListener(
 searchNumber.addEventListener(
     "keydown",
     function(event) {
-
-        if (
-            event.key === "Enter"
-        ) {
-
-            searchReports();
-
-        }
-
+        if (event.key === "Enter") searchReports();
     }
 );
+
+searchBoxNumber.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") searchReports();
+});
 
 
 /* =====================================================
