@@ -1413,6 +1413,12 @@ body {
 
         </div>
 
+        <!-- 新单号码去重总数 -->
+        <div class="home-item" onclick="openDailyNumberPage('hlb8-total')">
+            <div class="home-icon report-icon">🔢</div>
+            <div class="home-label">新单号码总数</div>
+        </div>
+
         <!-- 粘贴新单：独立页面，不替换原有新单 -->
         <div class="home-item" onclick="openPasteOrderPage()">
             <div class="home-icon report-icon">📋</div>
@@ -2240,7 +2246,9 @@ function openCheckPage(product) {
 
 function openDailyNumberPage(productScope = "all") {
     dailyNumberProductFilter = productScope;
-    dailyNumberTitle.textContent = productScope === "hlb8" ? "新单号码查询" : "号码查询";
+    dailyNumberTitle.textContent = productScope === "hlb8-total"
+        ? "新单号码总数"
+        : productScope === "hlb8" ? "新单号码查询" : "号码查询";
     dailyNumberDate.value = getTodayString().replace(/\//g, "-");
     showPage("dailyNumbers");
 }
@@ -2383,7 +2391,7 @@ function renderDailyNumbers() {
         dailyNumberResults.appendChild(section);
     }
 
-    groupOrder.forEach(function(code) {
+    if (dailyNumberProductFilter !== "hlb8-total") groupOrder.forEach(function(code) {
         if (!groups[code].length) return;
         hasResults = true;
         const section = document.createElement("section");
@@ -3824,7 +3832,7 @@ function formatIBao(
 
 
     return (
-        `【${number}】=B${quantity}{iB x${count}}`
+        `[${number}]=B${quantity}(iB x${count})`
     );
 
 }
