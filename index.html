@@ -1814,6 +1814,7 @@ body {
         <button type="button" data-scope="hlb8" onclick="switchDailyNumberMode('hlb8')">新单号码查询</button>
         <button type="button" data-scope="hlb8-total" onclick="switchDailyNumberMode('hlb8-total')">新单号码总数</button>
         <button type="button" data-scope="haolong-total" onclick="switchDailyNumberMode('haolong-total')">豪龙合计</button>
+        <button type="button" data-scope="amount-total" onclick="switchDailyNumberMode('amount-total')">金额合计</button>
     </div>
     <div class="daily-number-search">
         <label for="dailyNumberDate">日期</label>
@@ -1944,6 +1945,9 @@ const searchBoxNumber = document.getElementById("searchBoxNumber");
 
 let activeInput =
     dateInput;
+
+// 新单默认让数字键盘写入号码区；只有点日期行后才改写日期。
+let preferNumberInput = false;
 
 let activeProduct =
     "hlb8";
@@ -2144,6 +2148,7 @@ function openInputPage(product) {
 
     // 新单打开时，光标直接停在 D# 下方的第一行号码输入区。
     activeInput = numberInput;
+    preferNumberInput = true;
     numberInput.focus();
     numberInput.setSelectionRange(0, 0);
     updateActiveLineHighlight();
@@ -2321,7 +2326,7 @@ function openDailyNumberPage(productScope = "all") {
 }
 
 function switchDailyNumberMode(productScope) {
-    const allowedScopes = ["all", "hlb8", "hlb8-total", "haolong-total"];
+    const allowedScopes = ["all", "hlb8", "hlb8-total", "haolong-total", "amount-total"];
     if (!allowedScopes.includes(productScope)) return;
 
     dailyNumberProductFilter = productScope;
@@ -2329,7 +2334,8 @@ function switchDailyNumberMode(productScope) {
         all: "号码查询",
         hlb8: "新单号码查询",
         "hlb8-total": "新单号码总数",
-        "haolong-total": "豪龙合计"
+        "haolong-total": "豪龙合计",
+        "amount-total": "金额合计"
     };
     dailyNumberTitle.textContent = titles[productScope];
     document.querySelectorAll(".daily-number-tabs button").forEach(button => {
@@ -2424,6 +2430,8 @@ function renderDailyNumbers() {
     const groups = Object.fromEntries(groupOrder.map(code => [code, []]));
     const totalNumbers = new Set();
     const receiptTotals = {hlb8: 0, haolong: 0};
+    const receiptCounts = {hlb8: 0, haolong: 0};
+    const amountByLottery = Object.fromEntries(groupOrder.map(code => [code, new Map()]));
     const allSources = [
         {key: "hlb8_reports", product: "hlb8"},
         {key: "haolong_reports", product: "haolong"}
@@ -2447,11 +2455,34 @@ function renderDailyNumbers() {
 
         readReportsForDailyNumbers(source.key).forEach(function(ticket) {
             if (ticket.cancelled || getReportCreationDate(ticket.createdAt) !== selectedDate) return;
+            receiptCounts[source.product]++;
 
             const amountMatch = source.product === "haolong"
                 ? String(ticket.report || "").match(/^GT=([\d.]+)\(MYR\)$/m)
                 : String(ticket.report || "").match(/^Total\(([\d.]+)\)OK$/m);
             if (amountMatch) receiptTotals[source.product] += Number(amountMatch[1]) || 0;
+
+            if (dailyNumberProductFilter === "amount-total") {
+                let reportCodes = [...new Set(String(ticket.headerNumbers || "").split("").map(digit => map[digit]).filter(Boolean))];
+                String(ticket.report || "").split(/\r?\n/).forEach(function(reportLine) {
+                    const line = reportLine.trim();
+                    const header = line.match(/^\*?([A-Z]{1,12})(?:\s+-X)?$/);
+                    if (header) {
+                        const parsedCodes = [...new Set(header[1].split("").filter(code => groupOrder.includes(code)))];
+                        if (parsedCodes.length) reportCodes = parsedCodes;
+                        return;
+                    }
+                    const numberMatch = line.match(/^(?:\[(\d{4})\]|\{(\d{4})\}|(\d{4})=|\d\(\d{3}\)=)/);
+                    if (!numberMatch || !reportCodes.length) return;
+                    const number = numberMatch[1] || numberMatch[2] || numberMatch[3];
+                    const stakes = [...line.matchAll(/\b[BS](\d+(?:\.\d+)?)/g)].map(match => Number(match[1]) || 0);
+                    const stake = stakes.reduce((sum, value) => sum + value, 0);
+                    reportCodes.forEach(code => {
+                        if (!amountByLottery[code].has(number)) amountByLottery[code].set(number, 0);
+                        amountByLottery[code].set(number, amountByLottery[code].get(number) + stake);
+                    });
+                });
+            }
 
             let activeCodes = [...new Set(String(ticket.headerNumbers || "").split("").map(digit => map[digit]).filter(Boolean))];
             if (!activeCodes.length && ticket.report) {
@@ -2500,6 +2531,46 @@ function renderDailyNumbers() {
         summaryLine.textContent = `新单票单合计：${receiptTotals.hlb8}`;
         summarySection.appendChild(summaryLine);
         dailyNumberResults.appendChild(summarySection);
+    }
+
+    if (dailyNumberProductFilter === "amount-total") {
+        const section = document.createElement("section");
+        section.className = "daily-number-group daily-number-total";
+        const title = document.createElement("div");
+        title.className = "daily-number-group-title";
+        title.textContent = "当日下注金额（独立统计）";
+        section.appendChild(title);
+        if (receiptCounts.hlb8 || receiptCounts.haolong) {
+            hasResults = true;
+            const totalsLine = document.createElement("div");
+            totalsLine.className = "daily-number-line daily-number-summary";
+            totalsLine.textContent = `新单合计：${receiptTotals.hlb8}（${receiptCounts.hlb8}张票）　豪龙合计：${receiptTotals.haolong} MYR（${receiptCounts.haolong}张票）`;
+            section.appendChild(totalsLine);
+            groupOrder.forEach(function(code) {
+                const entries = [...amountByLottery[code].entries()].sort((a, b) => a[0].localeCompare(b[0]));
+                if (!entries.length) return;
+                const groupTitle = document.createElement("div");
+                groupTitle.className = "daily-number-group-title";
+                groupTitle.textContent = code;
+                section.appendChild(groupTitle);
+                entries.forEach(function([number, amount]) {
+                    const row = document.createElement("div");
+                    row.className = "daily-number-line";
+                    row.style.display = "flex";
+                    row.style.justifyContent = "space-between";
+                    row.textContent = `${number}　　　 RM${amount}`;
+                    section.appendChild(row);
+                });
+            });
+        }
+        dailyNumberResults.appendChild(section);
+        if (!hasResults) {
+            const empty = document.createElement("div");
+            empty.className = "daily-number-empty";
+            empty.textContent = "这一天没有找到有效票单";
+            dailyNumberResults.appendChild(empty);
+        }
+        return;
     }
 
     if (totalNumbers.size) {
@@ -2609,6 +2680,7 @@ dateInput.addEventListener(
 
         activeInput =
             dateInput;
+        preferNumberInput = false;
 
     }
 );
@@ -2668,6 +2740,7 @@ numberInput.addEventListener(
 
         activeInput =
             numberInput;
+        preferNumberInput = true;
 
         updateActiveLineHighlight();
 
@@ -2680,22 +2753,35 @@ numberInput.addEventListener(
     updateActiveLineHighlight
 );
 
-// 手机点按号码框时，将光标放到所点的行首，并高亮该行。
-numberInput.addEventListener("click", function(event) {
+// 手机点按时按触点定位行；停在该行末尾，方便继续输入或按删除键。
+function selectNumberLineAtPoint(clientY) {
     const style = window.getComputedStyle(numberInput);
     const lineHeight = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.65;
     const paddingTop = parseFloat(style.paddingTop) || 0;
     const rect = numberInput.getBoundingClientRect();
-    const yInText = event.clientY - rect.top - paddingTop + numberInput.scrollTop;
+    const yInText = clientY - rect.top - paddingTop + numberInput.scrollTop;
     const targetLine = Math.max(0, Math.floor(yInText / lineHeight));
     const lineStarts = [0];
     for (let i = 0; i < numberInput.value.length; i++) {
         if (numberInput.value[i] === "\n") lineStarts.push(i + 1);
     }
-    const cursor = lineStarts[Math.min(targetLine, lineStarts.length - 1)];
+    while (lineStarts.length <= targetLine) {
+        numberInput.value += "\n";
+        lineStarts.push(numberInput.value.length);
+    }
+    const lineStart = lineStarts[targetLine];
+    const nextBreak = numberInput.value.indexOf("\n", lineStart);
+    const cursor = nextBreak < 0 ? numberInput.value.length : nextBreak;
+    numberInput.focus();
     numberInput.setSelectionRange(cursor, cursor);
     activeInput = numberInput;
+    preferNumberInput = true;
     updateActiveLineHighlight();
+}
+
+numberInput.addEventListener("pointerdown", function(event) {
+    event.preventDefault();
+    selectNumberLineAtPoint(event.clientY);
 });
 
 
@@ -2713,37 +2799,22 @@ function inputKey(char) {
     }
 
 
-    const start =
-        activeInput.selectionStart;
+    const targetInput = preferNumberInput ? numberInput : activeInput;
+    const start = targetInput.selectionStart;
+    const end = targetInput.selectionEnd;
+    const value = targetInput.value;
 
-
-    const end =
-        activeInput.selectionEnd;
-
-
-    const value =
-        activeInput.value;
-
-
-    activeInput.value =
+    targetInput.value =
         value.substring(0, start) +
         char +
         value.substring(end);
 
+    const position = start + char.length;
+    targetInput.focus();
+    targetInput.setSelectionRange(position, position);
+    activeInput = targetInput;
 
-    const position =
-        start + char.length;
-
-
-    activeInput.focus();
-
-
-    activeInput.setSelectionRange(
-        position,
-        position
-    );
-
-    if (activeInput === numberInput) {
+    if (targetInput === numberInput) {
 
         updateActiveLineHighlight();
 
