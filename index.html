@@ -1120,23 +1120,33 @@ body {
 /* 按日期查询号码 */
 #dailyNumberPage { display:none; min-height:100vh; padding-bottom:20px; background:#f5f7fa; }
 .daily-number-header { position:sticky; top:0; z-index:50; height:55px; display:flex; align-items:center; justify-content:space-between; padding:0 15px; border-bottom:1px solid #ddd; background:#fff; }
-.daily-number-back { width:80px; color:#06f; font-size:21px; cursor:pointer; }
+.daily-number-back { width:80px; color:#287C78; font-size:21px; cursor:pointer; }
 .daily-number-title { flex:1; text-align:center; font-size:22px; font-weight:bold; }
 .daily-number-spacer { width:80px; }
 .daily-number-tabs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; padding:10px; background:#fff; }
-.daily-number-tabs button { min-height:40px; padding:5px 7px; border:1px solid #1689e8; border-radius:6px; background:#fff; color:#1689e8; font-size:15px; }
-.daily-number-tabs button.active { background:#1689e8; color:#fff; }
+.daily-number-tabs button { min-height:40px; padding:5px 7px; border:1px solid #287C78; border-radius:6px; background:#fff; color:#287C78; font-size:15px; }
+.daily-number-tabs button.active { background:#287C78; color:#fff; }
 .daily-number-search { display:flex; align-items:center; gap:8px; padding:12px 10px; background:#fff; border-bottom:1px solid #ddd; }
 .daily-number-search label { white-space:nowrap; font-size:17px; }
 #dailyNumberDate { flex:1; min-width:0; height:42px; padding:0 8px; border:1px solid #888; background:#fff; font-size:17px; }
-.daily-number-search button { height:42px; padding:0 16px; border:0; border-radius:5px; background:#1689e8; color:#fff; font-size:17px; }
+.daily-number-search button { height:42px; padding:0 16px; border:0; border-radius:5px; background:#287C78; color:#fff; font-size:17px; }
 .daily-number-search .daily-number-copy { padding:0 12px; background:#159447; }
 #dailyNumberResults { padding:10px; }
 .daily-number-group { margin-bottom:10px; padding:0 12px 10px; border:1px solid #e2e5e8; border-radius:7px; background:#fff; }
-.daily-number-group-title { margin:0 -12px 8px; padding:8px 12px; border-bottom:1px solid #e5e5e5; color:#06f; font-size:20px; font-weight:bold; }
-.daily-number-total .daily-number-group-title { background:#1689e8; color:#fff; }
-.daily-number-summary { margin-bottom:6px; color:#1689e8; font-weight:bold; }
+.daily-number-group-title { margin:0 -12px 8px; padding:8px 12px; border-bottom:1px solid #e5e5e5; background:#EAF4F3; color:#287C78; font-size:20px; font-weight:bold; }
+.daily-number-total .daily-number-group-title { background:#287C78; color:#fff; }
+.daily-number-total .amount-ticket-title { background:#287C78; color:#fff; }
+.daily-number-summary { margin-bottom:6px; color:#287C78; font-weight:bold; }
+.daily-number-group:not(.daily-number-total) .daily-number-line { margin:2px 0; padding:3px 6px; border-radius:4px; background:#F3F8F7; }
 .daily-number-line { padding:3px 0; color:#111; font-size:18px; line-height:1.5; white-space:pre-wrap; word-break:break-word; }
+.amount-type-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:2px; text-align:right; }
+.amount-type-header { width:min(266px,calc(100vw - 100px)); margin:0 0 4px auto; padding:5px 0; border-bottom:1px solid #dce3e8; color:#287C78; font-size:12px; font-weight:bold; }
+.amount-number-row { display:grid; grid-template-columns:60px minmax(0,1fr); align-items:center; gap:4px; margin:2px 0; padding:5px 4px; border-bottom:1px solid #edf0f2; border-radius:5px; background:#F3F8F7; }
+.amount-number-row:last-child { border-bottom:0; }
+.amount-number-row strong { display:block; font-size:17px; }
+.amount-type-values { width:min(266px,calc(100vw - 100px)); margin-left:auto; align-items:center; color:#333; font-size:11px; white-space:nowrap; }
+.amount-type-values span { justify-self:end; min-width:0; padding:2px 2px; border:1px solid #d9e8f5; border-radius:10px; background:#f4f9fd; text-align:center; overflow:hidden; }
+.amount-type-values span.amount-over-five { border-color:#f2a8c4; background:#ffdce9; color:#b4235a; }
 .daily-number-empty { padding:24px 10px; color:#777; text-align:center; font-size:17px; }
 
 @media (max-width: 600px) {
@@ -1810,11 +1820,10 @@ body {
         <div class="daily-number-spacer"></div>
     </div>
     <div class="daily-number-tabs" role="tablist" aria-label="号码查询类型">
+        <button type="button" data-scope="amount-total" onclick="switchDailyNumberMode('amount-total')">金额合计</button>
+        <button type="button" data-scope="hlb8-total" onclick="switchDailyNumberMode('hlb8-total')">新单号码总数</button>
         <button type="button" data-scope="all" onclick="switchDailyNumberMode('all')">号码查询</button>
         <button type="button" data-scope="hlb8" onclick="switchDailyNumberMode('hlb8')">新单号码查询</button>
-        <button type="button" data-scope="hlb8-total" onclick="switchDailyNumberMode('hlb8-total')">新单号码总数</button>
-        <button type="button" data-scope="haolong-total" onclick="switchDailyNumberMode('haolong-total')">豪龙合计</button>
-        <button type="button" data-scope="amount-total" onclick="switchDailyNumberMode('amount-total')">金额合计</button>
     </div>
     <div class="daily-number-search">
         <label for="dailyNumberDate">日期</label>
@@ -2319,14 +2328,14 @@ function openCheckPage(product) {
    首页其他
 ===================================================== */
 
-function openDailyNumberPage(productScope = "all") {
+function openDailyNumberPage(productScope = "amount-total") {
     dailyNumberDate.value = getTodayString().replace(/\//g, "-");
     showPage("dailyNumbers");
     switchDailyNumberMode(productScope);
 }
 
 function switchDailyNumberMode(productScope) {
-    const allowedScopes = ["all", "hlb8", "hlb8-total", "haolong-total", "amount-total"];
+    const allowedScopes = ["all", "hlb8", "hlb8-total", "amount-total"];
     if (!allowedScopes.includes(productScope)) return;
 
     dailyNumberProductFilter = productScope;
@@ -2432,6 +2441,18 @@ function renderDailyNumbers() {
     const receiptTotals = {hlb8: 0, haolong: 0};
     const receiptCounts = {hlb8: 0, haolong: 0};
     const amountByLottery = Object.fromEntries(groupOrder.map(code => [code, new Map()]));
+    const uniquePermutations = function(value) {
+        const results = new Set();
+        const build = function(prefix, remaining) {
+            if (!remaining.length) { results.add(prefix); return; }
+            for (let i = 0; i < remaining.length; i++) {
+                if (i > 0 && remaining[i] === remaining[i - 1]) continue;
+                build(prefix + remaining[i], remaining.slice(0, i) + remaining.slice(i + 1));
+            }
+        };
+        build("", value.split("").sort().join(""));
+        return [...results];
+    };
     const allSources = [
         {key: "hlb8_reports", product: "hlb8"},
         {key: "haolong_reports", product: "haolong"}
@@ -2457,56 +2478,63 @@ function renderDailyNumbers() {
             if (ticket.cancelled || getReportCreationDate(ticket.createdAt) !== selectedDate) return;
             receiptCounts[source.product]++;
 
+            const reportText = String(ticket.report || "");
             const amountMatch = source.product === "haolong"
-                ? String(ticket.report || "").match(/^GT=([\d.]+)\(MYR\)$/m)
-                : String(ticket.report || "").match(/^Total\(([\d.]+)\)OK$/m);
+                ? reportText.match(/^GT=([\d.]+)\(MYR\)$/m)
+                : reportText.match(/^Total\(([\d.]+)\)OK$/m);
             if (amountMatch) receiptTotals[source.product] += Number(amountMatch[1]) || 0;
 
-            if (dailyNumberProductFilter === "amount-total") {
-                let reportCodes = [...new Set(String(ticket.headerNumbers || "").split("").map(digit => map[digit]).filter(Boolean))];
-                String(ticket.report || "").split(/\r?\n/).forEach(function(reportLine) {
-                    const line = reportLine.trim();
-                    const header = line.match(/^\*?([A-Z]{1,12})(?:\s+-X)?$/);
-                    if (header) {
-                        const parsedCodes = [...new Set(header[1].split("").filter(code => groupOrder.includes(code)))];
-                        if (parsedCodes.length) reportCodes = parsedCodes;
-                        return;
-                    }
-                    const numberMatch = line.match(/^(?:\[(\d{4})\]|\{(\d{4})\}|(\d{4})=|\d\(\d{3}\)=)/);
-                    if (!numberMatch || !reportCodes.length) return;
-                    const number = numberMatch[1] || numberMatch[2] || numberMatch[3];
-                    const stakes = [...line.matchAll(/\b[BS](\d+(?:\.\d+)?)/g)].map(match => Number(match[1]) || 0);
-                    const stake = stakes.reduce((sum, value) => sum + value, 0);
-                    reportCodes.forEach(code => {
-                        if (!amountByLottery[code].has(number)) amountByLottery[code].set(number, 0);
-                        amountByLottery[code].set(number, amountByLottery[code].get(number) + stake);
+            // 按收据里的彩种标题，把各号码的单注金额分到对应彩种。
+            let reportCodes = [...new Set(String(ticket.headerNumbers || "").split("").map(digit => map[digit]).filter(Boolean))];
+            reportText.split(/\r?\n/).forEach(function(reportLine) {
+                const line = reportLine.trim();
+                const header = line.match(/^\*?([A-Z]{1,12})(?:\s+-X)?$/);
+                if (header) {
+                    const parsedCodes = [...new Set(header[1].split("").filter(code => groupOrder.includes(code)))];
+                    if (parsedCodes.length) reportCodes = parsedCodes;
+                    return;
+                }
+                const numberMatch = line.match(/^(?:\*{0,2})?(?:\(IB\))?(?:\[(\d{4})\]|\{(\d{4})\}|\((\d{4})\)|((?:\d{4})\*{0,2})|\d\((\d{3})\))=/);
+                if (!numberMatch || !reportCodes.length) return;
+                const number = numberMatch.slice(1).find(Boolean).replace(/\*/g, "");
+                const betItems = [...line.matchAll(/\b(SA|SB|SC|SD|SE|B|S)(\d+(?:\.\d+)?)/g)]
+                    .map(match => ({type: match[1], amount: Number(match[2]) || 0}));
+                if (!betItems.length) return;
+                const packMatch = line.match(/(?:i\s*box|ibox|iB|box)\s*x?\s*(\d+)/i);
+                const packSize = packMatch ? Math.max(1, Number(packMatch[1]) || 1) : 1;
+                const expandedNumbers = packMatch && /^\d{4}$/.test(number)
+                    ? uniquePermutations(number).slice(0, packSize)
+                    : [number];
+                reportCodes.forEach(code => {
+                    expandedNumbers.forEach(expandedNumber => {
+                        if (!amountByLottery[code].has(expandedNumber)) {
+                            amountByLottery[code].set(expandedNumber, {B: 0, S: 0, SA: 0, SB: 0, SC: 0, SD: 0, SE: 0});
+                        }
+                        const totals = amountByLottery[code].get(expandedNumber);
+                        betItems.forEach(item => { totals[item.type] += item.amount / packSize; });
                     });
                 });
-            }
+            });
 
             let activeCodes = [...new Set(String(ticket.headerNumbers || "").split("").map(digit => map[digit]).filter(Boolean))];
-            if (!activeCodes.length && ticket.report) {
-                const header = ticket.report.split(/\r?\n/).find(line => /^\*[A-Z]+$/.test(line) || /^[A-Z]+\s+-X$/.test(line));
-                if (header) activeCodes = [...new Set(header.replace(/^\*/, "").replace(/\s+-X$/, "").split(""))];
+            if (!activeCodes.length && reportText) {
+                const header = reportText.split(/\r?\n/).find(line => /^\*?[A-Z]+$/.test(line.trim()) || /^[A-Z]+\s+-X$/.test(line.trim()));
+                if (header) activeCodes = [...new Set(header.trim().replace(/^\*/, "").replace(/\s+-X$/, "").split(""))];
             }
 
             const rawLines = String(ticket.rawInput || "").split(/\r?\n/).slice(1);
             rawLines.forEach(function(rawLine) {
                 const line = rawLine.trim();
                 if (!line) return;
-
-                const selection = line.match(/^#(\d+?)(?:(?:##?|-)\d+)?$/);
+                const selection = line.match(/^#(\d+?)(?:(?:##?|-)(\d+))?$/);
                 if (selection) {
                     activeCodes = [...new Set(selection[1].split("").map(digit => map[digit]).filter(Boolean))];
                     return;
                 }
-
                 const numbers = getDailyNumbersFromBetLine(line);
                 if (!numbers.length) return;
-
                 numbers.forEach(number => totalNumbers.add(number));
-
-                activeCodes.forEach(function(code) {
+                activeCodes.forEach(code => {
                     if (groups[code]) groups[code].push(...numbers);
                 });
             });
@@ -2518,6 +2546,69 @@ function renderDailyNumbers() {
     const copyButton = document.getElementById("dailyNumberCopyButton");
     if (copyButton) copyButton.disabled = dailyNumbersForCopy.length === 0;
     let hasResults = false;
+
+    if (dailyNumberProductFilter === "amount-total") {
+        groupOrder.forEach(function(code) {
+            const entries = [...amountByLottery[code].entries()].sort((a, b) => {
+                const totalA = Object.values(a[1]).reduce((sum, value) => sum + value, 0);
+                const totalB = Object.values(b[1]).reduce((sum, value) => sum + value, 0);
+                return totalB - totalA || a[0].localeCompare(b[0]);
+            });
+            if (!entries.length) return;
+            hasResults = true;
+            const section = document.createElement("section");
+            section.className = "daily-number-group daily-number-total";
+            const codeAmountTotal = entries.reduce((sum, [, amounts]) => sum + Object.values(amounts).reduce((rowSum, value) => rowSum + value, 0), 0);
+            const formattedCodeTotal = (Math.round((codeAmountTotal + Number.EPSILON) * 1000) / 1000).toFixed(3).replace(/\.?0+$/, "");
+            const title = document.createElement("div");
+            title.className = "daily-number-group-title amount-ticket-title";
+            title.textContent = `${code}票单合计：${formattedCodeTotal} MYR`;
+            section.appendChild(title);
+
+            const types = ["B", "S", "SA", "SB", "SC", "SD", "SE"];
+            const typeHeader = document.createElement("div");
+            typeHeader.className = "amount-type-grid amount-type-header";
+            types.forEach(type => {
+                const cell = document.createElement("span");
+                cell.textContent = type;
+                typeHeader.appendChild(cell);
+            });
+            section.appendChild(typeHeader);
+
+            entries.forEach(function([number, amounts]) {
+                const row = document.createElement("div");
+                row.className = "daily-number-line amount-number-row";
+                const numberLabel = document.createElement("strong");
+                numberLabel.textContent = number;
+                const values = document.createElement("div");
+                values.className = "amount-type-grid amount-type-values";
+                types.forEach(function(type) {
+                    const cell = document.createElement("span");
+                    const amount = amounts[type];
+                    if (amount) {
+                        const roundedAmount = (Math.round((amount + Number.EPSILON) * 1000) / 1000).toFixed(3).replace(/\.?0+$/, "");
+                        cell.textContent = `RM${roundedAmount}`;
+                        if (amount > 5) cell.classList.add("amount-over-five");
+                    } else {
+                        cell.textContent = "";
+                        cell.style.border = "0";
+                        cell.style.background = "transparent";
+                    }
+                    values.appendChild(cell);
+                });
+                row.append(numberLabel, values);
+                section.appendChild(row);
+            });
+            dailyNumberResults.appendChild(section);
+        });
+        if (!hasResults) {
+            const empty = document.createElement("div");
+            empty.className = "daily-number-empty";
+            empty.textContent = "这一天没有找到有效票单";
+            dailyNumberResults.appendChild(empty);
+        }
+        return;
+    }
 
     if (dailyNumberProductFilter === "hlb8") {
         const summarySection = document.createElement("section");
@@ -2533,46 +2624,6 @@ function renderDailyNumbers() {
         dailyNumberResults.appendChild(summarySection);
     }
 
-    if (dailyNumberProductFilter === "amount-total") {
-        const section = document.createElement("section");
-        section.className = "daily-number-group daily-number-total";
-        const title = document.createElement("div");
-        title.className = "daily-number-group-title";
-        title.textContent = "当日下注金额（独立统计）";
-        section.appendChild(title);
-        if (receiptCounts.hlb8 || receiptCounts.haolong) {
-            hasResults = true;
-            const totalsLine = document.createElement("div");
-            totalsLine.className = "daily-number-line daily-number-summary";
-            totalsLine.textContent = `新单合计：${receiptTotals.hlb8}（${receiptCounts.hlb8}张票）　豪龙合计：${receiptTotals.haolong} MYR（${receiptCounts.haolong}张票）`;
-            section.appendChild(totalsLine);
-            groupOrder.forEach(function(code) {
-                const entries = [...amountByLottery[code].entries()].sort((a, b) => a[0].localeCompare(b[0]));
-                if (!entries.length) return;
-                const groupTitle = document.createElement("div");
-                groupTitle.className = "daily-number-group-title";
-                groupTitle.textContent = code;
-                section.appendChild(groupTitle);
-                entries.forEach(function([number, amount]) {
-                    const row = document.createElement("div");
-                    row.className = "daily-number-line";
-                    row.style.display = "flex";
-                    row.style.justifyContent = "space-between";
-                    row.textContent = `${number}　　　 RM${amount}`;
-                    section.appendChild(row);
-                });
-            });
-        }
-        dailyNumberResults.appendChild(section);
-        if (!hasResults) {
-            const empty = document.createElement("div");
-            empty.className = "daily-number-empty";
-            empty.textContent = "这一天没有找到有效票单";
-            dailyNumberResults.appendChild(empty);
-        }
-        return;
-    }
-
     if (totalNumbers.size) {
         hasResults = true;
         const section = document.createElement("section");
@@ -2581,14 +2632,12 @@ function renderDailyNumbers() {
         title.className = "daily-number-group-title";
         title.textContent = `TOTAL（${totalNumbers.size}个不同号码）`;
         section.appendChild(title);
-
         const summary = document.createElement("div");
         summary.className = "daily-number-line daily-number-summary";
         summary.textContent = dailyNumberProductFilter === "haolong-total"
             ? `豪龙合计：${receiptTotals.haolong} MYR`
             : `新单票单合计：${receiptTotals.hlb8}；豪龙合计：${receiptTotals.haolong} MYR`;
         if (dailyNumberProductFilter !== "hlb8") section.appendChild(summary);
-
         [...totalNumbers].sort().forEach(function(number) {
             const row = document.createElement("div");
             row.className = "daily-number-line";
@@ -2598,23 +2647,25 @@ function renderDailyNumbers() {
         dailyNumberResults.appendChild(section);
     }
 
-    if (dailyNumberProductFilter !== "hlb8-total" && dailyNumberProductFilter !== "haolong-total") groupOrder.forEach(function(code) {
-        if (!groups[code].length) return;
-        hasResults = true;
-        const section = document.createElement("section");
-        section.className = "daily-number-group";
-        const title = document.createElement("div");
-        title.className = "daily-number-group-title";
-        title.textContent = `${code}（${groups[code].length}）`;
-        section.appendChild(title);
-        groups[code].forEach(function(number) {
-            const row = document.createElement("div");
-            row.className = "daily-number-line";
-            row.textContent = number;
-            section.appendChild(row);
+    if (dailyNumberProductFilter !== "hlb8-total" && dailyNumberProductFilter !== "haolong-total") {
+        groupOrder.forEach(function(code) {
+            if (!groups[code].length) return;
+            hasResults = true;
+            const section = document.createElement("section");
+            section.className = "daily-number-group";
+            const title = document.createElement("div");
+            title.className = "daily-number-group-title";
+            title.textContent = `${code}（${groups[code].length}）`;
+            section.appendChild(title);
+            groups[code].forEach(function(number) {
+                const row = document.createElement("div");
+                row.className = "daily-number-line";
+                row.textContent = number;
+                section.appendChild(row);
+            });
+            dailyNumberResults.appendChild(section);
         });
-        dailyNumberResults.appendChild(section);
-    });
+    }
 
     if (!hasResults) {
         const empty = document.createElement("div");
@@ -2623,8 +2674,6 @@ function renderDailyNumbers() {
         dailyNumberResults.appendChild(empty);
     }
 }
-
-
 
 
 function logout() {
