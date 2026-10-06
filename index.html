@@ -2424,6 +2424,20 @@ function renderDailyNumbers() {
     if (copyButton) copyButton.disabled = dailyNumbersForCopy.length === 0;
     let hasResults = false;
 
+    if (dailyNumberProductFilter === "hlb8") {
+        const summarySection = document.createElement("section");
+        summarySection.className = "daily-number-group daily-number-total";
+        const summaryTitle = document.createElement("div");
+        summaryTitle.className = "daily-number-group-title";
+        summaryTitle.textContent = "新单合计";
+        summarySection.appendChild(summaryTitle);
+        const summaryLine = document.createElement("div");
+        summaryLine.className = "daily-number-line daily-number-summary";
+        summaryLine.textContent = `新单票单合计：${receiptTotals.hlb8}`;
+        summarySection.appendChild(summaryLine);
+        dailyNumberResults.appendChild(summarySection);
+    }
+
     if (totalNumbers.size) {
         hasResults = true;
         const section = document.createElement("section");
@@ -2435,12 +2449,10 @@ function renderDailyNumbers() {
 
         const summary = document.createElement("div");
         summary.className = "daily-number-line daily-number-summary";
-        summary.textContent = dailyNumberProductFilter === "hlb8"
-            ? `新单票单合计：${receiptTotals.hlb8}`
-            : dailyNumberProductFilter === "haolong-total"
-                ? `豪龙合计：${receiptTotals.haolong} MYR`
-                : `新单票单合计：${receiptTotals.hlb8}；豪龙合计：${receiptTotals.haolong} MYR`;
-        section.appendChild(summary);
+        summary.textContent = dailyNumberProductFilter === "haolong-total"
+            ? `豪龙合计：${receiptTotals.haolong} MYR`
+            : `新单票单合计：${receiptTotals.hlb8}；豪龙合计：${receiptTotals.haolong} MYR`;
+        if (dailyNumberProductFilter !== "hlb8") section.appendChild(summary);
 
         [...totalNumbers].sort().forEach(function(number) {
             const row = document.createElement("div");
@@ -5844,11 +5856,12 @@ function screenshotReport(reportId) {
 
     const canvas = document.createElement("canvas");
     const width = 1000;
-    const padding = 30;
+    const sidePadding = 50;
+    const verticalPadding = 30;
     const fontSize = 40;
     const lineHeight = 62;
     const titleHeight = 0;
-    const maxTextWidth = width - padding * 2;
+    const maxTextWidth = width - sidePadding * 2;
     const measureContext = canvas.getContext("2d");
     measureContext.font = `${fontSize}px Arial, Helvetica, sans-serif`;
 
@@ -5873,7 +5886,7 @@ function screenshotReport(reportId) {
     });
 
     canvas.width = width;
-    canvas.height = titleHeight + padding * 2 + Math.max(1, wrappedLines.length) * lineHeight;
+    canvas.height = titleHeight + verticalPadding * 2 + Math.max(1, wrappedLines.length) * lineHeight;
     const context = canvas.getContext("2d");
     context.fillStyle = screenshotProduct === "haolong" ? "#ffffff" : "#eef8ff";
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -5883,11 +5896,11 @@ function screenshotReport(reportId) {
 
     context.font = `${fontSize}px Arial, Helvetica, sans-serif`;
     context.textBaseline = "top";
-    let y = titleHeight + padding;
+    let y = titleHeight + verticalPadding;
     wrappedLines.forEach(function(line) {
         if (screenshotProduct === "haolong" && line === "GX999") {
             context.fillStyle = "#0000ee";
-            context.fillText(line, padding, y);
+            context.fillText(line, sidePadding, y);
             context.fillStyle = "#111111";
         }
         else {
@@ -5895,8 +5908,8 @@ function screenshotReport(reportId) {
             if (totalMatch) {
                 const prefix = "GT=";
                 context.fillStyle = "#111111";
-                context.fillText(prefix, padding, y);
-                const amountX = padding + context.measureText(prefix).width;
+                context.fillText(prefix, sidePadding, y);
+                const amountX = sidePadding + context.measureText(prefix).width;
                 context.fillStyle = "#0000ee";
                 context.fillText(totalMatch[1], amountX, y);
                 const suffixX = amountX + context.measureText(totalMatch[1]).width;
@@ -5905,7 +5918,7 @@ function screenshotReport(reportId) {
             }
             else {
                 context.fillStyle = "#111111";
-                context.fillText(line, padding, y);
+                context.fillText(line, sidePadding, y);
             }
         }
         y += lineHeight;
