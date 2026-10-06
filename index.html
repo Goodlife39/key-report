@@ -1109,9 +1109,13 @@ body {
 #pasteOrderAmount { flex:1; display:flex; align-items:center; justify-content:center; min-height:52px; border:2px solid #1689e8; border-radius:8px; color:#1689e8; font-size:22px; font-weight:bold; }
 .paste-order-buy { flex:0 0 38%; min-height:52px; border:0; border-radius:8px; background:#32ad50; color:#fff; font-size:20px; }
 #pasteOrderNumbers { display:block; width:100%; min-height:38vh; padding:15px; border:2px solid #1689e8; border-radius:10px; outline:none; background:#fff; font:20px/1.6 Arial, Helvetica, sans-serif; resize:vertical; }
-.paste-order-controls { display:flex; gap:8px; margin-top:10px; }
-.paste-order-controls button { flex:1; min-height:52px; border:0; border-radius:7px; background:#606060; color:#fff; font-size:18px; font-weight:bold; }
-.paste-order-controls .paste-clear { background:#d91d2a; }
+.paste-order-keypad { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; margin-top:8px; padding:5px; border-radius:9px; background:#e5e5e5; }
+.paste-order-keypad button { min-width:0; min-height:64px; border:0; border-radius:8px; background:#606060; color:#fff; font-size:24px; font-weight:bold; touch-action:manipulation; }
+.paste-order-keypad .paste-order-keypad-tools { grid-column:1/-1; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+.paste-order-keypad-tools button { min-height:52px; font-size:18px; }
+.paste-order-keypad .paste-key-del { background:#d91d2a; }
+.paste-order-keypad .paste-key-enter { background:#444; }
+@media (max-width:480px) { #pasteOrderNumbers { min-height:30vh; } .paste-order-keypad button { min-height:58px; } }
 
 /* 按日期查询号码 */
 #dailyNumberPage { display:none; min-height:100vh; padding-bottom:20px; background:#f5f7fa; }
@@ -1840,9 +1844,28 @@ body {
         <button class="paste-order-buy" onclick="buyPasteOrder()">购买</button>
     </div>
     <textarea id="pasteOrderNumbers" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="请粘贴已打好的号码，例如：&#10;137&#10;1234#1&#10;2234"></textarea>
-    <div class="paste-order-controls">
-        <button onclick="pasteOrderFromClipboard()">Paste</button>
-        <button class="paste-clear" onclick="clearPasteOrder()">清除</button>
+    <div class="paste-order-keypad">
+        <div class="paste-order-keypad-tools">
+            <button onclick="pasteOrderFromClipboard()">Paste</button>
+            <button onclick="savePasteOrderDraft()">Save</button>
+            <button onclick="loadPasteOrderDraft()">Load</button>
+        </div>
+        <button onclick="pasteOrderKey('1')">1</button>
+        <button onclick="pasteOrderKey('2')">2</button>
+        <button onclick="pasteOrderKey('3')">3</button>
+        <button class="paste-key-del" onclick="pasteOrderKey('DEL')">DEL</button>
+        <button onclick="pasteOrderKey('4')">4</button>
+        <button onclick="pasteOrderKey('5')">5</button>
+        <button onclick="pasteOrderKey('6')">6</button>
+        <button onclick="pasteOrderKey('D')">D</button>
+        <button onclick="pasteOrderKey('7')">7</button>
+        <button onclick="pasteOrderKey('8')">8</button>
+        <button onclick="pasteOrderKey('9')">9</button>
+        <button onclick="pasteOrderKey('+')">+</button>
+        <button onclick="pasteOrderKey('*')">*</button>
+        <button onclick="pasteOrderKey('0')">0</button>
+        <button onclick="pasteOrderKey('#')">#</button>
+        <button class="paste-key-enter" onclick="pasteOrderKey('ENTER')">↵</button>
     </div>
 </div>
 
@@ -2119,15 +2142,11 @@ function openInputPage(product) {
     updateInputProductSwitch();
     showPage("input");
 
-    activeInput =
-        dateInput;
-
-    dateInput.focus();
-
-    dateInput.setSelectionRange(
-        dateInput.value.length,
-        dateInput.value.length
-    );
+    // 新单打开时，光标直接停在 D# 下方的第一行号码输入区。
+    activeInput = numberInput;
+    numberInput.focus();
+    numberInput.setSelectionRange(0, 0);
+    updateActiveLineHighlight();
 
 }
 
@@ -2161,15 +2180,60 @@ function updatePasteOrderProduct() {
 
 function updatePasteOrderTotal() {
     const pasted = pasteOrderNumbers.value.trim();
+    dateInput.value = pasteOrderDate.value.trim() || "D#";
+    numberInput.value = pasted;
     if (!pasted) {
         document.getElementById("pasteOrderAmount").textContent = "MYR 0.00";
         return;
     }
-    dateInput.value = pasteOrderDate.value.trim() || "D#";
-    numberInput.value = pasted;
     updateAmount();
     const amount = document.getElementById("amountDisplay").textContent.replace(/^\$/, "");
     document.getElementById("pasteOrderAmount").textContent = `MYR ${amount}`;
+}
+
+function pasteOrderKey(key) {
+    const field = pasteOrderNumbers;
+    field.focus();
+    const start = field.selectionStart ?? field.value.length;
+    const end = field.selectionEnd ?? start;
+    let value = field.value;
+    let cursor = start;
+    if (key === "DEL") {
+        if (start !== end) value = value.slice(0, start) + value.slice(end);
+        else if (start > 0) { value = value.slice(0, start - 1) + value.slice(end); cursor = start - 1; }
+    } else {
+        const inserted = key === "ENTER" ? "\n" : key;
+        value = value.slice(0, start) + inserted + value.slice(end);
+        cursor = start + inserted.length;
+    }
+    field.value = value;
+    field.setSelectionRange(cursor, cursor);
+    updatePasteOrderTotal();
+}
+
+function savePasteOrderDraft() {
+    try {
+        localStorage.setItem("pasteOrderDraftV1", JSON.stringify({
+            date: pasteOrderDate.value,
+            product: activeProduct,
+            numbers: pasteOrderNumbers.value
+        }));
+        alert("已保存这份粘贴新单草稿。");
+    } catch (error) { alert("保存失败，浏览器可能未允许本地存储。"); }
+}
+
+function loadPasteOrderDraft() {
+    try {
+        const raw = localStorage.getItem("pasteOrderDraftV1");
+        if (!raw) { alert("没有找到已保存的草稿。"); return; }
+        const draft = JSON.parse(raw);
+        pasteOrderDate.value = draft.date || "D#";
+        pasteOrderNumbers.value = draft.numbers || "";
+        if (draft.product === "hlb8" || draft.product === "haolong") activeProduct = draft.product;
+        updatePasteOrderProduct();
+        updatePasteOrderTotal();
+        pasteOrderNumbers.focus();
+    } catch (error) { alert("读取草稿失败。"); }
 }
 
 async function pasteOrderFromClipboard() {
@@ -2615,6 +2679,24 @@ numberInput.addEventListener(
     "scroll",
     updateActiveLineHighlight
 );
+
+// 手机点按号码框时，将光标放到所点的行首，并高亮该行。
+numberInput.addEventListener("click", function(event) {
+    const style = window.getComputedStyle(numberInput);
+    const lineHeight = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.65;
+    const paddingTop = parseFloat(style.paddingTop) || 0;
+    const rect = numberInput.getBoundingClientRect();
+    const yInText = event.clientY - rect.top - paddingTop + numberInput.scrollTop;
+    const targetLine = Math.max(0, Math.floor(yInText / lineHeight));
+    const lineStarts = [0];
+    for (let i = 0; i < numberInput.value.length; i++) {
+        if (numberInput.value[i] === "\n") lineStarts.push(i + 1);
+    }
+    const cursor = lineStarts[Math.min(targetLine, lineStarts.length - 1)];
+    numberInput.setSelectionRange(cursor, cursor);
+    activeInput = numberInput;
+    updateActiveLineHighlight();
+});
 
 
 /* =====================================================
