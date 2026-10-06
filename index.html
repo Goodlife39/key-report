@@ -1119,6 +1119,9 @@ body {
 .daily-number-back { width:80px; color:#06f; font-size:21px; cursor:pointer; }
 .daily-number-title { flex:1; text-align:center; font-size:22px; font-weight:bold; }
 .daily-number-spacer { width:80px; }
+.daily-number-tabs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; padding:10px; background:#fff; }
+.daily-number-tabs button { min-height:40px; padding:5px 7px; border:1px solid #1689e8; border-radius:6px; background:#fff; color:#1689e8; font-size:15px; }
+.daily-number-tabs button.active { background:#1689e8; color:#fff; }
 .daily-number-search { display:flex; align-items:center; gap:8px; padding:12px 10px; background:#fff; border-bottom:1px solid #ddd; }
 .daily-number-search label { white-space:nowrap; font-size:17px; }
 #dailyNumberDate { flex:1; min-width:0; height:42px; padding:0 8px; border:1px solid #888; background:#fff; font-size:17px; }
@@ -1405,29 +1408,6 @@ body {
 
         </div>
 
-
-        <!-- 新单号码查询 -->
-
-        <div
-            class="home-item"
-            onclick="openDailyNumberPage('hlb8')"
-        >
-
-            <div class="home-icon report-icon">
-                🔎
-            </div>
-
-            <div class="home-label">
-                新单号码查询
-            </div>
-
-        </div>
-
-        <!-- 新单号码去重总数 -->
-        <div class="home-item" onclick="openDailyNumberPage('hlb8-total')">
-            <div class="home-icon report-icon">🔢</div>
-            <div class="home-label">新单号码总数</div>
-        </div>
 
         <!-- 粘贴新单：独立页面，不替换原有新单 -->
         <div class="home-item" onclick="openPasteOrderPage()">
@@ -1824,6 +1804,12 @@ body {
         <div class="daily-number-back" onclick="backToHome()">‹ 返回</div>
         <div id="dailyNumberTitle" class="daily-number-title">号码查询</div>
         <div class="daily-number-spacer"></div>
+    </div>
+    <div class="daily-number-tabs" role="tablist" aria-label="号码查询类型">
+        <button type="button" data-scope="all" onclick="switchDailyNumberMode('all')">号码查询</button>
+        <button type="button" data-scope="hlb8" onclick="switchDailyNumberMode('hlb8')">新单号码查询</button>
+        <button type="button" data-scope="hlb8-total" onclick="switchDailyNumberMode('hlb8-total')">新单号码总数</button>
+        <button type="button" data-scope="haolong-total" onclick="switchDailyNumberMode('haolong-total')">豪龙合计</button>
     </div>
     <div class="daily-number-search">
         <label for="dailyNumberDate">日期</label>
@@ -2265,14 +2251,30 @@ function openCheckPage(product) {
 ===================================================== */
 
 function openDailyNumberPage(productScope = "all") {
-    dailyNumberProductFilter = productScope;
-    dailyNumberTitle.textContent = productScope === "hlb8-total"
-        ? "新单号码总数"
-        : productScope === "hlb8" ? "新单号码查询" : "号码查询";
     dailyNumberDate.value = getTodayString().replace(/\//g, "-");
-    const copyButton = document.getElementById("dailyNumberCopyButton");
-    copyButton.style.display = productScope === "hlb8-total" ? "block" : "none";
     showPage("dailyNumbers");
+    switchDailyNumberMode(productScope);
+}
+
+function switchDailyNumberMode(productScope) {
+    const allowedScopes = ["all", "hlb8", "hlb8-total", "haolong-total"];
+    if (!allowedScopes.includes(productScope)) return;
+
+    dailyNumberProductFilter = productScope;
+    const titles = {
+        all: "号码查询",
+        hlb8: "新单号码查询",
+        "hlb8-total": "新单号码总数",
+        "haolong-total": "豪龙合计"
+    };
+    dailyNumberTitle.textContent = titles[productScope];
+    document.querySelectorAll(".daily-number-tabs button").forEach(button => {
+        button.classList.toggle("active", button.dataset.scope === productScope);
+        button.setAttribute("aria-selected", button.dataset.scope === productScope ? "true" : "false");
+    });
+    const copyButton = document.getElementById("dailyNumberCopyButton");
+    copyButton.style.display = productScope === "hlb8-total" || productScope === "haolong-total" ? "block" : "none";
+    renderDailyNumbers();
 }
 
 function readReportsForDailyNumbers(storageKey) {
@@ -2364,7 +2366,9 @@ function renderDailyNumbers() {
     ];
     const sources = dailyNumberProductFilter === "hlb8"
         ? allSources.filter(source => source.product === "hlb8")
-        : allSources;
+        : dailyNumberProductFilter === "haolong-total"
+            ? allSources.filter(source => source.product === "haolong")
+            : allSources;
 
     if (!selectedDate) {
         dailyNumbersForCopy = [];
@@ -2433,7 +2437,9 @@ function renderDailyNumbers() {
         summary.className = "daily-number-line daily-number-summary";
         summary.textContent = dailyNumberProductFilter === "hlb8"
             ? `新单票单合计：${receiptTotals.hlb8}`
-            : `新单票单合计：${receiptTotals.hlb8}；豪龙合计：${receiptTotals.haolong} MYR`;
+            : dailyNumberProductFilter === "haolong-total"
+                ? `豪龙合计：${receiptTotals.haolong} MYR`
+                : `新单票单合计：${receiptTotals.hlb8}；豪龙合计：${receiptTotals.haolong} MYR`;
         section.appendChild(summary);
 
         [...totalNumbers].sort().forEach(function(number) {
@@ -2445,7 +2451,7 @@ function renderDailyNumbers() {
         dailyNumberResults.appendChild(section);
     }
 
-    if (dailyNumberProductFilter !== "hlb8-total") groupOrder.forEach(function(code) {
+    if (dailyNumberProductFilter !== "hlb8-total" && dailyNumberProductFilter !== "haolong-total") groupOrder.forEach(function(code) {
         if (!groups[code].length) return;
         hasResults = true;
         const section = document.createElement("section");
