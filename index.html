@@ -2459,6 +2459,9 @@ function ticketIncludesDrawDate(ticket, selectedDate) {
 }
 
 function getWinningBetInfo(ticket, number, rawLine, prize) {
+    const source = String(rawLine || "");
+    const hasLeadingBox = /^\s*\*\*\s*\d{4}/.test(source);
+    const isBom = /^\s*\d{4}\s*\*\*/.test(source);
     const reportLines = String(ticket.report || "").split(/\r?\n/);
     const reportLine = reportLines.find(line => {
         if (!/(?:=|\s)(?:B|S|SA|SB|SC|SD|SE)\s*\d/i.test(line)) return false;
@@ -2467,7 +2470,7 @@ function getWinningBetInfo(ticket, number, rawLine, prize) {
     });
     if (reportLine) {
         const positionCode = {"1": "SA", "2": "SB", "3": "SC", S: "SD", C: "SE"}[prize];
-        if (String(rawLine || "").includes("**") && /\bS[ABCDE]\s*\d/i.test(reportLine)) {
+        if (isBom && /\bS[ABCDE]\s*\d/i.test(reportLine)) {
             const positionMatch = reportLine.match(new RegExp(`\\b${positionCode}\\s*(\\d+(?:\\.\\d+)?)`, "i"));
             if (!positionMatch) return {stake: 0, ways: 1, positionBet: true};
             const rawNumberMatch = String(rawLine || "").match(/(\d{4})\*+/);
@@ -2481,14 +2484,14 @@ function getWinningBetInfo(ticket, number, rawLine, prize) {
         const stakes = [...reportLine.matchAll(/\b(?:SA|SB|SC|SD|SE|B|S)\s*(\d+(?:\.\d+)?)/gi)].map(match => Number(match[1]) || 0);
         const stake = stakes.reduce((sum, value) => sum + value, 0) || 1;
         const packMatch = reportLine.match(/(?:i\s*box|ibox|iB|box)\s*x?\s*(\d+)/i);
-        const ways = packMatch ? Number(packMatch[1]) : 1;
+        const sourceNumberMatch = source.match(/\d{4}/);
+        const ways = hasLeadingBox && sourceNumberMatch
+            ? getUniqueDailyPermutations(sourceNumberMatch[0]).length
+            : packMatch ? Number(packMatch[1]) : 1;
         return {stake, ways: ways || 1};
     }
-    const source = String(rawLine || "");
     const stakeTokens = [...source.matchAll(/#(\d+)/g)];
     if (source.includes("**") && stakeTokens.length) {
-        const hasLeadingBox = /^\s*\*\*\s*\d{4}/.test(source);
-        const isBom = /^\s*\d{4}\s*\*\*/.test(source);
         const stakeIndex = {"1": 0, "2": 1, "3": 2, S: 3, C: 4}[prize];
         if (stakeTokens.length > 1 && stakeIndex >= stakeTokens.length) return {stake: 0, ways: 1, positionBet: true};
         const selected = stakeTokens.length === 1 ? (prize === "1" ? stakeTokens[0] : null) : stakeTokens[stakeIndex];
