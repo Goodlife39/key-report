@@ -2443,10 +2443,22 @@ function parseDrawResults(text) {
 }
 
 function ticketIncludesDrawDate(ticket, selectedDate) {
-    return getReportCreationDate(ticket.createdAt) === selectedDate;
+    if (!ticketUsesWeeklyDrawDays(ticket)) return getReportCreationDate(ticket.createdAt) === selectedDate;
+    if (Array.isArray(ticket.drawDates) && ticket.drawDates.length) return ticket.drawDates.includes(selectedDate);
+    const [, targetMonth, targetDay] = selectedDate.split("-").map(Number);
+    if (!targetMonth || !targetDay) return false;
+    const targetOrder = targetMonth * 100 + targetDay;
+    return String(ticket.report || "").split(/\r?\n/).some(line => {
+        const match = line.trim().match(/^(\d{1,2})\/(\d{1,2})(?:~(\d{1,2})\/(\d{1,2}))?$/);
+        if (!match) return false;
+        const start = Number(match[2]) * 100 + Number(match[1]);
+        const end = match[3] ? Number(match[4]) * 100 + Number(match[3]) : start;
+        return start <= end ? targetOrder >= start && targetOrder <= end : targetOrder >= start || targetOrder <= end;
+    });
 }
 
 function getTicketReportForDisplay(ticket) {
+    if (ticketUsesWeeklyDrawDays(ticket)) return String(ticket.report || "");
     const purchaseDate = getReportCreationDate(ticket.createdAt);
     const dateParts = purchaseDate && purchaseDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (!dateParts) return String(ticket.report || "");
@@ -3903,6 +3915,32 @@ function getDrawDates(
 
 }
 
+function ticketUsesWeeklyDrawDays(ticket) {
+    const isHaolong = ticket.product === "haolong";
+    const productMap = isHaolong ? {...numberMap, "8": "H", "9": "E"} : numberMap;
+    const codes = [...new Set(String(ticket.headerNumbers || "").split("").map(digit => productMap[digit]).filter(Boolean))];
+    return codes.some(code => ["M", "P", "T", "S", "W"].includes(code));
+}
+
+function getTicketDrawDates(dateCommand, headerNumbers, product, purchaseDate) {
+    const parsed = parseDateCommand(dateCommand);
+    const productMap = product === "haolong" ? {...numberMap, "8": "H", "9": "E"} : numberMap;
+    const codes = [...new Set(String(headerNumbers || "").split("").map(digit => productMap[digit]).filter(Boolean))];
+    const usesWeeklyDays = codes.some(code => ["M", "P", "T", "S", "W"].includes(code));
+    if (parsed && parsed.type === "period" && !usesWeeklyDays) {
+        const current = new Date(purchaseDate);
+        current.setHours(0, 0, 0, 0);
+        const dates = [];
+        for (let index = 0; index < parsed.count; index++) {
+            const drawDate = new Date(current);
+            drawDate.setDate(current.getDate() + index);
+            dates.push(drawDate);
+        }
+        return dates;
+    }
+    return getDrawDates(dateCommand);
+}
+
 
 /* =====================================================
    日期格式
@@ -5281,9 +5319,14 @@ function generateReport() {
 
     /* 日期 */
 
+    const receiptCreatedAt = new Date();
+
     const drawDates =
-        getDrawDates(
-            dateCommand
+        getTicketDrawDates(
+            dateCommand,
+            headerNumbers,
+            receiptProduct,
+            receiptCreatedAt
         );
 
 
@@ -5368,9 +5411,6 @@ function generateReport() {
 
     /* Generate 编号 */
 
-    const receiptCreatedAt =
-        new Date();
-
     const receiptDateStamp =
         getHaolongDateStamp(receiptCreatedAt);
 
@@ -5415,7 +5455,7 @@ function generateReport() {
             "GX999\n";
 
         report +=
-            `${formatShortDate(receiptCreatedAt)}\n`;
+            `${formatDrawDates(drawDates)}\n`;
 
         report +=
             `*${mtw}\n`;
@@ -5462,7 +5502,7 @@ function generateReport() {
 
 
     report +=
-        `${formatShortDate(receiptCreatedAt)}\n`;
+        `${formatDrawDates(drawDates)}\n`;
 
 
     report +=
