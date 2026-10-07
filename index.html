@@ -2443,19 +2443,7 @@ function parseDrawResults(text) {
 }
 
 function ticketIncludesDrawDate(ticket, selectedDate) {
-    const [targetYear, targetMonth, targetDay] = selectedDate.split("-").map(Number);
-    if (!targetYear || !targetMonth || !targetDay) return false;
-    const dateLines = String(ticket.report || "").split(/\r?\n/)
-        .map(line => line.trim().match(/^(\d{1,2})\/(\d{1,2})(?:~(\d{1,2})\/(\d{1,2}))?$/))
-        .filter(Boolean);
-    const targetOrder = targetMonth * 100 + targetDay;
-    return dateLines.some(match => {
-        const [, day1, month1, day2, month2] = match;
-        const startOrder = Number(month1) * 100 + Number(day1);
-        const endOrder = day2 ? Number(month2) * 100 + Number(day2) : startOrder;
-        if (startOrder <= endOrder) return targetOrder >= startOrder && targetOrder <= endOrder;
-        return targetOrder >= startOrder || targetOrder <= endOrder;
-    });
+    return getReportCreationDate(ticket.createdAt) === selectedDate;
 }
 
 function getWinningBetInfo(ticket, number, rawLine, prize) {
