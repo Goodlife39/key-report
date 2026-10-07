@@ -2443,7 +2443,57 @@ function parseDrawResults(text) {
 }
 
 function ticketIncludesDrawDate(ticket, selectedDate) {
-    return getReportCreationDate(ticket.createdAt) === selectedDate;
+    if (Array.isArray(ticket.drawDates) && ticket.drawDates.length) {
+        return ticket.drawDates.includes(selectedDate);
+    }
+    const [, targetMonth, targetDay] = selectedDate.split("-").map(Number);
+    if (!targetMonth || !targetDay) return false;
+    const dateLines = String(ticket.report || "").split(/\r?\n/)
+        .map(line => line.trim().match(/^(\d{1,2})\/(\d{1,2})(?:~(\d{1,2})\/(\d{1,2}))?$/))
+        .filter(Boolean);
+    const targetOrder = targetMonth * 100 + targetDay;
+    const matchesReportDate = dateLines.some(match => {
+        const [, day1, month1, day2, month2] = match;
+        const start = Number(month1) * 100 + Number(day1);
+        const end = day2 ? Number(month2) * 100 + Number(day2) : start;
+        return start <= end ? targetOrder >= start && targetOrder <= end : targetOrder >= start || targetOrder <= end;
+    });
+    const command = parseDateCommand(String(ticket.dateCommand || ""));
+    const purchaseDate = getReportCreationDate(ticket.createdAt);
+    const purchaseMatch = purchaseDate.match(/^\d{4}-(\d{2})-(\d{2})$/);
+    const reportDateIsPurchaseDate = purchaseMatch && dateLines.some(match =>
+        Number(match[1]) === Number(purchaseMatch[2]) && Number(match[2]) === Number(purchaseMatch[1]) && !match[3]
+    );
+    if (matchesReportDate && !(reportDateIsPurchaseDate && command && command.type === "period")) return true;
+
+    // Older tickets created while the receipt date line temporarily showed the purchase date
+    // can recover their scheduled drawing from the saved D/D# period command.
+    if (command && command.type === "period") {
+        const created = new Date(ticket.createdAt);
+        if (Number.isNaN(created.getTime())) return false;
+        created.setHours(0, 0, 0, 0);
+        for (let index = 0; index < command.count; index++) {
+            const draw = getNextMagnumDate(created);
+            if (!draw) break;
+            const drawKey = `${draw.getFullYear()}-${String(draw.getMonth() + 1).padStart(2, "0")}-${String(draw.getDate()).padStart(2, "0")}`;
+            if (drawKey === selectedDate) return true;
+            created.setTime(draw.getTime());
+        }
+    }
+    return false;
+}
+
+function getTicketReportForDisplay(ticket) {
+    const purchaseDate = getReportCreationDate(ticket.createdAt);
+    const dateParts = purchaseDate && purchaseDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!dateParts) return String(ticket.report || "");
+    const shortDate = `${dateParts[3]}/${dateParts[2]}`;
+    let replaced = false;
+    return String(ticket.report || "").replace(/^\s*\d{1,2}\/\d{1,2}(?:~\d{1,2}\/\d{1,2})?\s*$/gm, line => {
+        if (replaced) return line;
+        replaced = true;
+        return shortDate;
+    });
 }
 
 function getWinningBetInfo(ticket, number, rawLine, prize) {
@@ -5402,7 +5452,7 @@ function generateReport() {
             "GX999\n";
 
         report +=
-            `${formatDrawDates(drawDates)}\n`;
+            `${formatShortDate(receiptCreatedAt)}\n`;
 
         report +=
             `*${mtw}\n`;
@@ -5449,7 +5499,7 @@ function generateReport() {
 
 
     report +=
-        `${formatDrawDates(drawDates)}\n`;
+        `${formatShortDate(receiptCreatedAt)}\n`;
 
 
     report +=
@@ -5604,6 +5654,8 @@ function generateReport() {
         rawInput: input,
 
         dateCommand: dateCommand,
+
+        drawDates: drawDates.map(date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`),
 
         headerNumbers: headerNumbers,
 
@@ -6175,6 +6227,7 @@ function renderReports() {
                     "div"
                 );
 
+            const displayReport = getTicketReportForDisplay(item);
 
             
             if (reportProduct === "haolong") {
@@ -6183,7 +6236,7 @@ function renderReports() {
 
             if (reportProduct === "haolong") {
                 let deletedLabelAdded = false;
-                item.report.split("\n").forEach(function(line) {
+                displayReport.split("\n").forEach(function(line) {
                     const lineElement = document.createElement("div");
                     lineElement.className = "haolong-report-line";
                     if (item.cancelled && line.trim() === "RRRR") {
@@ -6232,7 +6285,7 @@ function renderReports() {
                 }
             }
             else {
-                reportText.textContent = item.report;
+                reportText.textContent = displayReport;
             }
 
 
