@@ -2659,7 +2659,7 @@ function renderWinningTickets() {
 
 function openWinningTicket(ticket, source) {
     document.getElementById("winningTicketModalTitle").textContent = `${source}票单（${ticket.count ?? ticket.id}）`;
-    document.getElementById("winningTicketModalBody").textContent = String(ticket.report || ticket.rawInput || "");
+    document.getElementById("winningTicketModalBody").textContent = getTicketReportForDisplay(ticket) || String(ticket.rawInput || "");
     document.getElementById("winningTicketModal").style.display = "flex";
 }
 
