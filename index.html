@@ -2386,14 +2386,15 @@ function getDailyNumbersFromBetLine(rawLine) {
     if (!line || line.startsWith("#")) return [];
 
     let base = line;
-    while (/(?:#{1,2}\d+|-\d+)$/.test(base)) {
-        base = base.replace(/(?:#{1,2}\d+|-\d+)$/, "");
+    while (/(?:#{1,2}\d+|-\d+)\s*$/.test(base)) {
+        base = base.replace(/(?:#{1,2}\d+|-\d+)\s*$/, "");
     }
+    base = base.trim();
 
     const boxMatch = base.match(/^(\*{1,2})(\d+)$/);
     if (boxMatch) return getUniqueDailyPermutations(boxMatch[2]);
 
-    const prefixBoxMatch = base.match(/^(\d+)\*(\d+)$/);
+    const prefixBoxMatch = base.match(/^(\d+)\s*\*\s*(\d+)$/);
     if (prefixBoxMatch) {
         return getUniqueDailyPermutations(prefixBoxMatch[2]).map(function(permutation) {
             return prefixBoxMatch[1] + permutation;
