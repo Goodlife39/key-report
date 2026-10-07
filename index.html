@@ -2443,7 +2443,8 @@ function parseDrawResults(text) {
 }
 
 function ticketIncludesDrawDate(ticket, selectedDate) {
-    if (!ticketUsesWeeklyDrawDays(ticket)) return getReportCreationDate(ticket.createdAt) === selectedDate;
+    const normalizedSelectedDate = normalizeDateString(selectedDate);
+    if (!ticketUsesWeeklyDrawDays(ticket)) return getReportCreationDate(ticket.createdAt) === normalizedSelectedDate;
     if (Array.isArray(ticket.drawDates) && ticket.drawDates.length) return ticket.drawDates.includes(selectedDate);
     const [, targetMonth, targetDay] = selectedDate.split("-").map(Number);
     if (!targetMonth || !targetDay) return false;
@@ -2460,7 +2461,7 @@ function ticketIncludesDrawDate(ticket, selectedDate) {
 function getTicketReportForDisplay(ticket) {
     if (ticketUsesWeeklyDrawDays(ticket)) return String(ticket.report || "");
     const purchaseDate = getReportCreationDate(ticket.createdAt);
-    const dateParts = purchaseDate && purchaseDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const dateParts = purchaseDate && purchaseDate.match(/^(\d{4})\/(\d{2})\/(\d{2})$/);
     if (!dateParts) return String(ticket.report || "");
     const shortDate = `${dateParts[3]}/${dateParts[2]}`;
     let replaced = false;
