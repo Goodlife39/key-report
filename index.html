@@ -1117,6 +1117,35 @@ body {
 .paste-order-keypad .paste-key-enter { background:#444; }
 @media (max-width:480px) { #pasteOrderNumbers { min-height:30vh; } .paste-order-keypad button { min-height:58px; } }
 
+/* 成绩粘贴与中奖查询 */
+.lottery-data-page { display:none; min-height:100vh; padding-bottom:20px; background:#f5f7fa; }
+.lottery-data-header { position:sticky; top:0; z-index:50; height:55px; display:flex; align-items:center; justify-content:space-between; padding:0 15px; border-bottom:1px solid #ddd; background:#fff; }
+.lottery-data-header div { width:80px; color:#287C78; font-size:21px; cursor:pointer; }
+.lottery-data-header strong { font-size:22px; }
+.lottery-data-header span { width:80px; }
+.lottery-data-form { padding:12px; }
+.lottery-data-form label,.lottery-data-search label { font-size:17px; }
+.lottery-data-form input,.lottery-data-search input { height:42px; padding:0 8px; border:1px solid #aaa; background:#fff; font-size:17px; }
+.lottery-data-form input { display:block; width:100%; margin:7px 0 10px; }
+#scoreText { display:block; width:100%; min-height:58vh; padding:12px; border:1px solid #b9cecb; border-radius:7px; outline:none; background:#fff; font:15px/1.5 Arial, sans-serif; resize:vertical; }
+.lottery-primary-button { min-height:42px; padding:0 16px; border:0; border-radius:6px; background:#287C78; color:#fff; font-size:17px; }
+.lottery-data-form > .lottery-primary-button { width:100%; margin-top:10px; }
+.lottery-hint { padding:8px 2px; color:#777; font-size:13px; }
+.lottery-data-search { display:flex; align-items:center; gap:8px; padding:12px 10px; background:#fff; }
+.lottery-data-search input { flex:1; min-width:0; }
+.lottery-data-results { padding:10px; }
+.winning-ticket { margin-bottom:10px; padding:12px; border:1px solid #ead8a2; border-radius:7px; background:#fffdf4; }
+.winning-ticket-title { margin-bottom:7px; color:#287C78; font-size:17px; font-weight:bold; }
+.winning-ticket-line { padding:2px 0; font-size:16px; }
+.winning-ticket-open { margin-top:8px; padding:7px 12px; border:0; border-radius:5px; background:#1689e8; color:#fff; font-size:15px; }
+.winning-ticket-modal { display:none; position:fixed; inset:0; z-index:1000; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.48); }
+.winning-ticket-modal-box { width:min(100%,560px); max-height:88vh; display:flex; flex-direction:column; overflow:hidden; border-radius:9px; background:#edf8ff; box-shadow:0 8px 30px rgba(0,0,0,.25); }
+.winning-ticket-modal-header { display:flex; align-items:center; justify-content:space-between; padding:11px 14px; background:#888; color:#fff; font-size:17px; font-weight:bold; }
+.winning-ticket-modal-close { border:0; background:transparent; color:#fff; font-size:24px; }
+.winning-ticket-modal-body { overflow:auto; padding:14px; white-space:pre-wrap; overflow-wrap:anywhere; font:16px/1.5 Arial,sans-serif; color:#17212a; }
+.report-card.winner { background:#fff6c7; border-color:#eadb88; }
+.report-card.haolong-card.winner { background:#fff6c7; }
+
 /* 按日期查询号码 */
 #dailyNumberPage { display:none; min-height:100vh; padding-bottom:20px; background:#f5f7fa; }
 .daily-number-header { position:sticky; top:0; z-index:50; height:55px; display:flex; align-items:center; justify-content:space-between; padding:0 15px; border-bottom:1px solid #ddd; background:#fff; }
@@ -1355,7 +1384,7 @@ body {
 
         <div
             class="home-item"
-            onclick="showMessage('成绩功能稍后加入')"
+            onclick="openScorePage()"
         >
 
             <div class="home-icon chart-icon">
@@ -1422,6 +1451,11 @@ body {
 
         </div>
 
+
+        <div class="home-item" onclick="openWinningPage()">
+            <div class="home-icon report-icon">🏆</div>
+            <div class="home-label">中奖查询</div>
+        </div>
 
         <!-- 粘贴新单：独立页面，不替换原有新单 -->
         <div class="home-item" onclick="openPasteOrderPage()">
@@ -1834,6 +1868,34 @@ body {
     <div id="dailyNumberResults"></div>
 </div>
 
+<div id="scorePage" class="lottery-data-page">
+    <div class="lottery-data-header"><div onclick="backToHome()">‹ 返回</div><strong>成绩</strong><span></span></div>
+    <div class="lottery-data-form">
+        <label for="scoreDate">开彩日期</label>
+        <input id="scoreDate" type="date">
+        <textarea id="scoreText" spellcheck="false" placeholder="把成绩整段粘贴在这里"></textarea>
+        <button class="lottery-primary-button" onclick="saveScoreResults()">保存成绩</button>
+        <div class="lottery-hint">成绩只保存在这台设备的浏览器里。</div>
+    </div>
+</div>
+
+<div id="winningPage" class="lottery-data-page">
+    <div class="lottery-data-header"><div onclick="backToHome()">‹ 返回</div><strong>中奖查询</strong><span></span></div>
+    <div class="lottery-data-search">
+        <label for="winningDate">开彩日期</label>
+        <input id="winningDate" type="date">
+        <button class="lottery-primary-button" onclick="renderWinningTickets()">查询</button>
+    </div>
+    <div id="winningResults" class="lottery-data-results"></div>
+</div>
+
+<div id="winningTicketModal" class="winning-ticket-modal" onclick="if(event.target===this) closeWinningTicket()">
+    <div class="winning-ticket-modal-box" role="dialog" aria-modal="true" aria-label="中奖票单">
+        <div class="winning-ticket-modal-header"><span id="winningTicketModalTitle">票单</span><button class="winning-ticket-modal-close" onclick="closeWinningTicket()" aria-label="关闭">×</button></div>
+        <div id="winningTicketModalBody" class="winning-ticket-modal-body"></div>
+    </div>
+</div>
+
 <div id="pasteOrderPage">
     <div class="paste-order-header">
         <div class="paste-order-back" onclick="backToHome()">‹ 返回</div>
@@ -1908,6 +1970,12 @@ const reportPage =
 
 const dailyNumberPage =
     document.getElementById("dailyNumberPage");
+const scorePage = document.getElementById("scorePage");
+const scoreDate = document.getElementById("scoreDate");
+const scoreText = document.getElementById("scoreText");
+const winningPage = document.getElementById("winningPage");
+const winningDate = document.getElementById("winningDate");
+const winningResults = document.getElementById("winningResults");
 const pasteOrderPage = document.getElementById("pasteOrderPage");
 const pasteOrderNumbers = document.getElementById("pasteOrderNumbers");
 const pasteOrderDate = document.getElementById("pasteOrderDate");
@@ -2000,6 +2068,8 @@ function showPage(page) {
     reportPage.style.display = "none";
     dailyNumberPage.style.display = "none";
     pasteOrderPage.style.display = "none";
+    scorePage.style.display = "none";
+    winningPage.style.display = "none";
     amountBar.style.display = "none";
     keypad.style.display = "none";
 
@@ -2026,6 +2096,8 @@ function showPage(page) {
     if (page === "pasteOrder") {
         pasteOrderPage.style.display = "block";
     }
+    if (page === "scores") scorePage.style.display = "block";
+    if (page === "winners") winningPage.style.display = "block";
 
 }
 
@@ -2286,6 +2358,272 @@ function buyPasteOrder() {
 
 pasteOrderNumbers.addEventListener("input", updatePasteOrderTotal);
 pasteOrderDate.addEventListener("input", updatePasteOrderTotal);
+
+/* =====================================================
+   成绩保存与中奖查询
+===================================================== */
+function scoreStorageKey(date) { return `lottery_results_${date}`; }
+
+function openScorePage() {
+    scoreDate.value = getTodayString().replace(/\//g, "-");
+    loadScoreForDate();
+    showPage("scores");
+}
+
+function loadScoreForDate() {
+    if (!scoreDate.value) return;
+    scoreText.value = localStorage.getItem(scoreStorageKey(scoreDate.value)) || "";
+}
+
+function saveScoreResults() {
+    if (!scoreDate.value || !scoreText.value.trim()) {
+        alert("请先选开彩日期并粘贴成绩。");
+        return;
+    }
+    try {
+        localStorage.setItem(scoreStorageKey(scoreDate.value), scoreText.value.trim());
+        alert("成绩已保存。");
+    } catch (error) { alert("保存失败，请检查浏览器储存空间。"); }
+}
+
+scoreDate.addEventListener("change", loadScoreForDate);
+scoreText.addEventListener("input", function() {
+    const dateMatch = scoreText.value.match(/^\s*(\d{4})(\d{2})(\d{2})\s*$/m);
+    if (dateMatch) {
+        scoreDate.value = `${dateMatch[1]}-${dateMatch[2]}-${dateMatch[3]}`;
+        return;
+    }
+    const siteDateMatch = scoreText.value.match(/\bDate\s*:\s*(\d{1,2})-(\d{1,2})-(\d{4})/i);
+    if (siteDateMatch) scoreDate.value = `${siteDateMatch[3]}-${siteDateMatch[2].padStart(2, "0")}-${siteDateMatch[1].padStart(2, "0")}`;
+});
+
+function openWinningPage() {
+    winningDate.value = getTodayString().replace(/\//g, "-");
+    showPage("winners");
+    renderWinningTickets();
+}
+
+function parseDrawResults(text) {
+    const results = {};
+    const headingAliases = [
+        ["MAGNUM", "M"], ["1+3D", "P"], ["TOTO", "T"], ["TOTO 5D", null], ["TOTO 6D", null],
+        ["SINGAPORE", "S"], ["MATAHARI", "I"], ["NEWWIN", "J"], ["SARAWAK", "W"],
+        ["LOTTOMACAO", "C"], ["PERDANA", "N"], ["LUCKY", "A"],
+        ["GRAND DRAGON 4D 豪龙", "H"], ["NINE LOTTO", "E"]
+    ];
+    let current = null;
+    let category = "";
+    String(text || "").split(/\r?\n/).forEach(function(rawLine) {
+        const line = rawLine.trim();
+        if (!line) return;
+        const normalized = line.toUpperCase().replace(/\s+/g, " ");
+        const alias = headingAliases.find(([name]) => normalized === name) ||
+            (normalized.startsWith("GRAND DRAGON 4D") ? ["GRAND DRAGON 4D 豪龙", "H"] : null);
+        if (alias) {
+            current = results[alias[0]] = {name: alias[0], code: alias[1], prizes: {"1": [], "2": [], "3": [], S: [], C: []}};
+            category = "";
+            return;
+        }
+        if (!current) return;
+        const rank = line.match(/^([1-3])\s*:\s*(\d{4})$/) ||
+            line.match(/^(?:([1-3])(?:st|nd|rd)\s+Prize\b[^\d]*)(\d{4})$/i);
+        if (rank) { current.prizes[rank[1]].push(rank[2]); category = ""; return; }
+        const prizeLabel = line.match(/^(Special|Consolation)\b/i);
+        if (prizeLabel) { category = prizeLabel[1].toLowerCase() === "special" ? "S" : "C"; return; }
+        const group = line.match(/^([SC])\s*:\s*(.*)$/i);
+        if (group) {
+            category = group[1].toUpperCase();
+            const numbers = group[2].match(/\b\d{4}\b/g) || [];
+            current.prizes[category].push(...numbers);
+            return;
+        }
+        if (category) current.prizes[category].push(...(line.match(/\b\d{4}\b/g) || []));
+    });
+    return results;
+}
+
+function ticketIncludesDrawDate(ticket, selectedDate) {
+    const target = selectedDate.split("-").slice(1).map(part => Number(part));
+    const dateLines = String(ticket.report || "").split(/\r?\n/)
+        .map(line => line.trim().match(/^(\d{1,2})\/(\d{1,2})(?:~(\d{1,2})\/(\d{1,2}))?$/))
+        .filter(Boolean);
+    if (dateLines.length) {
+        return dateLines.some(match => {
+            const [, day1, month1, day2, month2] = match;
+            return (Number(day1) === target[1] && Number(month1) === target[0]) ||
+                (day2 && Number(day2) === target[1] && Number(month2) === target[0]);
+        });
+    }
+    return getReportCreationDate(ticket.createdAt) === selectedDate;
+}
+
+function getWinningBetInfo(ticket, number, rawLine, prize) {
+    const reportLines = String(ticket.report || "").split(/\r?\n/);
+    const reportLine = reportLines.find(line => {
+        if (!/(?:=|\s)(?:B|S|SA|SB|SC|SD|SE)\s*\d/i.test(line)) return false;
+        const sourceNumbers = line.match(/\d{4}/g) || [];
+        return sourceNumbers.some(sourceNumber => sourceNumber === String(number) || getUniqueDailyPermutations(sourceNumber).includes(String(number)));
+    });
+    if (reportLine) {
+        const positionCode = {"1": "SA", "2": "SB", "3": "SC", S: "SD", C: "SE"}[prize];
+        if (String(rawLine || "").includes("**") && /\bS[ABCDE]\s*\d/i.test(reportLine)) {
+            const positionMatch = reportLine.match(new RegExp(`\\b${positionCode}\\s*(\\d+(?:\\.\\d+)?)`, "i"));
+            if (!positionMatch) return {stake: 0, ways: 1, positionBet: true};
+            const rawNumberMatch = String(rawLine || "").match(/(\d{4})\*+/);
+            const hasLeadingBox = /^\s*\*\*\s*\d{4}/.test(String(rawLine || ""));
+            const isBom = /^\s*\d{4}\s*\*\*/.test(String(rawLine || ""));
+            const ways = hasLeadingBox && rawNumberMatch
+                ? getUniqueDailyPermutations(rawNumberMatch[1]).length
+                : isBom ? 1 : rawNumberMatch ? getUniqueDailyPermutations(rawNumberMatch[1]).length : 1;
+            return {stake: Number(positionMatch[1]) || 0, ways: ways || 1, positionBet: true};
+        }
+        const stakes = [...reportLine.matchAll(/\b(?:SA|SB|SC|SD|SE|B|S)\s*(\d+(?:\.\d+)?)/gi)].map(match => Number(match[1]) || 0);
+        const stake = stakes.reduce((sum, value) => sum + value, 0) || 1;
+        const packMatch = reportLine.match(/(?:i\s*box|ibox|iB|box)\s*x?\s*(\d+)/i);
+        const ways = packMatch ? Number(packMatch[1]) : 1;
+        return {stake, ways: ways || 1};
+    }
+    const source = String(rawLine || "");
+    const stakeTokens = [...source.matchAll(/#(\d+)/g)];
+    if (source.includes("**") && stakeTokens.length) {
+        const hasLeadingBox = /^\s*\*\*\s*\d{4}/.test(source);
+        const isBom = /^\s*\d{4}\s*\*\*/.test(source);
+        const stakeIndex = {"1": 0, "2": 1, "3": 2, S: 3, C: 4}[prize];
+        if (stakeTokens.length > 1 && stakeIndex >= stakeTokens.length) return {stake: 0, ways: 1, positionBet: true};
+        const selected = stakeTokens.length === 1 ? (prize === "1" ? stakeTokens[0] : null) : stakeTokens[stakeIndex];
+        if (!selected) return {stake: 0, ways: 1, positionBet: true};
+        const numberMatch = source.match(/(\d{4})\*+/);
+        const ways = hasLeadingBox && numberMatch
+            ? getUniqueDailyPermutations(numberMatch[1]).length
+            : isBom ? 1 : numberMatch ? getUniqueDailyPermutations(numberMatch[1]).length : 1;
+        return {stake: Number(selected[1]) || 0, ways: ways || 1, positionBet: true};
+    }
+    const stakeMatch = source.match(/#(\d+)\s*$/);
+    const stake = stakeMatch ? Number(stakeMatch[1]) : 1;
+    if (/\*/.test(source)) {
+        const numberMatch = source.match(/(\d{4})\*+/);
+        const ways = numberMatch ? getUniqueDailyPermutations(numberMatch[1]).length : 1;
+        return {stake, ways: ways || 1};
+    }
+    return {stake, ways: 1};
+}
+
+function getWinningPayout(code, prize, ticket, number, rawLine) {
+    const firstPrizeGroup = new Set(["M", "P", "T", "S", "W"]);
+    const multiPositionPrize = ["M", "P", "T", "S", "W"].includes(code)
+        ? {"1": 7200, "2": 7200, "3": 7200, S: 720, C: 720}
+        : code === "H"
+            ? {"1": 7140, "2": 7140, "3": 7140, S: 714, C: 714}
+            : code === "E"
+                ? {"1": 7350, "2": 7350, "3": 7350, S: 735, C: 735}
+                : {"1": 8000, "2": 8000, "3": 8000, S: 800, C: 800};
+    const payouts = ["H", "E"].includes(code)
+        ? {"1": 3045, "2": 1050, "3": 525, S: 210, C: 63}
+        : firstPrizeGroup.has(code)
+            ? {"1": 3030, "2": 1120, "3": 520, S: 210, C: 63}
+            : {"1": 3500, "2": 1200, "3": 650, S: 215, C: 70};
+    const base = payouts[prize] || 0;
+    const {stake, ways, positionBet} = getWinningBetInfo(ticket, number, rawLine, prize);
+    if (!stake) return null;
+    const payoutBase = positionBet ? (multiPositionPrize[prize] || 0) : base;
+    const amount = (payoutBase * stake) / ways;
+    return {payout: String(Number(amount.toFixed(2))), betAmount: String(Number((stake / ways).toFixed(3)))};
+}
+
+function getWinningMatchesForDate(date) {
+    const savedResults = localStorage.getItem(scoreStorageKey(date));
+    if (!savedResults) return [];
+    const parsedResults = parseDrawResults(savedResults);
+    const gameByCode = {M: "MAGNUM", P: "1+3D", T: "TOTO", S: "SINGAPORE", I: "MATAHARI", J: "NEWWIN", W: "SARAWAK", C: "LOTTOMACAO", N: "PERDANA", A: "LUCKY", H: "GRAND DRAGON 4D 豪龙", E: "NINE LOTTO"};
+    const sources = [{key: "hlb8_reports", label: "新单"}, {key: "haolong_reports", label: "豪龙"}];
+    const matches = [];
+    sources.forEach(source => {
+        readReportsForDailyNumbers(source.key).forEach(ticket => {
+            if (ticket.cancelled || !ticketIncludesDrawDate(ticket, date)) return;
+            const productMap = source.label === "豪龙" ? {...numberMap, "8": "H", "9": "E"} : numberMap;
+            const codes = [...new Set(String(ticket.headerNumbers || "").split("").map(digit => productMap[digit]).filter(Boolean))];
+            let activeCodes = codes;
+            const rawLines = String(ticket.rawInput || "").split(/\r?\n/).slice(1);
+            rawLines.forEach(rawLine => {
+                const line = rawLine.trim();
+                if (!line) return;
+                const selection = line.match(/^#(\d+?)(?:(?:##?|-)(\d+))?$/);
+                if (selection) {
+                    activeCodes = [...new Set(selection[1].split("").map(digit => productMap[digit]).filter(Boolean))];
+                    return;
+                }
+                const numbers = getDailyNumbersFromBetLine(line);
+                if (!numbers.length) return;
+                activeCodes.forEach(code => {
+                    const gameName = gameByCode[code];
+                    const game = gameName && parsedResults[gameName];
+                    if (!game) return;
+                    Object.entries(game.prizes).forEach(([prize, winningNumbers]) => {
+                        numbers.forEach(number => {
+                            if (winningNumbers.includes(number)) {
+                                const payout = getWinningPayout(code, prize, ticket, number, line);
+                                if (payout) matches.push({ticket, source: source.label, sourceKey: source.key, code, gameName, prize, number, ...payout});
+                            }
+                        });
+                    });
+                });
+            });
+        });
+    });
+    const unique = new Map();
+    matches.forEach(match => {
+        const key = `${match.sourceKey}|${match.ticket.id}|${match.ticket.createdAt}|${match.code}|${match.prize}|${match.number}|${match.payout}|${match.betAmount}`;
+        if (!unique.has(key)) unique.set(key, match);
+    });
+    return [...unique.values()];
+}
+
+function renderWinningTickets() {
+    winningResults.innerHTML = "";
+    const date = winningDate.value;
+    if (!date) return;
+    if (!localStorage.getItem(scoreStorageKey(date))) {
+        winningResults.innerHTML = '<div class="daily-number-empty">这一天还没有保存成绩，请先到「成绩」粘贴并保存。</div>';
+        return;
+    }
+    const matches = getWinningMatchesForDate(date);
+    if (!matches.length) {
+        winningResults.innerHTML = '<div class="daily-number-empty">没有找到中奖票单（目前只自动核对已配置彩种的 4D 正选、S 和 C）。</div>';
+        return;
+    }
+    matches.forEach(match => {
+        const card = document.createElement("section");
+        card.className = "winning-ticket";
+        const title = document.createElement("div");
+        title.className = "winning-ticket-title";
+        title.textContent = `${match.source}（${match.ticket.count ?? match.ticket.id}） · ${match.gameName} · ${match.prize === "S" ? "特别奖" : match.prize === "C" ? "安慰奖" : `第${match.prize}名`}`;
+        const detail = document.createElement("div");
+        detail.className = "winning-ticket-line";
+        detail.textContent = `中奖号码：${match.number}`;
+        const payout = document.createElement("div");
+        payout.className = "winning-ticket-line";
+        payout.textContent = `奖金：${match.payout} MYR`;
+        const betAmount = document.createElement("div");
+        betAmount.className = "winning-ticket-line";
+        betAmount.textContent = `该号码下注：RM${match.betAmount}`;
+        const openButton = document.createElement("button");
+        openButton.className = "winning-ticket-open";
+        openButton.textContent = `查看票单（${match.ticket.count ?? match.ticket.id}）`;
+        openButton.addEventListener("click", () => openWinningTicket(match.ticket, match.source));
+        card.append(title, detail, betAmount, payout, openButton);
+        winningResults.appendChild(card);
+    });
+}
+
+function openWinningTicket(ticket, source) {
+    document.getElementById("winningTicketModalTitle").textContent = `${source}票单（${ticket.count ?? ticket.id}）`;
+    document.getElementById("winningTicketModalBody").textContent = String(ticket.report || ticket.rawInput || "");
+    document.getElementById("winningTicketModal").style.display = "flex";
+}
+
+function closeWinningTicket() {
+    document.getElementById("winningTicketModal").style.display = "none";
+}
 
 /* =====================================================
    返回首页
@@ -5620,6 +5958,15 @@ function renderReports() {
             .trim();
 
     const boxNumberValue = searchBoxNumber.value.trim();
+    const winningTicketKeys = new Set();
+    for (let index = 0; index < localStorage.length; index++) {
+        const storageKey = localStorage.key(index);
+        if (!storageKey || !storageKey.startsWith("lottery_results_")) continue;
+        const drawDate = storageKey.slice("lottery_results_".length);
+        getWinningMatchesForDate(drawDate).forEach(match => {
+            winningTicketKeys.add(`${match.sourceKey}|${match.ticket.id}|${match.ticket.createdAt}`);
+        });
+    }
 
     let filtered =
         reports.filter(
@@ -5757,6 +6104,11 @@ function renderReports() {
 
             card.className =
                 "report-card";
+
+            const winningSourceKey = reportProduct === "haolong" ? "haolong_reports" : "hlb8_reports";
+            if (!item.cancelled && winningTicketKeys.has(`${winningSourceKey}|${item.id}|${item.createdAt}`)) {
+                card.classList.add("winner");
+            }
 
 
             
