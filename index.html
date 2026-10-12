@@ -891,7 +891,7 @@ body {
 
     padding: 14px 14px 48px;
 
-    background: #eef8ff;
+    background: var(--ticket-report-bg, #eef8ff);
 
     border: 1px solid #dce5eb;
 
@@ -901,7 +901,7 @@ body {
 
     font-family: Arial, Helvetica, sans-serif;
 
-    font-size: 18px;
+    font-size: var(--ticket-report-font-size, 18px);
 
     line-height: 1.55;
 
@@ -956,7 +956,7 @@ body {
     padding: 14px 14px 18px;
     color: #111;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
+    font-size: var(--ticket-report-font-size, 18px);
     line-height: 1.55;
     white-space: pre-wrap;
 }
@@ -1084,7 +1084,7 @@ body {
 .receipt-modal { display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.48); }
 .receipt-modal-dialog { display:flex; flex-direction:column; width:min(560px, 100%); max-height:85vh; overflow:hidden; border-radius:10px; background:#fff; box-shadow:0 8px 30px rgba(0,0,0,.25); }
 .receipt-modal-title { flex:none; padding:11px 14px; background:#a0a0a0; color:#fff; text-align:center; font-size:20px; font-weight:bold; }
-.receipt-modal-content { flex:1; overflow:auto; padding:16px; background:#eef8ff; color:#111; font-family:Arial, Helvetica, sans-serif; font-size:18px; line-height:1.55; white-space:pre-wrap; word-break:break-word; }
+.receipt-modal-content { flex:1; overflow:auto; padding:16px; background:var(--ticket-report-bg, #eef8ff); color:#111; font-family:Arial, Helvetica, sans-serif; font-size:var(--ticket-report-font-size, 18px); line-height:1.55; white-space:pre-wrap; word-break:break-word; }
 .receipt-modal-content.haolong-report-content { background:#fff; }
 .receipt-modal-actions { display:flex; justify-content:flex-end; gap:10px; flex:none; padding:11px 13px; border-top:1px solid #ddd; background:#fff; }
 .receipt-modal-button { min-width:82px; height:40px; border:0; border-radius:5px; color:#fff; font-size:17px; }
@@ -1137,6 +1137,9 @@ body {
 .winning-ticket { margin-bottom:10px; padding:12px; border:1px solid #ead8a2; border-radius:7px; background:#fffdf4; }
 .winning-ticket-title { margin-bottom:7px; color:#287C78; font-size:17px; font-weight:bold; }
 .winning-ticket-line { padding:2px 0; font-size:16px; }
+.winning-ticket-audit { margin-top:8px; padding-top:7px; border-top:1px solid #e5e8e8; color:#333; font-size:14px; line-height:1.55; }
+.winning-ticket-audit summary { color:#287C78; font-size:15px; font-weight:bold; cursor:pointer; }
+.winning-ticket-audit div { padding-top:5px; overflow-wrap:anywhere; }
 .winning-ticket-open { margin-top:8px; padding:7px 12px; border:0; border-radius:5px; background:#1689e8; color:#fff; font-size:15px; }
 .winning-ticket-modal { display:none; position:fixed; inset:0; z-index:1000; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.48); }
 .winning-ticket-modal-box { width:min(100%,560px); max-height:88vh; display:flex; flex-direction:column; overflow:hidden; border-radius:9px; background:#edf8ff; box-shadow:0 8px 30px rgba(0,0,0,.25); }
@@ -1280,6 +1283,16 @@ body {
 
 }
 
+ .settings-page { display:none; min-height:100vh; padding:0 12px 24px; background:#f5f7fa; }
+ .settings-header { display:flex; align-items:center; justify-content:space-between; min-height:52px; margin:0 -12px 12px; padding:0 12px; background:#fff; border-bottom:1px solid #ddd; }
+ .settings-header button { border:0; background:none; color:#287C78; font-size:18px; }
+ .settings-section { margin:12px 0; padding:12px; border:1px solid #d9e2e7; border-radius:9px; background:#fff; }
+ .settings-section h3 { margin:0 0 10px; color:#287C78; font-size:18px; }
+ .settings-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+ .settings-grid label { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:7px 0; font-size:14px; }
+ .settings-grid input { width:88px; height:36px; padding:0 7px; border:1px solid #aaa; border-radius:5px; font-size:16px; }
+ .settings-select,.settings-range { width:100%; min-height:40px; margin:4px 0 12px; font-size:16px; }
+ .settings-save { width:100%; min-height:46px; border:0; border-radius:7px; background:#1689e8; color:white; font-size:18px; }
 </style>
 
 </head>
@@ -1461,6 +1474,11 @@ body {
         <div class="home-item" onclick="openPasteOrderPage()">
             <div class="home-icon report-icon">📋</div>
             <div class="home-label">粘贴新单</div>
+        </div>
+
+        <div class="home-item" onclick="openSettingsPage()">
+            <div class="home-icon report-icon">⚙️</div>
+            <div class="home-label">设置</div>
         </div>
 
 
@@ -1896,6 +1914,19 @@ body {
     </div>
 </div>
 
+<div id="settingsPage" class="settings-page">
+    <div class="settings-header"><button onclick="backToHome()">‹ 返回</button><strong>设置</strong><span></span></div>
+    <div class="settings-section"><h3>普通奖金（MYR）</h3><div id="normalPayoutSettings" class="settings-grid"></div></div>
+    <div class="settings-section"><h3>BOM 奖金（MYR）</h3><div id="bomPayoutSettings" class="settings-grid"></div></div>
+    <div class="settings-section"><h3>Report 外观</h3>
+        <label for="reportFontSetting">Report 字体大小：<span id="reportFontValue">18px</span></label>
+        <input id="reportFontSetting" class="settings-range" type="range" min="14" max="28" value="18" oninput="document.getElementById('reportFontValue').textContent=this.value+'px'">
+        <label for="reportBackgroundSetting">Report 背景颜色</label>
+        <select id="reportBackgroundSetting" class="settings-select"><option value="#eef8ff">浅蓝</option><option value="#f3faf6">浅绿</option><option value="#fffaf0">浅米色</option><option value="#ffffff">白色</option></select>
+    </div>
+    <button class="settings-save" onclick="saveAppSettings()">保存设置</button>
+</div>
+
 <div id="pasteOrderPage">
     <div class="paste-order-header">
         <div class="paste-order-back" onclick="backToHome()">‹ 返回</div>
@@ -1978,6 +2009,7 @@ const winningDate = document.getElementById("winningDate");
 const winningResults = document.getElementById("winningResults");
 const pasteOrderPage = document.getElementById("pasteOrderPage");
 const pasteOrderNumbers = document.getElementById("pasteOrderNumbers");
+const settingsPage = document.getElementById("settingsPage");
 const pasteOrderDate = document.getElementById("pasteOrderDate");
 
 const dailyNumberDate =
@@ -2070,6 +2102,7 @@ function showPage(page) {
     pasteOrderPage.style.display = "none";
     scorePage.style.display = "none";
     winningPage.style.display = "none";
+    settingsPage.style.display = "none";
     amountBar.style.display = "none";
     keypad.style.display = "none";
 
@@ -2098,6 +2131,7 @@ function showPage(page) {
     }
     if (page === "scores") scorePage.style.display = "block";
     if (page === "winners") winningPage.style.display = "block";
+    if (page === "settings") { settingsPage.style.display = "block"; renderAppSettings(); }
 
 }
 
@@ -2531,25 +2565,90 @@ function getWinningBetInfo(ticket, number, rawLine, prize) {
 
 function getWinningPayout(code, prize, ticket, number, rawLine) {
     const firstPrizeGroup = new Set(["M", "P", "T", "S", "W"]);
-    const multiPositionPrize = ["M", "P", "T", "S", "W"].includes(code)
-        ? {"1": 7200, "2": 7200, "3": 7200, S: 720, C: 720}
-        : code === "H"
-            ? {"1": 7140, "2": 7140, "3": 7140, S: 714, C: 714}
-            : code === "E"
-                ? {"1": 7350, "2": 7350, "3": 7350, S: 735, C: 735}
-                : {"1": 8000, "2": 8000, "3": 8000, S: 800, C: 800};
-    const payouts = ["H", "E"].includes(code)
-        ? {"1": 3045, "2": 1050, "3": 525, S: 210, C: 63}
-        : firstPrizeGroup.has(code)
-            ? {"1": 3030, "2": 1120, "3": 520, S: 210, C: 63}
-            : {"1": 3500, "2": 1200, "3": 650, S: 215, C: 70};
+    const group = code === "H" || code === "E" ? code : firstPrizeGroup.has(code) ? "MPTSW" : "other";
+    const settings = getAppSettings();
+    const multiPositionPrize = settings.bom[group];
+    const payouts = settings.normal[group];
     const base = payouts[prize] || 0;
     const {stake, ways, positionBet} = getWinningBetInfo(ticket, number, rawLine, prize);
     if (!stake) return null;
     const payoutBase = positionBet ? (multiPositionPrize[prize] || 0) : base;
     const amount = (payoutBase * stake) / ways;
-    return {payout: String(Number(amount.toFixed(2))), betAmount: String(Number((stake / ways).toFixed(3)))};
+    return {
+        payout: String(Number(amount.toFixed(2))),
+        betAmount: String(Number((stake / ways).toFixed(3))),
+        stake,
+        ways,
+        positionBet,
+        payoutBase
+    };
 }
+
+const APP_SETTINGS_STORAGE_KEY = "lottery_app_settings_v1";
+const DEFAULT_APP_SETTINGS = {
+    normal: {
+        MPTSW: {"1":3030,"2":1120,"3":520,S:210,C:63},
+        other: {"1":3500,"2":1200,"3":650,S:215,C:70},
+        H: {"1":3045,"2":1050,"3":525,S:210,C:63},
+        E: {"1":3045,"2":1050,"3":525,S:210,C:63}
+    },
+    bom: {
+        MPTSW: {"1":7200,"2":7200,"3":7200,S:720,C:720},
+        other: {"1":8000,"2":8000,"3":8000,S:800,C:800},
+        H: {"1":7140,"2":7140,"3":7140,S:714,C:714},
+        E: {"1":7350,"2":7350,"3":7350,S:735,C:735}
+    },
+    reportFontSize: 18,
+    reportBackground: "#eef8ff"
+};
+
+function getAppSettings() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(APP_SETTINGS_STORAGE_KEY) || "{}");
+        return {
+            normal: Object.fromEntries(Object.keys(DEFAULT_APP_SETTINGS.normal).map(group => [group, {...DEFAULT_APP_SETTINGS.normal[group], ...(saved.normal?.[group] || {})}])),
+            bom: Object.fromEntries(Object.keys(DEFAULT_APP_SETTINGS.bom).map(group => [group, {...DEFAULT_APP_SETTINGS.bom[group], ...(saved.bom?.[group] || {})}])),
+            reportFontSize: Number(saved.reportFontSize) || DEFAULT_APP_SETTINGS.reportFontSize,
+            reportBackground: saved.reportBackground || DEFAULT_APP_SETTINGS.reportBackground
+        };
+    } catch (error) { return JSON.parse(JSON.stringify(DEFAULT_APP_SETTINGS)); }
+}
+
+function renderAppSettings() {
+    const settings = getAppSettings();
+    const groupNames = {MPTSW:"M、P、T、S、W", other:"其他彩种", H:"豪龙 H", E:"Nine Lotto E"};
+    const prizeNames = {"1":"第1名","2":"第2名","3":"第3名",S:"特别奖",C:"安慰奖"};
+    ["normal", "bom"].forEach(kind => {
+        const container = document.getElementById(kind === "normal" ? "normalPayoutSettings" : "bomPayoutSettings");
+        container.innerHTML = Object.keys(settings[kind]).map(group => Object.keys(prizeNames).map(prize =>
+            `<label>${groupNames[group]} ${prizeNames[prize]}<input type="number" min="0" step="0.01" data-settings-kind="${kind}" data-settings-group="${group}" data-settings-prize="${prize}" value="${settings[kind][group][prize]}"></label>`
+        ).join("")).join("");
+    });
+    document.getElementById("reportFontSetting").value = settings.reportFontSize;
+    document.getElementById("reportFontValue").textContent = `${settings.reportFontSize}px`;
+    document.getElementById("reportBackgroundSetting").value = settings.reportBackground;
+    applyReportSettings(settings);
+}
+
+function applyReportSettings(settings = getAppSettings()) {
+    document.documentElement.style.setProperty("--ticket-report-font-size", `${settings.reportFontSize}px`);
+    document.documentElement.style.setProperty("--ticket-report-bg", settings.reportBackground);
+}
+
+function saveAppSettings() {
+    const settings = getAppSettings();
+    document.querySelectorAll("[data-settings-kind]").forEach(input => {
+        const value = Number(input.value);
+        if (Number.isFinite(value) && value >= 0) settings[input.dataset.settingsKind][input.dataset.settingsGroup][input.dataset.settingsPrize] = value;
+    });
+    settings.reportFontSize = Number(document.getElementById("reportFontSetting").value) || 18;
+    settings.reportBackground = document.getElementById("reportBackgroundSetting").value;
+    localStorage.setItem(APP_SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+    applyReportSettings(settings);
+    alert("设置已保存");
+}
+
+function openSettingsPage() { showPage("settings"); }
 
 function getWinningMatchesForDate(date) {
     const savedResults = localStorage.getItem(scoreStorageKey(date));
@@ -2583,7 +2682,7 @@ function getWinningMatchesForDate(date) {
                         numbers.forEach(number => {
                             if (winningNumbers.includes(number)) {
                                 const payout = getWinningPayout(code, prize, ticket, number, line);
-                                if (payout) matches.push({ticket, source: source.label, sourceKey: source.key, code, gameName, prize, number, ...payout});
+                                if (payout) matches.push({ticket, source: source.label, sourceKey: source.key, drawDate: date, code, gameName, prize, number, rawLine: line, ...payout});
                             }
                         });
                     });
@@ -2627,11 +2726,27 @@ function renderWinningTickets() {
         const betAmount = document.createElement("div");
         betAmount.className = "winning-ticket-line";
         betAmount.textContent = `该号码下注：RM${match.betAmount}`;
+        const ticketDate = getReportCreationDate(match.ticket.createdAt) || "未知";
+        const drawDateText = String(match.drawDate || "").replace(/-/g, "/");
+        const dateLine = document.createElement("div");
+        dateLine.className = "winning-ticket-line";
+        dateLine.textContent = `成绩日期：${drawDateText}　购票日期：${ticketDate}　彩种：${match.gameName}（${match.code}）`;
+        const audit = document.createElement("details");
+        audit.className = "winning-ticket-audit";
+        const auditSummary = document.createElement("summary");
+        auditSummary.textContent = "核对奖金计算";
+        const auditSource = document.createElement("div");
+        auditSource.textContent = `票单下注内容：${match.rawLine}`;
+        const auditFormula = document.createElement("div");
+        auditFormula.textContent = `${match.positionBet ? "BOM奖金" : "普通奖金"}：${match.payoutBase} × RM${match.stake} ÷ ${match.ways} = RM${match.payout}`;
+        const auditWays = document.createElement("div");
+        auditWays.textContent = `下注注额：RM${match.stake}；分摊号码数：${match.ways}；单个号码下注：RM${match.betAmount}`;
+        audit.append(auditSummary, auditSource, auditFormula, auditWays);
         const openButton = document.createElement("button");
         openButton.className = "winning-ticket-open";
         openButton.textContent = `查看票单（${match.ticket.count ?? match.ticket.id}）`;
         openButton.addEventListener("click", () => openWinningTicket(match.ticket, match.source));
-        card.append(title, detail, betAmount, payout, openButton);
+        card.append(title, dateLine, detail, betAmount, payout, audit, openButton);
         winningResults.appendChild(card);
     });
 }
@@ -5743,7 +5858,8 @@ function generateReport() {
 ===================================================== */
 
 function rebuyReport(
-    reportId
+    reportId,
+    createdAt
 ) {
 
     const reports =
@@ -5754,10 +5870,8 @@ function rebuyReport(
         reports.find(
             function(report) {
 
-                return (
-                    report.id ===
-                    reportId
-                );
+                return report.id === reportId &&
+                    (!createdAt || report.createdAt === createdAt);
 
             }
         );
@@ -6410,7 +6524,8 @@ function renderReports() {
                 function() {
 
                     rebuyReport(
-                        item.id
+                        item.id,
+                        item.createdAt
                     );
 
                 };
@@ -6822,6 +6937,8 @@ searchBoxNumber.addEventListener("keydown", function(event) {
 ===================================================== */
 
 showPage("home");
+
+applyReportSettings();
 
 updateAmount();
 
