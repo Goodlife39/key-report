@@ -5836,7 +5836,6 @@ function generateReport() {
     /* =================================================
        保存完整资料
     ================================================= */
-
     const reports =
         getSavedReports();
 
@@ -5889,7 +5888,6 @@ function rebuyReport(
     reportId,
     createdAt
 ) {
-
     const reports =
         getSavedReports();
 
@@ -5962,7 +5960,6 @@ function rebuyReport(
    ===================================================== */
 
 function rebuyCurrent() {
-
     const reports =
         getSavedReports();
 
@@ -6015,7 +6012,6 @@ function rebuyCurrent() {
 function buyReport(
     reportId
 ) {
-
     const reports =
         getSavedReports();
 
@@ -6076,7 +6072,6 @@ function cancelReport(
     reportId,
     createdAt
 ) {
-
     const reports =
         getSavedReports();
 
@@ -6218,7 +6213,7 @@ function renderReportSummary(start, end, selectedCodes) {
         return;
     }
     const rows = new Map();
-    const sources = [{key:"hlb8_reports",product:"hlb8",name:"hlb8"},{key:"haolong_reports",product:"haolong",name:"GX999"}];
+    const sources = [{key:"haolong_reports",product:"haolong",name:"GX999"}];
     const getRow = (source, code) => {
         const key = `${source.product}|${code}`;
         if (!rows.has(key)) rows.set(key, {source,code,tickets:new Set(),stake:0,winning:0});
@@ -6305,10 +6300,8 @@ function renderReports() {
         document.getElementById(
             "reportList"
         );
-
-
-    const reports =
-        getSavedReports();
+    // 报告页只显示豪龙票单；新单票单仍保留在本地储存中。
+    const reports = activeProduct === "haolong" ? getSavedReports() : [];
 
 
     const dateValue =
