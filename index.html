@@ -1915,7 +1915,7 @@ body {
         <div id="pasteOrderAmount">MYR 0.00</div>
         <button class="paste-order-buy" onclick="buyPasteOrder()">购买</button>
     </div>
-    <textarea id="pasteOrderNumbers" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="请粘贴已打好的号码，例如：&#10;137&#10;1234#1&#10;2234"></textarea>
+    <textarea id="pasteOrderNumbers" readonly inputmode="none" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="请粘贴已打好的号码，例如：&#10;137&#10;1234#1&#10;2234"></textarea>
     <div class="paste-order-keypad">
         <div class="paste-order-keypad-tools">
             <button onclick="pasteOrderFromClipboard()">Paste</button>
@@ -2475,13 +2475,16 @@ function getTicketReportForDisplay(ticket) {
 function getWinningBetInfo(ticket, number, rawLine, prize) {
     const source = String(rawLine || "");
     const hasLeadingBox = /^\s*\*\*\s*\d{4}/.test(source);
+    const hasTrailingBom = /^\s*\d{4}\s*\*\*/.test(source);
+    if (hasTrailingBom && prize !== "1") return {stake: 0, ways: 1, positionBet: true};
     const isBom = /^\s*\d{4}\s*\*\*/.test(source);
     const reportLines = String(ticket.report || "").split(/\r?\n/);
-    const reportLine = reportLines.find(line => {
+    const matchingReportLines = reportLines.filter(line => {
         if (!/(?:=|\s)(?:B|S|SA|SB|SC|SD|SE)\s*\d/i.test(line)) return false;
         const sourceNumbers = line.match(/\d{4}/g) || [];
         return sourceNumbers.some(sourceNumber => sourceNumber === String(number) || getUniqueDailyPermutations(sourceNumber).includes(String(number)));
     });
+    const reportLine = matchingReportLines.find(line => /\(IB\)|ibox/i.test(line) === hasLeadingBox) || matchingReportLines[0];
     if (reportLine) {
         const positionCode = {"1": "SA", "2": "SB", "3": "SC", S: "SD", C: "SE"}[prize];
         if (isBom && /\bS[ABCDE]\s*\d/i.test(reportLine)) {
@@ -4099,6 +4102,42 @@ function parseBasicLine(
 
     if (activeProduct === "haolong") {
 
+        const bigSmallBoomMatch = line.match(/^(.+?)-(\d+)-(\d+)-(\d+)$/);
+
+        if (bigSmallBoomMatch) {
+            const bigQuantity = parseInt(bigSmallBoomMatch[2], 10);
+            const smallQuantity = parseInt(bigSmallBoomMatch[3], 10);
+            const boomAQuantity = parseInt(bigSmallBoomMatch[4], 10);
+            return {
+                number: bigSmallBoomMatch[1].trim(),
+                quantity: bigQuantity + smallQuantity + boomAQuantity,
+                bigQuantity,
+                smallQuantity,
+                boomAQuantity,
+                multiMode: true,
+                mode: "big",
+                hasQuantity: true,
+                convertToMtw
+            };
+        }
+
+        const bigSmallMatch = line.match(/^(.+?)-(\d+)-(\d+)$/);
+
+        if (bigSmallMatch) {
+            const bigQuantity = parseInt(bigSmallMatch[2], 10);
+            const smallQuantity = parseInt(bigSmallMatch[3], 10);
+            return {
+                number: bigSmallMatch[1].trim(),
+                quantity: bigQuantity + smallQuantity,
+                bigQuantity,
+                smallQuantity,
+                multiMode: true,
+                mode: "big",
+                hasQuantity: true,
+                convertToMtw
+            };
+        }
+
         const dualModeMatch =
             line.match(
                 /^(.+?)#(\d+)#(\d+)$/
@@ -4402,7 +4441,7 @@ function parseStarQuantities(
 
     const matches =
         text.match(
-            /#(\d+)/g
+            /(?:#|-)(\d+)/g
         );
 
 
@@ -4738,10 +4777,15 @@ function parseNumberLines(
         const firstHash =
             rawLine.indexOf("#");
 
+        const trailingStarMatch =
+            rawLine.match(/^(.+?\*\*)(.*)$/);
+
         const numberPart =
-            firstHash >= 0
-                ? rawLine.substring(0, firstHash).trim()
-                : rawLine.trim();
+            trailingStarMatch
+                ? trailingStarMatch[1].trim()
+                : firstHash >= 0
+                    ? rawLine.substring(0, firstHash).trim()
+                    : rawLine.trim();
 
         if (
             rawLine.includes("**") &&
@@ -4749,9 +4793,11 @@ function parseNumberLines(
         ) {
 
             const quantityPart =
-                firstHash >= 0
-                    ? rawLine.substring(firstHash)
-                    : "";
+                trailingStarMatch
+                    ? trailingStarMatch[2]
+                    : firstHash >= 0
+                        ? rawLine.substring(firstHash)
+                        : "";
 
 
             const analyzed =
@@ -4987,6 +5033,9 @@ function parseNumberLines(
             smallQuantity:
                 info.smallQuantity,
 
+            boomAQuantity:
+                info.boomAQuantity,
+
             sideMultiplier:
                 activeMultiplier
 
@@ -5073,7 +5122,7 @@ function formatHaolongItem(item, analyzed) {
 
     if (item.multiMode) {
 
-        return `${analyzed.number}=B${item.bigQuantity} S${item.smallQuantity}`;
+        return `${analyzed.number}=B${item.bigQuantity} S${item.smallQuantity}${item.boomAQuantity ? ` SA${item.boomAQuantity}` : ""}`;
 
     }
 
@@ -5725,6 +5774,9 @@ function rebuyReport(
     }
 
 
+    activeProduct = item.product === "haolong" ? "haolong" : "hlb8";
+
+
     dateInput.value =
         item.dateCommand || "D#";
 
@@ -5735,6 +5787,9 @@ function rebuyReport(
 
     document.getElementById("accountLabel").textContent =
         `户口: ${getProductLabel()}`;
+
+
+    updateInputProductSwitch();
 
 
     activeInput =
