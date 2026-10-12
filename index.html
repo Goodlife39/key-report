@@ -745,7 +745,7 @@ body {
     white-space: nowrap;
 }
 
-#searchDate, #searchEndDate {
+#searchDate {
 
     flex: 1;
 
@@ -782,19 +782,6 @@ body {
 
     cursor: pointer;
 }
-.report-date-shortcuts { display:flex; justify-content:flex-end; gap:14px; margin:-2px 4px 7px; color:#287C78; font-size:13px; }
-.report-date-shortcuts button { border:0; padding:2px 0; background:none; color:inherit; }
-.report-lottery-filters { display:flex; flex-wrap:wrap; align-items:center; gap:6px 11px; padding:10px 2px; border-top:1px solid #edf0f2; border-bottom:1px solid #edf0f2; }
-.report-lottery-filters label { display:inline-flex; align-items:center; gap:3px; color:#30343b; font-size:16px; }
-.report-lottery-filters input { width:19px; height:19px; margin:0; accent-color:#1689e8; }
-.report-lottery-pending { color:#999 !important; }
-.report-summary { margin:10px; padding:0 0 8px; overflow-x:auto; border:1px solid #dce5eb; border-radius:7px; background:#fff; }
-.report-summary-title { padding:9px 10px; background:#EAF4F3; color:#287C78; font-size:17px; font-weight:bold; }
-.report-summary-table { width:100%; min-width:510px; border-collapse:collapse; font-size:14px; text-align:right; }
-.report-summary-table th,.report-summary-table td { padding:7px 8px; border:1px solid #e3e7e9; white-space:nowrap; }
-.report-summary-table th:first-child,.report-summary-table td:first-child { text-align:left; }
-.report-summary-table thead th { background:#f3f7f8; color:#45515a; }
-.report-summary-total td { background:#eaf4f3; color:#1d625d; font-weight:bold; }
 
 
 /* 编号 / 号码 */
@@ -857,8 +844,6 @@ body {
     margin-top:8px;
 }
 .search-box-row .search-input { flex:1; }
-.report-summary-only .search-two-row,
-.report-summary-only .search-box-row { display:none !important; }
 
 .search-small-button {
 
@@ -1104,7 +1089,7 @@ body {
 .receipt-modal-actions { display:flex; justify-content:flex-end; gap:10px; flex:none; padding:11px 13px; border-top:1px solid #ddd; background:#fff; }
 .receipt-modal-button { min-width:82px; height:40px; border:0; border-radius:5px; color:#fff; font-size:17px; }
 .receipt-modal-screenshot { background:#1689e8; }
-.receipt-modal-delete { background:#df2535; }
+.receipt-modal-delete { background:#e51b23; }
 .receipt-modal-ok { background:#159447; }
 @media (max-width: 600px) { .receipt-modal { padding:12px; } .receipt-modal-dialog { max-height:88vh; } }
 
@@ -1153,10 +1138,9 @@ body {
 .winning-ticket { margin-bottom:10px; padding:12px; border:1px solid #ead8a2; border-radius:7px; background:#fffdf4; }
 .winning-ticket-title { margin-bottom:7px; color:#287C78; font-size:17px; font-weight:bold; }
 .winning-ticket-line { padding:2px 0; font-size:16px; }
-.winning-ticket-audit { margin-top:8px; padding-top:7px; border-top:1px solid #e5e8e8; color:#333; font-size:14px; line-height:1.55; }
-.winning-ticket-audit summary { color:#287C78; font-size:15px; font-weight:bold; cursor:pointer; }
-.winning-ticket-audit div { padding-top:5px; overflow-wrap:anywhere; }
 .winning-ticket-open { margin-top:8px; padding:7px 12px; border:0; border-radius:5px; background:#1689e8; color:#fff; font-size:15px; }
+.winning-ticket-audit { margin-top:8px; padding:7px 9px; border-radius:5px; background:#edf8f6; }
+.winning-ticket-audit summary { color:#287C78; font-weight:bold; cursor:pointer; }
 .winning-ticket-modal { display:none; position:fixed; inset:0; z-index:1000; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.48); }
 .winning-ticket-modal-box { width:min(100%,560px); max-height:88vh; display:flex; flex-direction:column; overflow:hidden; border-radius:9px; background:#edf8ff; box-shadow:0 8px 30px rgba(0,0,0,.25); }
 .winning-ticket-modal-header { display:flex; align-items:center; justify-content:space-between; padding:11px 14px; background:#888; color:#fff; font-size:17px; font-weight:bold; }
@@ -1391,23 +1375,11 @@ body {
         </div>
 
 
-        <!-- 投注：原粘贴新单格子 -->
-
-        <div
-            class="home-item"
-            onclick="openPasteOrderPage()"
-        >
-
-            <div class="home-icon report-icon">
-                📋
-            </div>
-
-            <div class="home-label">
-                投注
-            </div>
-
+        <!-- 投注：粘贴新单 -->
+        <div class="home-item" onclick="openPasteOrderPage()">
+            <div class="home-icon report-icon">📋</div>
+            <div class="home-label">投注</div>
         </div>
-
 
         <!-- 成绩 -->
 
@@ -1486,11 +1458,23 @@ body {
             <div class="home-label">中奖查询</div>
         </div>
 
-        <!-- 报告：与投注格子互换位置 -->
-        <div class="home-item" onclick="openCheckPage('hlb8', true)">
-            <div class="home-icon report-icon">📋</div>
-            <div class="home-label">报告</div>
+        <!-- 报告 -->
+
+        <div
+            class="home-item"
+            onclick="openCheckPage('hlb8')"
+        >
+
+            <div class="home-icon report-icon">
+                📋
+            </div>
+
+            <div class="home-label">
+                报告
+            </div>
+
         </div>
+
 
         <div class="home-item" onclick="openSettingsPage()">
             <div class="home-icon report-icon">⚙️</div>
@@ -1759,7 +1743,7 @@ body {
 
 
         <div class="report-title">
-            报告
+            新单
         </div>
 
 
@@ -1783,34 +1767,26 @@ body {
         <!-- 日期 -->
 
         <div class="search-date-row">
-            <div class="search-date-label">从</div>
-            <input id="searchDate" type="date" autocomplete="off">
-            <div class="search-date-label">至</div>
-            <input id="searchEndDate" type="date" autocomplete="off">
-            <button class="search-button" onclick="searchReports()">查询</button>
+
+            <div class="search-date-label">
+                从
+            </div>
+
+            <input
+                id="searchDate"
+                type="date"
+                autocomplete="off"
+                placeholder="2026/08/28"
+            >
+
+            <button
+                class="search-button"
+                onclick="searchReports()"
+            >
+                寻找
+            </button>
+
         </div>
-        <div class="report-date-shortcuts">
-            <button onclick="setReportDateRange('today')">今天</button>
-            <button onclick="setReportDateRange('week')">本周</button>
-            <button onclick="setReportDateRange('fortnight')">两周</button>
-            <button onclick="setReportDateRange('month')">本月</button>
-        </div>
-        <div id="reportLotteryFilters" class="report-lottery-filters" aria-label="彩种筛选">
-            <label><input type="checkbox" data-report-all checked onchange="onReportLotteryFilterChange(this)"><b>*</b></label>
-            <label><input type="checkbox" data-report-lottery="M" checked onchange="onReportLotteryFilterChange(this)">M</label>
-            <label><input type="checkbox" data-report-lottery="P" checked onchange="onReportLotteryFilterChange(this)">P</label>
-            <label><input type="checkbox" data-report-lottery="T" checked onchange="onReportLotteryFilterChange(this)">T</label>
-            <label><input type="checkbox" data-report-lottery="S" checked onchange="onReportLotteryFilterChange(this)">S</label>
-            <label><input type="checkbox" data-report-lottery="B" checked onchange="onReportLotteryFilterChange(this)">B</label>
-            <label><input type="checkbox" data-report-lottery="I" checked onchange="onReportLotteryFilterChange(this)">I</label>
-            <label><input type="checkbox" data-report-lottery="J" checked onchange="onReportLotteryFilterChange(this)">J</label>
-            <label><input type="checkbox" data-report-lottery="W" checked onchange="onReportLotteryFilterChange(this)">W</label>
-            <label><input type="checkbox" data-report-lottery="C" checked onchange="onReportLotteryFilterChange(this)">C</label>
-            <label><input type="checkbox" data-report-lottery="N" checked onchange="onReportLotteryFilterChange(this)">N</label>
-            <label><input type="checkbox" data-report-lottery="A" checked onchange="onReportLotteryFilterChange(this)">A</label>
-            <label><input type="checkbox" data-report-lottery="H" checked onchange="onReportLotteryFilterChange(this)">H</label>
-            <label><input type="checkbox" data-report-lottery="E" checked onchange="onReportLotteryFilterChange(this)">E</label>
-       </div>
 
 
         <!-- 编号 + 号码 -->
@@ -1883,7 +1859,6 @@ body {
          Report 列表
     ================================================= -->
 
-    <div id="reportSummary"></div>
     <div id="reportList"></div>
 
 
@@ -2003,7 +1978,7 @@ body {
         <div id="receiptModalContent" class="receipt-modal-content"></div>
         <div class="receipt-modal-actions">
             <button class="receipt-modal-button receipt-modal-screenshot" onclick="screenshotModalReceipt()">截图</button>
-            <button class="receipt-modal-button receipt-modal-delete" onclick="deleteReceiptModalTicket()">删除</button>
+            <button class="receipt-modal-button receipt-modal-delete" onclick="deleteCurrentReceiptModal()">删除</button>
             <button class="receipt-modal-button receipt-modal-ok" onclick="closeReceiptModal()">OK</button>
         </div>
     </div>
@@ -2051,7 +2026,7 @@ const receiptModal = document.getElementById("receiptModal");
 const receiptModalContent = document.getElementById("receiptModalContent");
 const receiptModalTitle = document.getElementById("receiptModalTitle");
 let currentReceiptModalId = null;
-let currentReceiptModalCreatedAt = null;
+let currentReceiptModalProduct = null;
 let dailyNumberProductFilter = "all";
 let dailyNumbersForCopy = [];
 
@@ -2069,7 +2044,6 @@ const numberInput =
 
 const searchDate =
     document.getElementById("searchDate");
-const searchEndDate = document.getElementById("searchEndDate");
 
 const searchId =
     document.getElementById("searchId");
@@ -2088,8 +2062,6 @@ let preferNumberInput = false;
 
 let activeProduct =
     "hlb8";
-
-let isSummaryReportView = false;
 
 
 function getProductLabel() {
@@ -2472,7 +2444,7 @@ function parseDrawResults(text) {
     const headingAliases = [
         ["MAGNUM", "M"], ["1+3D", "P"], ["TOTO", "T"], ["TOTO 5D", null], ["TOTO 6D", null],
         ["SINGAPORE", "S"], ["MATAHARI", "I"], ["NEWWIN", "J"], ["SARAWAK", "W"],
-        ["LOTTOMACAO", "C"], ["PERDANA", "N"], ["LUCKY", "A"], ["SABAH", "B"],
+        ["LOTTOMACAO", "C"], ["PERDANA", "N"], ["LUCKY", "A"],
         ["GRAND DRAGON 4D 豪龙", "H"], ["NINE LOTTO", "E"]
     ];
     let current = null;
@@ -2604,14 +2576,7 @@ function getWinningPayout(code, prize, ticket, number, rawLine) {
     if (!stake) return null;
     const payoutBase = positionBet ? (multiPositionPrize[prize] || 0) : base;
     const amount = (payoutBase * stake) / ways;
-    return {
-        payout: String(Number(amount.toFixed(2))),
-        betAmount: String(Number((stake / ways).toFixed(3))),
-        stake,
-        ways,
-        positionBet,
-        payoutBase
-    };
+    return {payout: String(Number(amount.toFixed(2))), betAmount: String(Number((stake / ways).toFixed(3)))};
 }
 
 const APP_SETTINGS_STORAGE_KEY = "lottery_app_settings_v1";
@@ -2680,19 +2645,18 @@ function saveAppSettings() {
 
 function openSettingsPage() { showPage("settings"); }
 
-function getWinningMatchesForDate(date, options = {}) {
+function getWinningMatchesForDate(date) {
     const savedResults = localStorage.getItem(scoreStorageKey(date));
     if (!savedResults) return [];
     const parsedResults = parseDrawResults(savedResults);
-    const gameByCode = {M: "MAGNUM", P: "1+3D", T: "TOTO", S: "SINGAPORE", B: "SABAH", I: "MATAHARI", J: "NEWWIN", W: "SARAWAK", C: "LOTTOMACAO", N: "PERDANA", A: "LUCKY", H: "GRAND DRAGON 4D 豪龙", E: "NINE LOTTO"};
+    const gameByCode = {M: "MAGNUM", P: "1+3D", T: "TOTO", S: "SINGAPORE", I: "MATAHARI", J: "NEWWIN", W: "SARAWAK", C: "LOTTOMACAO", N: "PERDANA", A: "LUCKY", H: "GRAND DRAGON 4D 豪龙", E: "NINE LOTTO"};
     const sources = [{key: "hlb8_reports", label: "新单"}, {key: "haolong_reports", label: "豪龙"}];
     const matches = [];
     sources.forEach(source => {
-        const sourceTickets = options.ticketsBySource ? (options.ticketsBySource[source.key] || []) : readReportsForDailyNumbers(source.key);
-        sourceTickets.forEach(ticket => {
+        readReportsForDailyNumbers(source.key).forEach(ticket => {
             if (ticket.cancelled || !ticketIncludesDrawDate(ticket, date)) return;
-            const productMap = source.label === "豪龙" ? getProductNumberMap("haolong") : numberMap;
-            const codes = [...new Set(String(ticket.headerNumbers || "").split("").map(digit => productMap[digit]).filter(code => code && (!options.selectedCodes || options.selectedCodes.includes(code))))];
+            const productMap = source.label === "豪龙" ? {...numberMap, "8": "H", "9": "E"} : numberMap;
+            const codes = [...new Set(String(ticket.headerNumbers || "").split("").map(digit => productMap[digit]).filter(Boolean))];
             let activeCodes = codes;
             const rawLines = String(ticket.rawInput || "").split(/\r?\n/).slice(1);
             rawLines.forEach(rawLine => {
@@ -2700,7 +2664,7 @@ function getWinningMatchesForDate(date, options = {}) {
                 if (!line) return;
                 const selection = line.match(/^#(\d+?)(?:(?:##?|-)(\d+))?$/);
                 if (selection) {
-                    activeCodes = [...new Set(selection[1].split("").map(digit => productMap[digit]).filter(code => code && (!options.selectedCodes || options.selectedCodes.includes(code))))];
+                    activeCodes = [...new Set(selection[1].split("").map(digit => productMap[digit]).filter(Boolean))];
                     return;
                 }
                 const numbers = getDailyNumbersFromBetLine(line);
@@ -2713,7 +2677,7 @@ function getWinningMatchesForDate(date, options = {}) {
                         numbers.forEach(number => {
                             if (winningNumbers.includes(number)) {
                                 const payout = getWinningPayout(code, prize, ticket, number, line);
-                                if (payout) matches.push({ticket, source: source.label, sourceKey: source.key, drawDate: date, code, gameName, prize, number, rawLine: line, ...payout});
+                                if (payout) matches.push({ticket, source: source.label, sourceKey: source.key, code, gameName, prize, number, ...payout});
                             }
                         });
                     });
@@ -2748,6 +2712,16 @@ function renderWinningTickets() {
         const title = document.createElement("div");
         title.className = "winning-ticket-title";
         title.textContent = `${match.source}（${match.ticket.count ?? match.ticket.id}） · ${match.gameName} · ${match.prize === "S" ? "特别奖" : match.prize === "C" ? "安慰奖" : `第${match.prize}名`}`;
+        const drawDateLine = document.createElement("div");
+        drawDateLine.className = "winning-ticket-line";
+        drawDateLine.textContent = `成绩日期：${match.drawDate}`;
+        const purchaseDate = getReportCreationDate(match.ticket.createdAt) || "未知";
+        const purchaseDateLine = document.createElement("div");
+        purchaseDateLine.className = "winning-ticket-line";
+        purchaseDateLine.textContent = `票单购买日期：${purchaseDate}`;
+        const lotteryLine = document.createElement("div");
+        lotteryLine.className = "winning-ticket-line";
+        lotteryLine.textContent = `彩种：${match.gameName}（${match.code}）`;
         const detail = document.createElement("div");
         detail.className = "winning-ticket-line";
         detail.textContent = `中奖号码：${match.number}`;
@@ -2757,28 +2731,23 @@ function renderWinningTickets() {
         const betAmount = document.createElement("div");
         betAmount.className = "winning-ticket-line";
         betAmount.textContent = `该号码下注：RM${match.betAmount}`;
-        const ticketDate = getReportCreationDate(match.ticket.createdAt) || "未知";
-        const drawDateText = String(match.drawDate || "").replace(/-/g, "/");
-        const dateLine = document.createElement("div");
-        dateLine.className = "winning-ticket-line";
-        dateLine.textContent = `成绩日期：${drawDateText}　购票日期：${ticketDate}　彩种：${match.gameName}（${match.code}）`;
         const audit = document.createElement("details");
         audit.className = "winning-ticket-audit";
-        const auditSummary = document.createElement("summary");
-        auditSummary.textContent = "核对奖金计算";
-        const auditSource = document.createElement("div");
-        auditSource.textContent = `票单下注内容：${match.rawLine}`;
+        const auditTitle = document.createElement("summary");
+        auditTitle.textContent = "核对中奖计算";
         const auditFormula = document.createElement("div");
-        auditFormula.textContent = `${match.positionBet ? "BOM奖金" : "普通奖金"}：${match.payoutBase} × RM${match.stake} ÷ ${match.ways} = RM${match.payout}`;
-        const auditWays = document.createElement("div");
-        auditWays.textContent = `下注注额：RM${match.stake}；分摊号码数：${match.ways}；单个号码下注：RM${match.betAmount}`;
-        audit.append(auditSummary, auditSource, auditFormula, auditWays);
+        auditFormula.className = "winning-ticket-line";
+        auditFormula.textContent = `${match.positionBet ? "BOM奖金" : "普通奖金"}：${match.payoutBase} × RM${match.stake} ÷ ${match.ways} = ${match.payout} MYR`;
+        const auditStake = document.createElement("div");
+        auditStake.className = "winning-ticket-line";
+        auditStake.textContent = `命中号码：${match.number}；票单编号：${match.ticket.count ?? match.ticket.id}`;
+        audit.append(auditTitle, auditFormula, auditStake);
         const openButton = document.createElement("button");
         openButton.className = "winning-ticket-open";
         openButton.textContent = `查看票单（${match.ticket.count ?? match.ticket.id}）`;
         openButton.addEventListener("click", () => openWinningTicket(match.ticket, match.source));
-        card.append(title, dateLine, detail, betAmount, payout, audit, openButton);
-        winningResults.appendChild(card);
+        card.append(title, drawDateLine, purchaseDateLine, lotteryLine, detail, betAmount, payout, audit, openButton);
+            winningResults.appendChild(card);
     });
 }
 
@@ -2807,10 +2776,7 @@ function backToHome() {
    首页 → 检查
 ===================================================== */
 
-function openCheckPage(product, includeSummary = false) {
-
-    isSummaryReportView = includeSummary;
-    document.getElementById("reportPage").classList.toggle("report-summary-only", includeSummary);
+function openCheckPage(product) {
 
     if (product) {
 
@@ -2820,7 +2786,6 @@ function openCheckPage(product, includeSummary = false) {
 
     searchDate.value =
         getTodayString().replace(/\//g, "-");
-    searchEndDate.value = searchDate.value;
 
     searchId.value =
         "";
@@ -2980,7 +2945,9 @@ function renderDailyNumbers() {
     }
 
     sources.forEach(function(source) {
-        const map = source.product === "haolong" ? getProductNumberMap("haolong") : numberMap;
+        const map = source.product === "haolong"
+            ? {...numberMap, "8": "H", "9": "E"}
+            : numberMap;
 
         readReportsForDailyNumbers(source.key).forEach(function(ticket) {
             if (ticket.cancelled || getReportCreationDate(ticket.createdAt) !== selectedDate) return;
@@ -3225,12 +3192,6 @@ const numberMap = {
     "0": "A"
 
 };
-function getProductNumberMap(product) {
-    if (product !== "haolong") return numberMap;
-    const map = {...numberMap, "5": "B", "8": "H", "9": "E"};
-    delete map["0"];
-    return map;
-}
 
 
 /* =====================================================
@@ -3629,7 +3590,10 @@ function convertToLetters(
 
     let result = "";
 
-    const productNumberMap = getProductNumberMap(activeProduct);
+    const productNumberMap =
+        activeProduct === "haolong"
+            ? { ...numberMap, "8": "H", "9": "E" }
+            : numberMap;
 
 
     for (
@@ -4075,14 +4039,14 @@ const DAILY_DRAW_CODES = new Set(["I", "J", "C", "N", "A", "H", "E"]);
 
 function ticketUsesWeeklyDrawDays(ticket) {
     const isHaolong = ticket.product === "haolong";
-    const productMap = isHaolong ? getProductNumberMap("haolong") : numberMap;
+    const productMap = isHaolong ? {...numberMap, "8": "H", "9": "E"} : numberMap;
     const codes = [...new Set(String(ticket.headerNumbers || "").split("").map(digit => productMap[digit]).filter(Boolean))];
     return codes.some(code => WEEKLY_DRAW_CODES.has(code));
 }
 
 function getTicketDrawDates(dateCommand, headerNumbers, product, purchaseDate) {
     const parsed = parseDateCommand(dateCommand);
-    const productMap = product === "haolong" ? getProductNumberMap("haolong") : numberMap;
+    const productMap = product === "haolong" ? {...numberMap, "8": "H", "9": "E"} : numberMap;
     const codes = [...new Set(String(headerNumbers || "").split("").map(digit => productMap[digit]).filter(Boolean))];
     const usesWeeklyDays = codes.some(code => WEEKLY_DRAW_CODES.has(code));
     const usesDailyDraws = codes.some(code => DAILY_DRAW_CODES.has(code));
@@ -5883,7 +5847,7 @@ function generateReport() {
     numberInput.value = "";
     updateAmount();
     updateActiveLineHighlight();
-    openReceiptModal(reportId, report, receiptProduct, receiptCreatedAt.toISOString());
+    openReceiptModal(reportId, report, receiptProduct);
 
 }
 
@@ -6081,8 +6045,7 @@ function formatDeletedTimestamp(value) {
 }
 
 function cancelReport(
-    reportId,
-    createdAt
+    reportId
 ) {
 
     const reports =
@@ -6093,8 +6056,10 @@ function cancelReport(
         reports.find(
             function(report) {
 
-                return report.id === reportId &&
-                    (!createdAt || report.createdAt === createdAt);
+                return (
+                    report.id ===
+                    reportId
+                );
 
             }
         );
@@ -6138,131 +6103,6 @@ function searchReports() {
         return;
     }
     renderReports();
-}
-
-const REPORT_LOTTERY_CODES = ["M", "P", "T", "S", "B", "I", "J", "W", "C", "N", "A", "H", "E"];
-const REPORT_LOTTERY_NAMES = {M:"Magnum",P:"1+3D",T:"Toto",S:"Singapore",B:"Sabah",I:"Matahari",J:"Jockey",W:"Cash Sweep",C:"Macao 4D",N:"Perdana",A:"Lucky",H:"豪龙",E:"Nine Lotto"};
-
-function getSelectedReportLotteryCodes() {
-    return [...document.querySelectorAll("[data-report-lottery]:checked")].map(input => input.dataset.reportLottery);
-}
-
-function onReportLotteryFilterChange(input) {
-    const boxes = [...document.querySelectorAll("[data-report-lottery]")];
-    const allBox = document.querySelector("[data-report-all]");
-    if (input.hasAttribute("data-report-all")) boxes.forEach(box => { box.checked = input.checked; });
-    else allBox.checked = boxes.length > 0 && boxes.every(box => box.checked);
-    searchReports();
-}
-
-function localDateInputValue(date) {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-}
-
-function setReportDateRange(preset) {
-    const end = new Date();
-    const start = new Date(end.getFullYear(), end.getMonth(), end.getDate());
-    if (preset === "week") {
-        const day = (start.getDay() + 6) % 7;
-        start.setDate(start.getDate() - day);
-    } else if (preset === "fortnight") start.setDate(start.getDate() - 13);
-    else if (preset === "month") start.setDate(1);
-    searchDate.value = localDateInputValue(start);
-    searchEndDate.value = localDateInputValue(end);
-    searchReports();
-}
-
-function getReportTicketCodes(ticket, product) {
-    const map = product === "haolong" ? getProductNumberMap("haolong") : numberMap;
-    const codes = new Set(String(ticket.headerNumbers || "").split("").map(digit => map[digit]).filter(code => REPORT_LOTTERY_CODES.includes(code)));
-    String(ticket.report || "").split(/\r?\n/).forEach(line => {
-        const header = line.trim().match(/^\*?([A-Z]{1,12})(?:\s+-X)?$/);
-        if (header) header[1].split("").forEach(code => { if (REPORT_LOTTERY_CODES.includes(code)) codes.add(code); });
-    });
-    return [...codes];
-}
-
-function getReportTicketAmountsByLottery(ticket, product) {
-    const result = {};
-    const map = product === "haolong" ? getProductNumberMap("haolong") : numberMap;
-    const reportText = String(ticket.report || "");
-    let activeCodes = getReportTicketCodes(ticket, product);
-    reportText.split(/\r?\n/).forEach(lineValue => {
-        const line = lineValue.trim();
-        const header = line.match(/^\*?([A-Z]{1,12})(?:\s+-X)?$/);
-        if (header) {
-            const found = [...new Set(header[1].split("").filter(code => REPORT_LOTTERY_CODES.includes(code)))];
-            if (found.length) activeCodes = found;
-            return;
-        }
-        const numberMatch = line.match(/^(?:\*{0,2})?(?:\(IB\))?(?:\[(\d{4})\]|\{(\d{4})\}|\((\d{4})\)|((?:\d{4})\*{0,2})|\d\((\d{3})\))=/);
-        if (!numberMatch || !activeCodes.length) return;
-        let number = numberMatch.slice(1).find(Boolean).replace(/\*/g, "");
-        if (number.length === 3) number = `${line[0]}${number}`;
-        const bets = [...line.matchAll(/\b(SA|SB|SC|SD|SE|B|S)(\d+(?:\.\d+)?)/g)].map(match => Number(match[2]) || 0);
-        if (!bets.length) return;
-        const packMatch = line.match(/(?:i\s*box|ibox|iB|box)\s*x?\s*(\d+)/i);
-        const packSize = packMatch ? Math.max(1, Number(packMatch[1]) || 1) : 1;
-        const ways = packMatch && /^\d{4}$/.test(number) ? Math.min(packSize, getUniqueDailyPermutations(number).length) : 1;
-        const lineAmount = bets.reduce((sum, value) => sum + value, 0) * ways / packSize;
-        activeCodes.forEach(code => { result[code] = (result[code] || 0) + lineAmount; });
-    });
-    return result;
-}
-
-function isTicketInReportRange(ticket, start, end) {
-    const date = normalizeDateString(getReportCreationDate(ticket.createdAt));
-    return (!start || date >= start) && (!end || date <= end);
-}
-
-function formatReportMoney(value) {
-    return (Math.round((value + Number.EPSILON) * 1000) / 1000).toFixed(3).replace(/\.?0+$/, "");
-}
-
-function renderReportSummary(start, end, selectedCodes) {
-    const container = document.getElementById("reportSummary");
-    if (!selectedCodes.length) {
-        container.innerHTML = '<div class="daily-number-empty">请至少选择一个彩种。</div>';
-        return;
-    }
-    const rows = new Map();
-    const sources = [{key:"hlb8_reports",product:"hlb8",name:"hlb8"},{key:"haolong_reports",product:"haolong",name:"GX999"}];
-    const getRow = (source, code) => {
-        const key = `${source.product}|${code}`;
-        if (!rows.has(key)) rows.set(key, {source,code,tickets:new Set(),stake:0,winning:0});
-        return rows.get(key);
-    };
-    const ticketsBySource = {};
-    sources.forEach(source => {
-        const tickets = readReportsForDailyNumbers(source.key).filter(ticket => !ticket.cancelled && isTicketInReportRange(ticket,start,end));
-        ticketsBySource[source.key] = tickets;
-        tickets.forEach(ticket => {
-            const amounts = getReportTicketAmountsByLottery(ticket,source.product);
-            selectedCodes.forEach(code => {
-                const stake = Number(amounts[code]) || 0;
-                if (!stake) return;
-                const row = getRow(source,code);
-                row.stake += stake;
-                row.tickets.add(`${ticket.id}|${ticket.createdAt}`);
-            });
-        });
-    });
-    for (let i=0;i<localStorage.length;i++) {
-        const key = localStorage.key(i);
-        if (!key || !key.startsWith("lottery_results_")) continue;
-        getWinningMatchesForDate(key.slice("lottery_results_".length), {ticketsBySource, selectedCodes}).forEach(match => {
-            if (!selectedCodes.includes(match.code) || !isTicketInReportRange(match.ticket,start,end)) return;
-            const source = sources.find(item => item.key === match.sourceKey);
-            if (source) getRow(source,match.code).winning += Number(match.payout) || 0;
-        });
-    }
-    const ordered = [...rows.values()].sort((a,b) => selectedCodes.indexOf(a.code)-selectedCodes.indexOf(b.code) || a.source.name.localeCompare(b.source.name));
-    const ticketKeys = new Set();
-    ordered.forEach(row => row.tickets.forEach(ticketKey => ticketKeys.add(`${row.source.product}|${ticketKey}`)));
-    const totals = ordered.reduce((sum,row) => ({stake:sum.stake+row.stake,winning:sum.winning+row.winning}),{stake:0,winning:0});
-    const rangeText = `${start || "最早"} ～ ${end || "今天"}`.replace(/-/g,"/");
-    const body = ordered.map(row => `<tr><td>${row.source.name} · ${REPORT_LOTTERY_NAMES[row.code]} (${row.code})</td><td>${row.tickets.size}</td><td>${formatReportMoney(row.stake)}</td><td>${formatReportMoney(row.winning)}</td><td>${formatReportMoney(row.stake-row.winning)}</td></tr>`).join("");
-    container.innerHTML = `<section class="report-summary"><div class="report-summary-title">本地票单汇总 · ${rangeText}<br><small>盈亏 = 下注 − 中奖；不含已删除票单</small></div><table class="report-summary-table"><thead><tr><th>账户 / 彩种</th><th>票数</th><th>下注 MYR</th><th>中奖 MYR</th><th>盈亏 MYR</th></tr></thead><tbody>${body}<tr class="report-summary-total"><td>合计</td><td>${ticketKeys.size}</td><td>${formatReportMoney(totals.stake)}</td><td>${formatReportMoney(totals.winning)}</td><td>${formatReportMoney(totals.stake-totals.winning)}</td></tr></tbody></table></section>`;
 }
 
 
@@ -6327,15 +6167,6 @@ function renderReports() {
         normalizeDateString(
             searchDate.value
         );
-    const endDateValue = normalizeDateString(searchEndDate.value);
-    const selectedCodes = getSelectedReportLotteryCodes();
-    const reportSummary = document.getElementById("reportSummary");
-    if (isSummaryReportView) {
-        renderReportSummary(dateValue, endDateValue, selectedCodes);
-        list.innerHTML = "";
-        return;
-    }
-    reportSummary.innerHTML = "";
 
 
     const idValue =
@@ -6365,11 +6196,26 @@ function renderReports() {
 
                 /* 日期 */
 
-                if (!isTicketInReportRange(report, dateValue, endDateValue)) return false;
+                if (
+                    dateValue
+                ) {
 
-                const reportProduct = report.product || activeProduct;
-                const reportCodes = getReportTicketCodes(report, reportProduct);
-                if (!reportCodes.some(code => selectedCodes.includes(code))) return false;
+                    const reportDate =
+                        getReportCreationDate(
+                            report.createdAt
+                        );
+
+
+                    if (
+                        reportDate !==
+                        dateValue
+                    ) {
+
+                        return false;
+
+                    }
+
+                }
 
 
                 /* 编号 */
@@ -6649,8 +6495,7 @@ function renderReports() {
                 function() {
 
                     cancelReport(
-                        item.id,
-                        item.createdAt
+                        item.id
                     );
 
                 };
@@ -6717,9 +6562,9 @@ function renderReports() {
    金额
 ===================================================== */
 
-function openReceiptModal(reportId, reportText, product = activeProduct, createdAt = null) {
+function openReceiptModal(reportId, reportText, product = activeProduct) {
     currentReceiptModalId = reportId;
-    currentReceiptModalCreatedAt = createdAt;
+    currentReceiptModalProduct = product;
     receiptModalTitle.textContent = product === "haolong" ? "下注" : "Report";
     receiptModalContent.innerHTML = "";
 
@@ -6766,18 +6611,25 @@ function screenshotModalReceipt() {
     }
 }
 
-function deleteReceiptModalTicket() {
-    if (currentReceiptModalId === null) return;
-    if (!confirm("确定删除这张刚买的票单吗？删除后这张票不会参与中奖查询。")) return;
-    cancelReport(currentReceiptModalId, currentReceiptModalCreatedAt);
-    closeReceiptModal();
-}
-
 
 function closeReceiptModal() {
     receiptModal.style.display = "none";
     currentReceiptModalId = null;
-    currentReceiptModalCreatedAt = null;
+    currentReceiptModalProduct = null;
+}
+
+function deleteCurrentReceiptModal() {
+    if (currentReceiptModalId === null || !currentReceiptModalProduct) return;
+    const storageKey = currentReceiptModalProduct === "haolong" ? "haolong_reports" : "hlb8_reports";
+    const reports = readReportsForDailyNumbers(storageKey);
+    const item = reports.find(report => report.id === currentReceiptModalId && !report.cancelled);
+    if (!item) { alert("找不到这张票单。"); return; }
+    if (!confirm("确定删除这张刚买的票单吗？删除后可在检查/废票中恢复。")) return;
+    item.cancelled = true;
+    item.deletedAt = new Date().toISOString();
+    localStorage.setItem(storageKey, JSON.stringify(reports));
+    closeReceiptModal();
+    renderReports();
 }
 
 
