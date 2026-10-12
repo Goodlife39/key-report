@@ -857,6 +857,8 @@ body {
     margin-top:8px;
 }
 .search-box-row .search-input { flex:1; }
+.report-summary-only .search-two-row,
+.report-summary-only .search-box-row { display:none !important; }
 
 .search-small-button {
 
@@ -1485,7 +1487,7 @@ body {
         </div>
 
         <!-- 报告：与投注格子互换位置 -->
-        <div class="home-item" onclick="openCheckPage('hlb8')">
+        <div class="home-item" onclick="openCheckPage('hlb8', true)">
             <div class="home-icon report-icon">📋</div>
             <div class="home-label">报告</div>
         </div>
@@ -2086,6 +2088,8 @@ let preferNumberInput = false;
 
 let activeProduct =
     "hlb8";
+
+let isSummaryReportView = false;
 
 
 function getProductLabel() {
@@ -2802,7 +2806,10 @@ function backToHome() {
    首页 → 检查
 ===================================================== */
 
-function openCheckPage(product) {
+function openCheckPage(product, includeSummary = false) {
+
+    isSummaryReportView = includeSummary;
+    document.getElementById("reportPage").classList.toggle("report-summary-only", includeSummary);
 
     if (product) {
 
@@ -5836,6 +5843,7 @@ function generateReport() {
     /* =================================================
        保存完整资料
     ================================================= */
+
     const reports =
         getSavedReports();
 
@@ -5888,6 +5896,7 @@ function rebuyReport(
     reportId,
     createdAt
 ) {
+
     const reports =
         getSavedReports();
 
@@ -5960,6 +5969,7 @@ function rebuyReport(
    ===================================================== */
 
 function rebuyCurrent() {
+
     const reports =
         getSavedReports();
 
@@ -6012,6 +6022,7 @@ function rebuyCurrent() {
 function buyReport(
     reportId
 ) {
+
     const reports =
         getSavedReports();
 
@@ -6072,6 +6083,7 @@ function cancelReport(
     reportId,
     createdAt
 ) {
+
     const reports =
         getSavedReports();
 
@@ -6213,7 +6225,7 @@ function renderReportSummary(start, end, selectedCodes) {
         return;
     }
     const rows = new Map();
-    const sources = [{key:"haolong_reports",product:"haolong",name:"GX999"}];
+    const sources = [{key:"hlb8_reports",product:"hlb8",name:"hlb8"},{key:"haolong_reports",product:"haolong",name:"GX999"}];
     const getRow = (source, code) => {
         const key = `${source.product}|${code}`;
         if (!rows.has(key)) rows.set(key, {source,code,tickets:new Set(),stake:0,winning:0});
@@ -6300,8 +6312,10 @@ function renderReports() {
         document.getElementById(
             "reportList"
         );
-    // 报告页只显示豪龙票单；新单票单仍保留在本地储存中。
-    const reports = activeProduct === "haolong" ? getSavedReports() : [];
+
+
+    const reports =
+        getSavedReports();
 
 
     const dateValue =
@@ -6310,7 +6324,13 @@ function renderReports() {
         );
     const endDateValue = normalizeDateString(searchEndDate.value);
     const selectedCodes = getSelectedReportLotteryCodes();
-    renderReportSummary(dateValue, endDateValue, selectedCodes);
+    const reportSummary = document.getElementById("reportSummary");
+    if (isSummaryReportView) {
+        renderReportSummary(dateValue, endDateValue, selectedCodes);
+        list.innerHTML = "";
+        return;
+    }
+    reportSummary.innerHTML = "";
 
 
     const idValue =
