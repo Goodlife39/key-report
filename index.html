@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -637,6 +637,69 @@ body {
    REPORT LIST PAGE
 ===================================================== */
 
+.profit-report-page { display:none; min-height:100vh; padding-bottom:24px; background:#f5f7fa; }
+.profit-report-header { height:55px; position:sticky; top:0; z-index:30; display:flex; align-items:center; justify-content:space-between; padding:0 15px; background:#fff; border-bottom:1px solid #ddd; }
+.profit-report-header button { border:0; background:none; color:#287C78; font-size:20px; }
+.profit-report-header strong { font-size:22px; }
+.profit-report-header span { width:48px; }
+.profit-report-filters { padding:12px; background:#fff; border-bottom:1px solid #ddd; }
+.profit-date-row { display:grid; grid-template-columns:auto minmax(0,1fr) auto minmax(0,1fr); gap:7px; align-items:center; }
+.profit-date-row input { min-width:0; height:42px; border:1px solid #aaa; padding:4px; font-size:15px; }
+.profit-quick-dates { display:flex; justify-content:flex-end; gap:16px; padding:8px 0; }
+.profit-quick-dates button { border:0; background:none; color:#287C78; font-size:14px; }
+.profit-lottery-filters { display:flex; flex-wrap:wrap; gap:8px 12px; padding:6px 0 12px; }
+.profit-lottery-filters label { display:inline-flex; align-items:center; gap:3px; font-size:18px; }
+.profit-lottery-filters input { width:19px; height:19px; accent-color:#168ee5; }
+.profit-search-button { width:100%; height:44px; border:0; border-radius:6px; color:#fff; background:#168ee5; font-size:18px; }
+.profit-report-results { padding:12px; }
+.profit-report-summary { padding:14px; margin-bottom:12px; border-radius:10px; background:#e8f5f4; color:#287C78; font-size:17px; font-weight:700; line-height:1.6; }
+.profit-report-table-wrap { overflow-x:auto; border-radius:8px; background:#fff; }
+.profit-report-table { width:100%; border-collapse:collapse; min-width:520px; }
+.profit-report-table th,.profit-report-table td { padding:11px 9px; border:1px solid #dce3e5; text-align:right; white-space:nowrap; }
+.profit-report-table th:first-child,.profit-report-table td:first-child { text-align:left; }
+.profit-report-table thead th { background:#eff7f7; }
+.profit-report-table tfoot { color:#287C78; font-weight:700; background:#e8f5f4; }
+.profit-report-empty { padding:28px 10px; text-align:center; color:#777; }
+
+/* 盈利报告视觉优化 */
+.profit-report-page { background:#f3f6f7; color:#253342; }
+.profit-report-header { background:linear-gradient(115deg,#176b68,#2b9187); border:0; box-shadow:0 2px 8px rgba(20,70,70,.16); color:#fff; }
+.profit-report-header button { color:#fff; font-weight:600; }
+.profit-report-header strong { letter-spacing:.04em; }
+.profit-report-filters { margin:12px; padding:14px; border:1px solid #e4eaec; border-radius:14px; box-shadow:0 3px 12px rgba(31,57,67,.06); }
+.profit-date-row { grid-template-columns:auto minmax(0,1fr) auto minmax(0,1fr); gap:7px; }
+.profit-date-row label { color:#52636c; font-size:14px; font-weight:600; }
+.profit-date-row input { border:1px solid #d4dfe2; border-radius:8px; background:#fbfdfd; color:#26363b; }
+.profit-date-row input:focus { outline:2px solid rgba(36,137,128,.18); border-color:#328c83; }
+.profit-quick-dates { gap:6px; padding:9px 0 11px; }
+.profit-quick-dates button { padding:6px 10px; border-radius:18px; background:#eff7f6; color:#287c78; font-weight:600; }
+.profit-quick-dates button:active { background:#dcefeb; }
+.profit-lottery-filters { gap:8px; padding:7px 0 13px; }
+.profit-lottery-filters label { min-width:42px; justify-content:center; gap:4px; padding:5px 8px; border:1px solid #e1e9eb; border-radius:9px; background:#fbfcfc; color:#40545c; font-size:16px; font-weight:600; }
+.profit-lottery-filters label:has(input[value="*"]) { color:#19756e; background:#eaf5f3; border-color:#c7e3df; }
+.profit-lottery-filters input { margin:0; }
+.profit-search-button { border-radius:9px; background:linear-gradient(100deg,#258c82,#1679a6); box-shadow:0 3px 8px rgba(27,114,132,.2); font-size:17px; font-weight:700; letter-spacing:.04em; }
+.profit-search-button:active { transform:translateY(1px); }
+.profit-report-results { padding:2px 12px 18px; }
+.profit-report-summary { padding:16px; border:1px solid #cfe5e1; border-radius:13px; background:linear-gradient(125deg,#e8f5f3,#f2f8f8); box-shadow:0 3px 12px rgba(31,57,67,.05); color:#236d68; font-size:15px; line-height:1.7; }
+.profit-report-table-wrap { border:1px solid #e2e8ea; border-radius:13px; box-shadow:0 4px 14px rgba(31,57,67,.07); }
+.profit-report-table { min-width:570px; font-size:14px; }
+.profit-report-table th,.profit-report-table td { padding:12px 10px; border-color:#e7ecee; }
+.profit-report-table thead th { background:#edf5f5; color:#40545c; font-weight:700; }
+.profit-report-table tbody tr:nth-child(even) { background:#fafcfc; }
+.profit-report-table tbody tr:hover { background:#f0f8f7; }
+.profit-report-table tfoot { background:#e5f2f0; color:#176b68; }
+.profit-report-empty { margin-top:10px; border:1px dashed #cbd8da; border-radius:12px; background:#fff; }
+@media (max-width:480px) {
+    .profit-report-filters { margin:9px; padding:11px; }
+    .profit-date-row { grid-template-columns:auto minmax(0,1fr); }
+    .profit-date-row label:nth-of-type(2) { margin-top:2px; }
+    .profit-date-row input { width:100%; }
+    .profit-quick-dates { justify-content:space-between; }
+    .profit-quick-dates button { padding:6px 8px; }
+    .profit-lottery-filters { gap:7px; }
+    .profit-lottery-filters label { min-width:38px; padding:5px 6px; }
+}
 #reportPage {
 
     display: none;
@@ -1458,25 +1521,13 @@ body {
             <div class="home-label">中奖查询</div>
         </div>
 
-        <!-- 报告 -->
-
-        <div
-            class="home-item"
-            onclick="openCheckPage('hlb8')"
-        >
-
-            <div class="home-icon report-icon">
-                📋
-            </div>
-
-            <div class="home-label">
-                报告
-            </div>
-
+        <!-- 盈利报告 -->
+        <div class="home-item" onclick="openProfitReport()">
+            <div class="home-icon report-icon">📈</div>
+            <div class="home-label">盈利报告</div>
         </div>
 
-
-        <div class="home-item" onclick="openSettingsPage()">
+<div class="home-item" onclick="openSettingsPage()">
             <div class="home-icon report-icon">⚙️</div>
             <div class="home-label">设置</div>
         </div>
@@ -1984,6 +2035,20 @@ body {
     </div>
 </div>
 
+<div id="profitReportPage" class="profit-report-page">
+    <div class="profit-report-header"><button onclick="backToHome()">‹ 返回</button><strong>盈利报告</strong><span></span></div>
+    <div class="profit-report-filters">
+        <div class="profit-date-row"><label for="profitFromDate">从日期</label><input id="profitFromDate" type="date"><label for="profitToDate">至日期</label><input id="profitToDate" type="date"></div>
+        <div class="profit-quick-dates"><button onclick="setProfitDateRange('today')">今天</button><button onclick="setProfitDateRange('week')">本周</button><button onclick="setProfitDateRange('twoWeeks')">两周</button><button onclick="setProfitDateRange('month')">本月</button></div>
+        <div class="profit-lottery-filters" id="profitLotteryFilters">
+            <label><input type="checkbox" value="*" checked onchange="toggleAllProfitLotteries(this)"><b>*</b></label>
+            <label><input type="checkbox" value="M" checked>M</label><label><input type="checkbox" value="P" checked>P</label><label><input type="checkbox" value="T" checked>T</label><label><input type="checkbox" value="S" checked>S</label><label><input type="checkbox" value="B" checked>B</label><label><input type="checkbox" value="W" checked>W</label><label><input type="checkbox" value="H" checked>H</label><label><input type="checkbox" value="E" checked>E</label><label><input type="checkbox" value="I" checked>I</label><label><input type="checkbox" value="J" checked>J</label><label><input type="checkbox" value="C" checked>C</label><label><input type="checkbox" value="N" checked>N</label><label><input type="checkbox" value="A" checked>A</label>
+        </div>
+        <button class="profit-search-button" onclick="renderProfitReport()">查询</button>
+    </div>
+    <div id="profitReportResults" class="profit-report-results"></div>
+</div>
+
 <script>
 
 
@@ -2100,6 +2165,7 @@ function showPage(page) {
     homePage.style.display = "none";
     inputPage.style.display = "none";
     reportPage.style.display = "none";
+    document.getElementById("profitReportPage").style.display = "none";
     dailyNumberPage.style.display = "none";
     pasteOrderPage.style.display = "none";
     scorePage.style.display = "none";
@@ -2117,6 +2183,8 @@ function showPage(page) {
         amountBar.style.display = "flex";
         keypad.style.display = "grid";
     }
+
+    if (page === "profitReport") { document.getElementById("profitReportPage").style.display = "block"; }
 
     if (page === "report") {
         reportPage.style.display = "block";
@@ -2644,6 +2712,86 @@ function saveAppSettings() {
 }
 
 function openSettingsPage() { showPage("settings"); }
+const profitLotteryNames = {M:"Magnum (M)",P:"1+3D (P)",T:"Toto (T)",S:"Singapore (S)",B:"Sabah (B)",W:"Cash Sweep (W)",H:"豪龙 (H)",E:"Nine Lotto (E)",I:"Matahary (I)",J:"NewWin (J)",C:"Lotto Macao (C)",N:"Perdana (N)",A:"Lucky (A)"};
+function openProfitReport() {
+    const today = getTodayString().replace(/\//g,"-");
+    document.getElementById("profitFromDate").value = today;
+    document.getElementById("profitToDate").value = today;
+    document.querySelectorAll("#profitLotteryFilters input").forEach(input => input.checked = true);
+    showPage("profitReport");
+    renderProfitReport();
+}
+function setProfitDateRange(preset) {
+    const now = new Date(); const start = new Date(now); const end = new Date(now);
+    if (preset === "week") start.setDate(now.getDate() - ((now.getDay()+6)%7));
+    if (preset === "twoWeeks") start.setDate(now.getDate()-13);
+    if (preset === "month") start.setDate(1);
+    const fmt = date => `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+    document.getElementById("profitFromDate").value = fmt(start); document.getElementById("profitToDate").value = fmt(end); renderProfitReport();
+}
+function toggleAllProfitLotteries(allBox) {
+    document.querySelectorAll("#profitLotteryFilters input").forEach(input => { if (input.value !== "*") input.checked = allBox.checked; });
+}
+function getProfitSelectedCodes() {
+    const boxes = [...document.querySelectorAll("#profitLotteryFilters input")];
+    const all = boxes.find(input => input.value === "*");
+    const selected = boxes.filter(input => input.value !== "*" && input.checked).map(input => input.value);
+    if (all) all.checked = selected.length === boxes.length - 1;
+    return selected;
+}
+function parseTicketProfitByLottery(ticket, product) {
+    const map = product === "haolong" ? {...numberMap,"8":"H","9":"E","5":"B"} : numberMap;
+    const text = String(ticket.report || ""); const lines = text.split(/\r?\n/);
+    let codes = [...new Set(String(ticket.headerNumbers || "").split("").map(d => map[d]).filter(Boolean))];
+    const totals = {};
+    for (const raw of lines) {
+        const line = raw.trim(); if (!line) continue;
+        const header = line.match(/^\*?([A-Z]{1,13})(?:\s+-X)?$/);
+        if (header) { const parsed = [...new Set(header[1].split("").filter(code => profitLotteryNames[code]))]; if (parsed.length) codes = parsed; continue; }
+        if (/^(?:D:|COPY|hlb8\s*\(|GT=|Total\(|END|\d{1,2}\/\d{1,2})/i.test(line)) continue;
+        if (!line.includes("=")) continue;
+        const amounts = [...line.matchAll(/(?:^|[=\s-])(SA|SB|SC|SD|SE|B|S)(\d+(?:\.\d+)?)/g)].map(m => Number(m[2])||0);
+        if (!amounts.length) continue;
+        const amount = amounts.reduce((sum,value)=>sum+value,0);
+        codes.forEach(code => { totals[code] = (totals[code]||0)+amount; });
+    }
+    return totals;
+}
+function renderProfitReport() {
+    const out = document.getElementById("profitReportResults"); if (!out) return;
+    const from = normalizeDateString(document.getElementById("profitFromDate").value).replace(/\//g,"-");
+    const to = normalizeDateString(document.getElementById("profitToDate").value).replace(/\//g,"-");
+    const selected = new Set(getProfitSelectedCodes()); out.innerHTML = "";
+    if (!from || !to || from > to) { out.innerHTML='<div class="profit-report-empty">请选择有效的日期范围。</div>'; return; }
+    const rows = new Map(); const rowFor = (account,code) => { const key=account+"|"+code; if(!rows.has(key)) rows.set(key,{account,code,tickets:0,bet:0,win:0}); return rows.get(key); };
+    const sources = [{key:"hlb8_reports",account:"GX999",product:"hlb8"},{key:"haolong_reports",account:"GX999",product:"haolong"}];
+    sources.forEach(source => readReportsForDailyNumbers(source.key).forEach(ticket => {
+        if (ticket.cancelled) return;
+        const purchase = getReportCreationDate(ticket.createdAt).replace(/\//g,"-");
+        if (purchase < from || purchase > to) return;
+        const stakes = parseTicketProfitByLottery(ticket,source.product);
+        Object.entries(stakes).forEach(([code,amount]) => { if(!selected.has(code)) return; const row=rowFor(source.account,code); row.tickets++; row.bet+=amount; });
+    }));
+    // 按所选购买日期范围统计这些票单对应的已录入成绩奖金。
+    for (let i=0;i<localStorage.length;i++) {
+        const key=localStorage.key(i); if(!key || !key.startsWith("lottery_results_")) continue;
+        const drawDate=key.slice("lottery_results_".length); const matches=getWinningMatchesForDate(drawDate);
+        matches.forEach(match => {
+            const purchase=getReportCreationDate(match.ticket.createdAt).replace(/\//g,"-");
+            if (purchase < from || purchase > to || !selected.has(match.code)) return;
+            const source=match.sourceKey === "haolong_reports" ? "豪龙" : "GX999";
+            const row=rowFor(source,match.code); row.win+=Number(match.payout)||0;
+        });
+    }
+    const visible=[...rows.values()].filter(row=>row.tickets||row.win).sort((a,b)=>a.account.localeCompare(b.account)||a.code.localeCompare(b.code));
+    const sum=visible.reduce((v,row)=>({tickets:v.tickets+row.tickets,bet:v.bet+row.bet,win:v.win+row.win}),{tickets:0,bet:0,win:0});
+    const summary=document.createElement("div"); summary.className="profit-report-summary"; summary.textContent=`本地票单汇总 · ${from.replace(/-/g,"/")} ～ ${to.replace(/-/g,"/")}\n盈亏 = 下注 − 中奖；不含已删除票单`; out.appendChild(summary);
+    if (!visible.length) { const empty=document.createElement("div"); empty.className="profit-report-empty"; empty.textContent="所选日期和彩种没有有效票单或中奖记录。"; out.appendChild(empty); return; }
+    const wrap=document.createElement("div"); wrap.className="profit-report-table-wrap"; const table=document.createElement("table"); table.className="profit-report-table";
+    table.innerHTML='<thead><tr><th>账户 / 彩种</th><th>票数</th><th>下注 MYR</th><th>中奖 MYR</th><th>盈亏 MYR</th></tr></thead>';
+    const body=document.createElement("tbody"); visible.forEach(row=>{ const tr=document.createElement("tr"); [row.account+" · "+(profitLotteryNames[row.code]||row.code),row.tickets.toString(),row.bet.toFixed(2),row.win.toFixed(2),(row.bet-row.win).toFixed(2)].forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.appendChild(td);}); body.appendChild(tr); }); table.appendChild(body);
+    const foot=document.createElement("tfoot"); const tr=document.createElement("tr"); ["合计",String(sum.tickets),sum.bet.toFixed(2),sum.win.toFixed(2),(sum.bet-sum.win).toFixed(2)].forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.appendChild(td);}); foot.appendChild(tr);table.appendChild(foot);wrap.appendChild(table);out.appendChild(wrap);
+}
 
 function getWinningMatchesForDate(date) {
     const savedResults = localStorage.getItem(scoreStorageKey(date));
