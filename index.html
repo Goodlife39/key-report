@@ -2772,15 +2772,47 @@ function getProfitSelectedCodes() {
     return selected;
 }
 function parseTicketProfitByLottery(ticket, product) {
-    const map = product === "haolong" ? {...numberMap,"8":"H","9":"E","5":"B"} : numberMap;
-    const text = String(ticket.report || ""); const lines = text.split(/\r?\n/);
-    let codes = [...new Set(String(ticket.headerNumbers || "").split("").map(d => map[d]).filter(Boolean))];
+    const map = product === "haolong" ? {...numberMap,"0":"","5":"B","8":"H","9":"E"} : numberMap;
+    const inputLines = String(ticket.rawInput || "").split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    if (inputLines.length < 2) return parseTicketProfitFromReceipt(ticket, product);
+    let activeCodes = [...new Set(String(ticket.headerNumbers || "").split("").map(digit => map[digit]).filter(code => profitLotteryNames[code]))];
+    if (!activeCodes.length) return parseTicketProfitFromReceipt(ticket, product);
+    const sums = {};
+    let betLines = [];
+    const flush = () => {
+        if (!betLines.length || !activeCodes.length) { betLines = []; return; }
+        const headerMultiplier = activeCodes.length;
+        const parsed = parseNumberLines(betLines, headerMultiplier);
+        if (!parsed.error) {
+            let amount = 0;
+            parsed.data.forEach(item => { amount += calculateItemTotal(headerMultiplier, item); });
+            const drawMultiplier = Array.isArray(ticket.drawDates) && ticket.drawDates.length ? ticket.drawDates.length : 1;
+            activeCodes.forEach(code => { sums[code] = (sums[code] || 0) + amount * drawMultiplier; });
+        }
+        betLines = [];
+    };
+    inputLines.slice(1).forEach(line => {
+        const selection = line.match(/^#(\d+?)(?:(?:##?|-)(\d+))?$/);
+        if (selection) {
+            flush();
+            activeCodes = [...new Set(selection[1].split("").map(digit => map[digit]).filter(code => profitLotteryNames[code]))];
+            return;
+        }
+        betLines.push(line);
+    });
+    flush();
+    return Object.keys(sums).length ? sums : parseTicketProfitFromReceipt(ticket, product);
+}
+function parseTicketProfitFromReceipt(ticket, product) {
+    const map = product === "haolong" ? {...numberMap,"0":"","5":"B","8":"H","9":"E"} : numberMap;
+    const lines = String(ticket.report || "").split(/\r?\n/);
+    let codes = [...new Set(String(ticket.headerNumbers || "").split("").map(d => map[d]).filter(code => profitLotteryNames[code]))];
     const totals = {};
     for (const raw of lines) {
         const line = raw.trim(); if (!line) continue;
         const header = line.match(/^\*?([A-Z]{1,13})(?:\s+-X)?$/);
         if (header) { const parsed = [...new Set(header[1].split("").filter(code => profitLotteryNames[code]))]; if (parsed.length) codes = parsed; continue; }
-        if (/^(?:D:|COPY|hlb8\s*\(|GT=|Total\(|END|\d{1,2}\/\d{1,2})/i.test(line)) continue;
+        if (/^(?:D:|COPY|hlb8\s*\(|GX999|GT=|Total\(|END|\d{1,2}\/\d{1,2})/i.test(line)) continue;
         if (!line.includes("=")) continue;
         const amounts = [...line.matchAll(/(?:^|[=\s-])(SA|SB|SC|SD|SE|B|S)(\d+(?:\.\d+)?)/g)].map(m => Number(m[2])||0);
         if (!amounts.length) continue;
@@ -2789,6 +2821,8 @@ function parseTicketProfitByLottery(ticket, product) {
         const amount = amounts.reduce((sum,value)=>sum+value,0) * boxMultiplier;
         codes.forEach(code => { totals[code] = (totals[code]||0)+amount; });
     }
+    const drawMultiplier = Array.isArray(ticket.drawDates) && ticket.drawDates.length ? ticket.drawDates.length : 1;
+    Object.keys(totals).forEach(code => totals[code] *= drawMultiplier);
     return totals;
 }
 function renderProfitReport() {
