@@ -2787,7 +2787,8 @@ function parseTicketProfitByLottery(ticket, product) {
             let amount = 0;
             parsed.data.forEach(item => { amount += calculateItemTotal(headerMultiplier, item); });
             const drawMultiplier = Array.isArray(ticket.drawDates) && ticket.drawDates.length ? ticket.drawDates.length : 1;
-            activeCodes.forEach(code => { sums[code] = (sums[code] || 0) + amount * drawMultiplier; });
+            const perLotteryAmount = amount / headerMultiplier;
+            activeCodes.forEach(code => { sums[code] = (sums[code] || 0) + perLotteryAmount * drawMultiplier; });
         }
         betLines = [];
     };
