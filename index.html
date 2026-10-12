@@ -1181,6 +1181,25 @@ body {
 .paste-order-keypad .paste-key-enter { background:#444; }
 @media (max-width:480px) { #pasteOrderNumbers { min-height:30vh; } .paste-order-keypad button { min-height:58px; } }
 
+/* 投注页手机单屏布局：D# 与号码同框，键盘固定显示 */
+@media (max-width: 600px) {
+  #pasteOrderPage { height:100dvh; min-height:0; overflow:hidden; display:flex; flex-direction:column; padding:0 9px env(safe-area-inset-bottom); }
+  .paste-order-header { flex:0 0 43px; height:43px; margin:0 -9px 5px; padding:0 12px; }
+  .paste-order-title { font-size:19px; }
+  .paste-order-account { flex:0 0 auto; gap:7px; margin-bottom:3px; }
+  .paste-order-account > div { padding:5px 9px; border-radius:8px; font-size:15px; }
+  .paste-order-label { margin-bottom:1px; font-size:11px; }
+  .paste-order-products { flex:0 0 36px; gap:7px; margin:3px 0 5px; }
+  .paste-order-products button { min-height:36px; font-size:16px; }
+  #pasteOrderDate { display:none !important; }
+  .paste-order-amount-row { flex:0 0 43px; gap:7px; margin:0 0 5px; }
+  #pasteOrderAmount,.paste-order-buy { min-height:43px; height:43px; font-size:19px; }
+  .paste-order-buy { flex-basis:38%; }
+  #pasteOrderNumbers { flex:1 1 0; width:100%; min-height:0; height:0; margin:0 0 5px; padding:10px 12px; border-width:2px; font-size:18px; line-height:1.4; resize:none; }
+  .paste-order-keypad { flex:0 0 clamp(218px, 34dvh, 260px); height:clamp(218px, 34dvh, 260px); min-height:0; grid-template-rows:40px repeat(4,minmax(0,1fr)); gap:4px; margin:0 -2px; padding:4px; }
+  .paste-order-keypad button { min-height:0; border-radius:6px; font-size:22px; }
+  .paste-order-keypad-tools button { min-height:0; font-size:16px; }
+}
 /* 成绩粘贴与中奖查询 */
 .lottery-data-page { display:none; min-height:100vh; padding-bottom:20px; background:#f5f7fa; }
 .lottery-data-header { position:sticky; top:0; z-index:50; height:55px; display:flex; align-items:center; justify-content:space-between; padding:0 15px; border-bottom:1px solid #ddd; background:#fff; }
@@ -1462,25 +1481,13 @@ body {
         </div>
 
 
-        <!-- 豪龙开单 -->
-
-        <div
-            class="home-item"
-            onclick="openInputPage('haolong')"
-        >
-
-            <div class="home-icon dragon-icon">
-                🐉
-            </div>
-
-            <div class="home-label">
-                豪龙
-            </div>
-
+        <!-- 盈利报告 -->
+        <div class="home-item" onclick="openProfitReport()">
+            <div class="home-icon report-icon">📈</div>
+            <div class="home-label">盈利报告</div>
         </div>
 
-
-        <!-- 豪龙 Report -->
+<!-- 豪龙 Report -->
 
         <div
             class="home-item"
@@ -1521,13 +1528,25 @@ body {
             <div class="home-label">中奖查询</div>
         </div>
 
-        <!-- 盈利报告 -->
-        <div class="home-item" onclick="openProfitReport()">
-            <div class="home-icon report-icon">📈</div>
-            <div class="home-label">盈利报告</div>
+        <!-- 豪龙开单 -->
+
+        <div
+            class="home-item"
+            onclick="openInputPage('haolong')"
+        >
+
+            <div class="home-icon dragon-icon">
+                🐉
+            </div>
+
+            <div class="home-label">
+                豪龙
+            </div>
+
         </div>
 
-<div class="home-item" onclick="openSettingsPage()">
+
+        <div class="home-item" onclick="openSettingsPage()">
             <div class="home-icon report-icon">⚙️</div>
             <div class="home-label">设置</div>
         </div>
@@ -1992,7 +2011,7 @@ body {
         <button id="pasteHlb8Button" onclick="setPasteOrderProduct('hlb8')">新单</button>
         <button id="pasteHaolongButton" onclick="setPasteOrderProduct('haolong')">豪龙</button>
     </div>
-    <input id="pasteOrderDate" type="text" value="D#" aria-label="下注日期" placeholder="D#">
+    <input id="pasteOrderDate" type="text" value="D#" aria-label="下注日期" placeholder="D#" tabindex="-1">
     <div class="paste-order-amount-row">
         <div id="pasteOrderAmount">MYR 0.00</div>
         <button class="paste-order-buy" onclick="buyPasteOrder()">购买</button>
@@ -2197,7 +2216,7 @@ function showPage(page) {
     }
 
     if (page === "pasteOrder") {
-        pasteOrderPage.style.display = "block";
+        pasteOrderPage.style.display = window.matchMedia("(max-width: 600px)").matches ? "flex" : "block";
     }
     if (page === "scores") scorePage.style.display = "block";
     if (page === "winners") winningPage.style.display = "block";
@@ -2345,13 +2364,24 @@ function openInputPage(product) {
    独立粘贴下单
 ===================================================== */
 
+function getPasteOrderDateCommand() {
+    const firstLine = String(pasteOrderNumbers.value || "").split(/\r?\n/)[0].trim();
+    return (/^D#/i.test(firstLine) || /^\d{1,2}\/\d{1,2}(?:~\d{1,2}\/\d{1,2})?$/.test(firstLine)) ? firstLine : (pasteOrderDate.value.trim() || "D#");
+}
+function getPasteOrderBetText() {
+    const lines = String(pasteOrderNumbers.value || "").split(/\r?\n/);
+    if (lines.length && (/^D#/i.test(lines[0].trim()) || lines[0].trim() === String(pasteOrderDate.value || "").trim())) lines.shift();
+    return lines.join("\n").trim();
+}
 function openPasteOrderPage() {
     activeProduct = "haolong";
     pasteOrderDate.value = dateInput.value || "D#";
-    pasteOrderNumbers.value = "";
+    pasteOrderNumbers.value = `${pasteOrderDate.value}\n`;
     updatePasteOrderProduct();
     updatePasteOrderTotal();
     showPage("pasteOrder");
+    pasteOrderNumbers.focus();
+    pasteOrderNumbers.setSelectionRange(pasteOrderNumbers.value.length, pasteOrderNumbers.value.length);
 }
 
 function setPasteOrderProduct(product) {
@@ -2369,8 +2399,9 @@ function updatePasteOrderProduct() {
 }
 
 function updatePasteOrderTotal() {
-    const pasted = pasteOrderNumbers.value.trim();
-    dateInput.value = pasteOrderDate.value.trim() || "D#";
+    const pasted = getPasteOrderBetText();
+    pasteOrderDate.value = getPasteOrderDateCommand();
+    dateInput.value = pasteOrderDate.value;
     numberInput.value = pasted;
     if (!pasted) {
         document.getElementById("pasteOrderAmount").textContent = "MYR 0.00";
@@ -2403,11 +2434,7 @@ function pasteOrderKey(key) {
 
 function savePasteOrderDraft() {
     try {
-        localStorage.setItem("pasteOrderDraftV1", JSON.stringify({
-            date: pasteOrderDate.value,
-            product: activeProduct,
-            numbers: pasteOrderNumbers.value
-        }));
+        localStorage.setItem("pasteOrderDraftV1", JSON.stringify({date:getPasteOrderDateCommand(),product:activeProduct,numbers:pasteOrderNumbers.value}));
         alert("已保存这份粘贴新单草稿。");
     } catch (error) { alert("保存失败，浏览器可能未允许本地存储。"); }
 }
@@ -2418,11 +2445,13 @@ function loadPasteOrderDraft() {
         if (!raw) { alert("没有找到已保存的草稿。"); return; }
         const draft = JSON.parse(raw);
         pasteOrderDate.value = draft.date || "D#";
-        pasteOrderNumbers.value = draft.numbers || "";
+        const savedNumbers = String(draft.numbers || "");
+        pasteOrderNumbers.value = /^D#/i.test(savedNumbers.trimStart()) ? savedNumbers : `${pasteOrderDate.value}\n${savedNumbers}`;
         if (draft.product === "hlb8" || draft.product === "haolong") activeProduct = draft.product;
         updatePasteOrderProduct();
         updatePasteOrderTotal();
         pasteOrderNumbers.focus();
+        pasteOrderNumbers.setSelectionRange(pasteOrderNumbers.value.length,pasteOrderNumbers.value.length);
     } catch (error) { alert("读取草稿失败。"); }
 }
 
@@ -2431,10 +2460,12 @@ async function pasteOrderFromClipboard() {
         if (!navigator.clipboard || !navigator.clipboard.readText) throw new Error("clipboard unavailable");
         const text = await navigator.clipboard.readText();
         if (text) {
-            pasteOrderNumbers.value = text;
+            const dateCommand = getPasteOrderDateCommand();
+            pasteOrderNumbers.value = /^D#/i.test(text.trimStart()) ? text : `${dateCommand}\n${text}`;
             updatePasteOrderTotal();
         }
         pasteOrderNumbers.focus();
+        pasteOrderNumbers.setSelectionRange(pasteOrderNumbers.value.length,pasteOrderNumbers.value.length);
     }
     catch (error) {
         pasteOrderNumbers.focus();
@@ -2443,19 +2474,20 @@ async function pasteOrderFromClipboard() {
 }
 
 function clearPasteOrder() {
-    pasteOrderNumbers.value = "";
+    pasteOrderNumbers.value = `${pasteOrderDate.value || "D#"}` + "\n";
+    pasteOrderNumbers.setSelectionRange(pasteOrderNumbers.value.length, pasteOrderNumbers.value.length);
     updatePasteOrderTotal();
     pasteOrderNumbers.focus();
 }
 
 function buyPasteOrder() {
-    const pasted = pasteOrderNumbers.value.trim();
+    const pasted = getPasteOrderBetText();
     if (!pasted) {
-        alert("请先粘贴号码。");
+        alert("请先输入或粘贴号码。");
         pasteOrderNumbers.focus();
         return;
     }
-    dateInput.value = pasteOrderDate.value.trim() || "D#";
+    dateInput.value = getPasteOrderDateCommand();
     numberInput.value = pasted;
     generateReport();
 }
@@ -2752,7 +2784,9 @@ function parseTicketProfitByLottery(ticket, product) {
         if (!line.includes("=")) continue;
         const amounts = [...line.matchAll(/(?:^|[=\s-])(SA|SB|SC|SD|SE|B|S)(\d+(?:\.\d+)?)/g)].map(m => Number(m[2])||0);
         if (!amounts.length) continue;
-        const amount = amounts.reduce((sum,value)=>sum+value,0);
+        const boxMatch = !/ibox/i.test(line) ? line.match(/\(box(\d+)\)/i) : null;
+        const boxMultiplier = boxMatch ? Math.max(1, Number(boxMatch[1]) || 1) : 1;
+        const amount = amounts.reduce((sum,value)=>sum+value,0) * boxMultiplier;
         codes.forEach(code => { totals[code] = (totals[code]||0)+amount; });
     }
     return totals;
@@ -2764,7 +2798,7 @@ function renderProfitReport() {
     const selected = new Set(getProfitSelectedCodes()); out.innerHTML = "";
     if (!from || !to || from > to) { out.innerHTML='<div class="profit-report-empty">请选择有效的日期范围。</div>'; return; }
     const rows = new Map(); const rowFor = (account,code) => { const key=account+"|"+code; if(!rows.has(key)) rows.set(key,{account,code,tickets:0,bet:0,win:0}); return rows.get(key); };
-    const sources = [{key:"hlb8_reports",account:"GX999",product:"hlb8"},{key:"haolong_reports",account:"GX999",product:"haolong"}];
+    const sources = [{key:"hlb8_reports",account:"新单",product:"hlb8"},{key:"haolong_reports",account:"豪龙",product:"haolong"}];
     sources.forEach(source => readReportsForDailyNumbers(source.key).forEach(ticket => {
         if (ticket.cancelled) return;
         const purchase = getReportCreationDate(ticket.createdAt).replace(/\//g,"-");
@@ -2779,7 +2813,7 @@ function renderProfitReport() {
         matches.forEach(match => {
             const purchase=getReportCreationDate(match.ticket.createdAt).replace(/\//g,"-");
             if (purchase < from || purchase > to || !selected.has(match.code)) return;
-            const source=match.sourceKey === "haolong_reports" ? "豪龙" : "GX999";
+            const source=match.sourceKey === "haolong_reports" ? "豪龙" : "新单";
             const row=rowFor(source,match.code); row.win+=Number(match.payout)||0;
         });
     }
@@ -3023,6 +3057,10 @@ function getDailyNumbersFromBetLine(rawLine) {
         });
     }
 
+    const formattedPrefixBox = base.match(/^(\d+)\((\d{3})\)(?:=.*)?$/);
+    if (formattedPrefixBox) {
+        return getUniqueDailyPermutations(formattedPrefixBox[2]).map(permutation => formattedPrefixBox[1] + permutation);
+    }
     const digits = base.replace(/\D/g, "");
     return digits.length >= 4 ? [digits.slice(0, 4)] : [];
 }
@@ -3119,15 +3157,19 @@ function renderDailyNumbers() {
                 }
                 const numberMatch = line.match(/^(?:\*{0,2})?(?:\(IB\))?(?:\[(\d{4})\]|\{(\d{4})\}|\((\d{4})\)|((?:\d{4})\*{0,2})|\d\((\d{3})\))=/);
                 if (!numberMatch || !reportCodes.length) return;
-                const number = numberMatch.slice(1).find(Boolean).replace(/\*/g, "");
+                const prefixBoxLine = line.match(/^(\d+)\((\d{3})\)=/);
+                const number = prefixBoxLine ? prefixBoxLine[1] + prefixBoxLine[2] : numberMatch.slice(1).find(Boolean).replace(/\*/g, "");
                 const betItems = [...line.matchAll(/\b(SA|SB|SC|SD|SE|B|S)(\d+(?:\.\d+)?)/g)]
                     .map(match => ({type: match[1], amount: Number(match[2]) || 0}));
                 if (!betItems.length) return;
                 const packMatch = line.match(/(?:i\s*box|ibox|iB|box)\s*x?\s*(\d+)/i);
                 const packSize = packMatch ? Math.max(1, Number(packMatch[1]) || 1) : 1;
-                const expandedNumbers = packMatch && /^\d{4}$/.test(number)
-                    ? uniquePermutations(number).slice(0, packSize)
-                    : [number];
+                const prefixBox = line.match(/^(\d+)\((\d{3})\)=/);
+                const expandedNumbers = prefixBox
+                    ? uniquePermutations(prefixBox[2]).slice(0, packSize).map(permutation => prefixBox[1] + permutation)
+                    : packMatch && /^\d{4}$/.test(number)
+                        ? uniquePermutations(number).slice(0, packSize)
+                        : [number];
                 reportCodes.forEach(code => {
                     expandedNumbers.forEach(expandedNumber => {
                         if (!amountByLottery[code].has(expandedNumber)) {
