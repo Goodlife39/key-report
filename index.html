@@ -4494,13 +4494,8 @@ function formatDrawDates(dates) {
     }
 
 
-    return (
-        formatShortDate(dates[0]) +
-        "~" +
-        formatShortDate(
-            dates[dates.length - 1]
-        )
-    );
+    return dates.map(formatShortDate).join("~");
+
 
 }
 
