@@ -5755,8 +5755,7 @@ function generateReport() {
 
     const receiptProduct = activeProduct;
 
-    const dateCommand =
-        dateInput.value.trim();
+    let dateCommand = dateInput.value.trim();
 
 
     const input =
@@ -5802,6 +5801,11 @@ function generateReport() {
             );
 
 
+    // 豪龙可在号码框第一行输入 D5，下一行再输入 #137 和号码。
+    if (receiptProduct === "haolong" && lines.length > 0 && parseDateCommand(lines[0])) {
+        dateCommand = lines.shift();
+        dateInput.value = dateCommand;
+    }
     if (
         lines.length < 2
     ) {
@@ -5857,6 +5861,7 @@ function generateReport() {
         return;
 
     }
+
 
 
     /* 日期 */
@@ -7140,7 +7145,7 @@ function updateAmount() {
     }
 
 
-    const lines =
+    let lines =
         input
             .split(/\r?\n/)
             .map(
@@ -7151,6 +7156,10 @@ function updateAmount() {
                 line =>
                     line !== ""
             );
+    let amountDateCommand = dateInput.value.trim();
+    if (activeProduct === "haolong" && lines.length > 0 && parseDateCommand(lines[0])) {
+        amountDateCommand = lines.shift();
+    }
 
 
     if (
@@ -7231,8 +7240,11 @@ function updateAmount() {
 
 
     const drawDates =
-        getDrawDates(
-            dateInput.value.trim()
+        getTicketDrawDates(
+            amountDateCommand,
+            headerNumbers,
+            activeProduct,
+            new Date()
         );
 
 
